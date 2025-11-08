@@ -30,7 +30,7 @@
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "next": "^15.0.0"
+    "next": "^16.0.0"
   }
 }
 
