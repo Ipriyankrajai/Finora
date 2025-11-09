@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui/card";
+
 export default function Home() {
-  return <h1>Finora</h1>;
+  return <Card>Finora</Card>;
 }
