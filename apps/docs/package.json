@@ -11,14 +11,13 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@finora/ui": "*",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@finora/eslint-config": "*",
-    "@finora/typescript-config": "*",
+    "@finora/eslint-config": "workspace:*",
+    "@finora/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
