@@ -1,135 +1,301 @@
-# Turborepo starter
+<div align="center">
+  <h1>💰 Finora</h1>
+  <p><strong>Smart finance manager to track expenses, plan budgets, and stay in control</strong></p>
+  
+  ![License](https://img.shields.io/badge/license-MIT-blue.svg)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
+  ![Next.js](https://img.shields.io/badge/Next.js-16-black)
+  ![Bun](https://img.shields.io/badge/Bun-1.1.43-orange)
+</div>
 
-This Turborepo starter is maintained by the Turborepo core team.
+---
 
-## Using this example
+## 📖 About
 
-Run the following command:
+Finora is a comprehensive financial management platform that empowers users to:
 
-```sh
-npx create-turbo@latest
-```
+- 📊 **Track expenses** - Monitor your spending patterns and financial habits
+- 💵 **Plan budgets** - Set and manage budgets across different categories
+- 📈 **Stay in control** - Get insights and analytics to make informed financial decisions
 
-## What's inside?
+Built with modern technologies and best practices, Finora provides a seamless experience for managing your personal or business finances.
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## 🏗️ Project Structure
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@finora/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@finora/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+This project is organized as a **Turborepo monorepo** with the following structure:
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+Finora/
+├── apps/
+│   ├── web/          # Main Next.js web application
+│   └── docs/         # Documentation site (Next.js)
+├── packages/
+│   ├── auth/         # Authentication package (Better Auth)
+│   ├── database/     # Database schema and client (Prisma)
+│   ├── trpc/         # tRPC API setup
+│   ├── ui/           # Shared React component library
+│   ├── eslint-config/    # Shared ESLint configurations
+│   └── typescript-config/ # Shared TypeScript configurations
+└── turbo.json        # Turborepo configuration
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## 🚀 Tech Stack
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+### Frontend
 
-### Develop
+- **[Next.js 16](https://nextjs.org/)** - React framework with App Router
+- **[React 19](https://react.dev/)** - UI library
+- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
 
-To develop all apps and packages, run the following command:
+### Backend
 
-```
-cd my-turborepo
+- **[tRPC](https://trpc.io/)** - End-to-end typesafe APIs
+- **[Prisma](https://www.prisma.io/)** - Database ORM
+- **[PostgreSQL](https://www.postgresql.org/)** - Primary database
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### Authentication
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+- **[Better Auth](https://better-auth.com/)** - Modern authentication solution
+- Email & Password authentication
+- OAuth providers (Google, GitHub)
+- Session management
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Development Tools
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+- **[Turborepo](https://turbo.build/repo)** - Monorepo build system
+- **[Bun](https://bun.sh/)** - Fast JavaScript runtime and package manager
+- **[ESLint](https://eslint.org/)** - Code linting
+- **[Prettier](https://prettier.io/)** - Code formatting
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+---
 
-### Remote Caching
+## 📋 Prerequisites
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+Before you begin, ensure you have the following installed:
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- **[Bun](https://bun.sh/)** >= 1.1.43
+- **[Node.js](https://nodejs.org/)** >= 18
+- **[PostgreSQL](https://www.postgresql.org/)** >= 14
+- **[Git](https://git-scm.com/)**
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+---
 
-```
-cd my-turborepo
+## 🛠️ Local Setup
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+### 1. Clone the Repository
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+git clone https://github.com/yourusername/Finora.git
+cd Finora
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### 2. Install Dependencies
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+bun install
 ```
 
-## Useful Links
+### 3. Set Up Environment Variables
 
-Learn more about the power of Turborepo:
+Create a `.env` file in the root directory and in `apps/web/`:
+
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/finora"
+
+# App URL
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# OAuth Providers (Optional)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+GITHUB_CLIENT_ID="your-github-client-id"
+GITHUB_CLIENT_SECRET="your-github-client-secret"
+```
+
+### 4. Set Up the Database
+
+#### a. Create a PostgreSQL database:
+
+```bash
+createdb finora
+```
+
+#### b. Generate Prisma Client:
+
+```bash
+cd packages/database
+bun run db:generate
+```
+
+#### c. Push the schema to your database:
+
+```bash
+bun run db:push
+```
+
+#### d. (Optional) Seed the database:
+
+```bash
+bun run db:seed
+```
+
+### 5. Run the Development Server
+
+From the root directory:
+
+```bash
+bun run dev
+```
+
+This will start:
+
+- **Web app**: http://localhost:3000
+- **Docs**: http://localhost:3001
+
+To run only the web app:
+
+```bash
+bun run dev --filter=web
+```
+
+---
+
+## 📜 Available Scripts
+
+From the root directory:
+
+```bash
+# Development
+bun run dev              # Start all apps in development mode
+bun run dev --filter=web # Start only the web app
+
+# Build
+bun run build            # Build all apps and packages
+bun run build --filter=web # Build only the web app
+
+# Code Quality
+bun run lint             # Lint all packages
+bun run format           # Format code with Prettier
+bun run check-types      # Type check all packages
+```
+
+### Database Scripts
+
+From `packages/database`:
+
+```bash
+bun run db:generate      # Generate Prisma Client
+bun run db:push          # Push schema changes (development)
+bun run db:migrate       # Create and run migrations (production)
+bun run db:studio        # Open Prisma Studio
+bun run db:seed          # Seed the database
+```
+
+---
+
+## 📦 Package Overview
+
+### `@finora/auth`
+
+Authentication package with email/password and OAuth support. Features:
+
+- 🔐 Email & Password authentication
+- 🌐 OAuth providers (Google, GitHub)
+- 🔄 Session management
+- 🗄️ Database integration
+
+[Read more →](./packages/auth/README.md)
+
+### `@repo/database`
+
+Shared Prisma database client and schema. Features:
+
+- 🗄️ PostgreSQL database
+- 🔄 Type-safe database access
+- 📊 Database migrations
+- 🌱 Database seeding
+
+[Read more →](./packages/database/README.md)
+
+### `@finora/trpc`
+
+End-to-end typesafe API layer. Features:
+
+- 🔒 Type-safe API routes
+- 🔄 Server and client setup
+- 🎯 React Query integration
+
+[Read more →](./packages/trpc/README.md)
+
+### `@repo/ui`
+
+Shared React component library. Features:
+
+- 🎨 Reusable UI components
+- 📱 Responsive design
+- ⚡ Optimized performance
+
+---
+
+## 🚢 Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import your repository to [Vercel](https://vercel.com)
+3. Configure environment variables
+4. Deploy!
+
+Vercel will automatically detect the Turborepo setup and deploy appropriately.
+
+### Docker (Coming Soon)
+
+Docker support for containerized deployments is planned for a future release.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🔗 Useful Links
+
+### Turborepo
 
 - [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
 - [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
 - [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+
+### Documentation
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [tRPC Documentation](https://trpc.io/docs)
+- [Better Auth Documentation](https://better-auth.com)
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by the Priyank Rajai</p>
+  <p>⭐ Star us on GitHub — it helps!</p>
+</div>
