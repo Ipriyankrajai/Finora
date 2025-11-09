@@ -6,11 +6,11 @@
   "types": "./src/index.ts",
   "scripts": {
     "with-env": "dotenv -e ../../.env --",
-    "db:generate": "bun run with-env prisma generate",
-    "db:push": "bun run with-env prisma db push",
-    "db:migrate": "bun run with-env prisma migrate dev",
-    "db:studio": "bun run with-env prisma studio",
-    "db:seed": "bun run with-env tsx src/seed.ts"
+    "db:generate": "pnpm run with-env prisma generate",
+    "db:push": "pnpm run with-env prisma db push",
+    "db:migrate": "pnpm run with-env prisma migrate dev",
+    "db:studio": "pnpm run with-env prisma studio",
+    "db:seed": "pnpm run with-env tsx src/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
