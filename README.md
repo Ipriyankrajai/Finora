@@ -233,7 +233,7 @@ End-to-end typesafe API layer. Features:
 
 [Read more →](./packages/trpc/README.md)
 
-### `@repo/ui`
+### `@finora/ui`
 
 Shared React component library. Features:
 
