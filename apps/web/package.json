@@ -15,12 +15,12 @@
     "@finora/auth": "workspace:*",
     "@finora/database": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@prisma/client": "^5.22.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/postcss": "^4.1.17",
-    "better-auth": "1.3.24",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "geist": "^1.3.0",
@@ -41,6 +41,7 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "eslint": "^9.39.1",
+    "prisma": "^5.22.0",
     "tw-animate-css": "^1.4.0",
     "typescript": "5.9.2"
   }
