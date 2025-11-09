@@ -4,11 +4,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000",
-    "build": "next build",
-    "start": "next start",
+    "dev": "bun run with-env next dev --port 3000",
+    "build": "bun run with-env next build",
+    "start": "bun run with-env next start",
     "lint": "eslint --max-warnings 0",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "bun run with-env next typegen && tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@finora/ui": "*",
