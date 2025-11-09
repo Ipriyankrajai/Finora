@@ -1,6 +1,5 @@
-import { GoogleSignIn } from "@/components/google-sign-in";
-import { GithubSignIn } from "@/components/github-sign-in";
-import { EmailSignIn } from "@/components/email-sign-in";
+import { GoogleSignIn } from "@/components/auth/google-sign-in";
+import { EmailSignIn } from "@/components/auth/email-sign-in";
 import {
   Accordion,
   AccordionContent,
@@ -80,8 +79,7 @@ export default function LoginPage() {
                     </AccordionTrigger>
                     <AccordionContent className="pt-4">
                       <div className="space-y-3">
-                        <GithubSignIn />
-                        <EmailSignIn className="border-t border-border pt-8" />
+                        <EmailSignIn />
                       </div>
                     </AccordionContent>
                   </AccordionItem>
