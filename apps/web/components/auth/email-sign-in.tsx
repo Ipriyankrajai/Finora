@@ -5,7 +5,11 @@ import { signIn } from "@finora/auth/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
 interface EmailSignInProps {
@@ -45,16 +49,16 @@ export function EmailSignIn({ className }: EmailSignInProps) {
   };
 
   return (
-    <div className={cn("space-y-4", className)}>
-      {error && (
-        <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">
-          {error}
-        </div>
-      )}
+    <form onSubmit={handleSubmit} className={className}>
+      <FieldGroup>
+        {error && (
+          <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">
+            {error}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+        <Field>
+          <FieldLabel htmlFor="email">Email</FieldLabel>
           <Input
             id="email"
             type="email"
@@ -64,10 +68,10 @@ export function EmailSignIn({ className }: EmailSignInProps) {
             required
             disabled={loading}
           />
-        </div>
+        </Field>
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+        <Field>
+          <FieldLabel htmlFor="password">Password</FieldLabel>
           <Input
             id="password"
             type="password"
@@ -77,12 +81,14 @@ export function EmailSignIn({ className }: EmailSignInProps) {
             required
             disabled={loading}
           />
-        </div>
+        </Field>
 
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Signing in..." : "Sign in with Email"}
-        </Button>
-      </form>
-    </div>
+        <Field>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Signing in..." : "Sign in with Email"}
+          </Button>
+        </Field>
+      </FieldGroup>
+    </form>
   );
 }

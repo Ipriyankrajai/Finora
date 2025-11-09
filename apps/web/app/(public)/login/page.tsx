@@ -1,11 +1,18 @@
 import { GoogleSignIn } from "@/components/auth/google-sign-in";
 import { EmailSignIn } from "@/components/auth/email-sign-in";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldSeparator,
+} from "@/components/ui/field";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -51,69 +58,52 @@ export default function LoginPage() {
         <div className="w-full lg:w-1/2 relative">
           {/* Form Content */}
           <div className="relative z-10 flex h-full items-center justify-center p-6">
-            <div className="w-full max-w-md space-y-8">
-              {/* Welcome Section */}
-              <div className="text-center">
-                <h1 className="text-lg mb-4 font-medium">Welcome to Finora</h1>
-                <p className="text-muted-foreground text-sm mb-8">
-                  New here or coming back? Choose how you want to continue
-                </p>
-              </div>
-
-              {/* Sign In Options */}
-              <div className="space-y-4">
-                {/* Primary Sign In Option */}
-                <div className="space-y-3">
-                  <GoogleSignIn />
-                </div>
-
-                <div className="flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">Or</span>
-                </div>
-
-                {/* More Options Accordion */}
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1" className="border-0">
-                    <AccordionTrigger className="flex justify-center items-center text-sm py-2 hover:no-underline">
-                      <span>Other options</span>
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-4">
-                      <div className="space-y-3">
-                        <EmailSignIn />
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </div>
+            <div className="w-full max-w-md flex flex-col gap-6">
+              <Card>
+                <CardHeader className="text-center">
+                  <CardTitle className="text-xl">Welcome to Finora</CardTitle>
+                  <CardDescription>
+                    Login with your Google account or email
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FieldGroup>
+                    <Field>
+                      <GoogleSignIn />
+                    </Field>
+                    <FieldSeparator>Or continue with</FieldSeparator>
+                    <Field>
+                      <EmailSignIn />
+                    </Field>
+                  </FieldGroup>
+                </CardContent>
+              </Card>
 
               {/* Terms and Privacy */}
-              <div className="text-center absolute bottom-4 left-0 right-0 px-6">
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  By signing in you agree to our{" "}
-                  <Link
-                    href="/terms"
-                    className="underline hover:text-foreground"
-                  >
-                    Terms of service
-                  </Link>{" "}
-                  &{" "}
-                  <Link
-                    href="/privacy"
-                    className="underline hover:text-foreground"
-                  >
-                    Privacy policy
-                  </Link>
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Don&apos;t have an account?{" "}
-                  <Link
-                    href="/signup"
-                    className="font-medium text-foreground underline-offset-4 hover:underline"
-                  >
-                    Sign up
-                  </Link>
-                </p>
-              </div>
+              <FieldDescription className="text-center">
+                By continuing, you agree to our{" "}
+                <Link href="/terms" className="underline hover:text-foreground">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy"
+                  className="underline hover:text-foreground"
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </FieldDescription>
+
+              <FieldDescription className="text-center">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/signup"
+                  className="font-medium text-foreground underline-offset-4 hover:underline"
+                >
+                  Sign up
+                </Link>
+              </FieldDescription>
             </div>
           </div>
         </div>
