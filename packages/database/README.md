@@ -1,37 +1,49 @@
-# @repo/database
+# @finora/database
 
 Shared database package using Prisma ORM for the Finora monorepo.
 
 ## Setup
 
-1. Copy the `.env.example` file to `.env`:
+1. Create a `.env` file in the **root** of the monorepo (not in this package):
 ```bash
-cp .env.example .env
+# From the root directory
+touch .env
 ```
 
-2. Update the `DATABASE_URL` in `.env` with your database credentials.
+2. Add your `DATABASE_URL` to the root `.env` file:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/finora?schema=public"
+```
 
-3. Install dependencies:
+3. Install dependencies (from root):
 ```bash
 bun install
 ```
 
 4. Generate Prisma Client:
 ```bash
+# From root
+bun db:generate
+# Or from this package
 bun run db:generate
 ```
 
 5. Push the schema to your database:
 ```bash
+# From root
+bun db:push
+# Or from this package
 bun run db:push
 ```
+
+> **Note:** All database scripts automatically load environment variables from the root `.env` file using `dotenv-cli`.
 
 ## Usage
 
 Import the Prisma client in your apps:
 
 ```typescript
-import { prisma } from "@repo/database";
+import { prisma } from "@finora/database";
 
 const users = await prisma.user.findMany();
 ```
