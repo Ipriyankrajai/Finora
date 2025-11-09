@@ -1,5 +1,5 @@
 import { auth } from "@finora/auth";
-import { toNextJsHandler } from "better-auth/next-js";
+import { toNextJsHandler } from "@finora/auth";
 
 export const { GET, POST } = toNextJsHandler(auth);
 

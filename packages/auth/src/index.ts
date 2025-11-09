@@ -7,9 +7,6 @@ export type { Auth } from "./config";
 export { authClient, signIn, signUp, signOut, useSession } from "./client";
 export { useAuth, useIsAuthenticated, useCurrentUser, useRequireAuth } from "./hooks";
 
-// Middleware exports
-export { createAuthMiddleware, authMiddleware } from "./middleware";
-export type { AuthMiddlewareConfig } from "./middleware";
 
 // Type exports
 export type {
@@ -24,3 +21,6 @@ export type {
   OAuthConfig,
 } from "./types";
 
+export { getCookieCache } from "better-auth/cookies";
+
+export {toNextJsHandler} from "better-auth/next-js";
