@@ -6,9 +6,16 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "typecheck": "turbo run typecheck",
+    "with-env": "dotenv -e .env --",
+    "db:generate": "bun --filter @finora/database db:generate",
+    "db:push": "bun --filter @finora/database db:push",
+    "db:migrate": "bun --filter @finora/database db:migrate",
+    "db:studio": "bun --filter @finora/database db:studio",
+    "db:seed": "bun --filter @finora/database db:seed"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.0.0",
     "prettier": "^3.6.2",
     "turbo": "^2.6.0",
     "typescript": "5.9.2"
