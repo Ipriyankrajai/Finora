@@ -1,4 +1,5 @@
-import { auth } from "./config";
+
+import { auth } from "@finora/auth";
 import { headers } from "next/headers";
 
 /**
