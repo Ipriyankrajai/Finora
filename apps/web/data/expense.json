@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "description": "Grocery Shopping",
+    "category": "Food & Groceries",
+    "amount": "125.50",
+    "date": "2024-06-15",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 2,
+    "description": "Electricity Bill",
+    "category": "Utilities",
+    "amount": "89.99",
+    "date": "2024-06-14",
+    "paymentMethod": "Bank Transfer",
+    "status": "Completed"
+  },
+  {
+    "id": 3,
+    "description": "Gas Station",
+    "category": "Transportation",
+    "amount": "65.00",
+    "date": "2024-06-13",
+    "paymentMethod": "Debit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 4,
+    "description": "Gym Membership",
+    "category": "Health & Fitness",
+    "amount": "50.00",
+    "date": "2024-06-12",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 5,
+    "description": "Restaurant Dinner",
+    "category": "Food & Dining",
+    "amount": "78.45",
+    "date": "2024-06-11",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 6,
+    "description": "Internet Bill",
+    "category": "Utilities",
+    "amount": "59.99",
+    "date": "2024-06-10",
+    "paymentMethod": "Auto-Pay",
+    "status": "Completed"
+  },
+  {
+    "id": 7,
+    "description": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": "32.00",
+    "date": "2024-06-09",
+    "paymentMethod": "Debit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 8,
+    "description": "Coffee & Snacks",
+    "category": "Food & Dining",
+    "amount": "15.75",
+    "date": "2024-06-08",
+    "paymentMethod": "Mobile Payment",
+    "status": "Completed"
+  },
+  {
+    "id": 9,
+    "description": "Monthly Rent",
+    "category": "Housing",
+    "amount": "1500.00",
+    "date": "2024-06-07",
+    "paymentMethod": "Bank Transfer",
+    "status": "Completed"
+  },
+  {
+    "id": 10,
+    "description": "Pharmacy Purchase",
+    "category": "Health & Fitness",
+    "amount": "45.30",
+    "date": "2024-06-06",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 11,
+    "description": "Salon Services",
+    "category": "Personal Care",
+    "amount": "85.00",
+    "date": "2024-06-05",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 12,
+    "description": "Streaming Service",
+    "category": "Entertainment",
+    "amount": "15.99",
+    "date": "2024-06-04",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 13,
+    "description": "Car Insurance",
+    "category": "Insurance",
+    "amount": "120.00",
+    "date": "2024-06-03",
+    "paymentMethod": "Bank Transfer",
+    "status": "Completed"
+  },
+  {
+    "id": 14,
+    "description": "Supermarket",
+    "category": "Food & Groceries",
+    "amount": "156.20",
+    "date": "2024-06-02",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 15,
+    "description": "Office Supplies",
+    "category": "Business",
+    "amount": "42.50",
+    "date": "2024-06-01",
+    "paymentMethod": "Business Card",
+    "status": "Completed"
+  },
+  {
+    "id": 16,
+    "description": "Gas",
+    "category": "Transportation",
+    "amount": "48.75",
+    "date": "2024-05-31",
+    "paymentMethod": "Debit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 17,
+    "description": "Clothing Store",
+    "category": "Shopping",
+    "amount": "234.99",
+    "date": "2024-05-30",
+    "paymentMethod": "Credit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 18,
+    "description": "Phone Bill",
+    "category": "Utilities",
+    "amount": "75.00",
+    "date": "2024-05-29",
+    "paymentMethod": "Auto-Pay",
+    "status": "Completed"
+  },
+  {
+    "id": 19,
+    "description": "Book Store",
+    "category": "Education",
+    "amount": "89.99",
+    "date": "2024-05-28",
+    "paymentMethod": "Debit Card",
+    "status": "Completed"
+  },
+  {
+    "id": 20,
+    "description": "Dentist Appointment",
+    "category": "Health & Fitness",
+    "amount": "200.00",
+    "date": "2024-05-27",
+    "paymentMethod": "Credit Card",
+    "status": "Pending"
+  }
+]
