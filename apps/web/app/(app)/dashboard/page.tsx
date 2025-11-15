@@ -32,7 +32,7 @@ export default function DashboardPage() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-gray-50 to-gray-100">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-lg font-medium text-gray-600">Loading...</div>
       </div>
     );
@@ -40,7 +40,7 @@ export default function DashboardPage() {
 
   if (!session) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-gray-50 to-gray-100">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-lg font-medium text-gray-600">
           Redirecting to login...
         </div>
@@ -51,7 +51,7 @@ export default function DashboardPage() {
   const { user } = session;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 p-4">
+    <div className="min-h-screen p-4">
       <div className="mx-auto max-w-4xl space-y-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between">
