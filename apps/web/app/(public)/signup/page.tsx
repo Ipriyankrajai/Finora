@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AuthSidePanel } from "@/components/auth/auth-side-panel";
 import {
   Card,
   CardContent,
@@ -91,31 +92,10 @@ export default function SignupPage() {
       {/* Main Layout */}
       <div className="flex h-full">
         {/* Background Section - Hidden on mobile, visible on desktop */}
-        <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden rounded-l-2xl">
-          {/* Light mode gradient */}
-          <div className="absolute inset-0 bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 dark:hidden" />
-
-          {/* Dark mode gradient */}
-          <div className="absolute inset-0 bg-linear-to-br from-gray-900 via-indigo-950 to-purple-950 hidden dark:block" />
-
-          {/* Decorative elements */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-20 left-20 w-72 h-72 bg-blue-400 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl animate-blob" />
-            <div className="absolute top-40 right-20 w-72 h-72 bg-purple-400 dark:bg-purple-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl animate-blob animation-delay-2000" />
-            <div className="absolute bottom-20 left-40 w-72 h-72 bg-indigo-400 dark:bg-indigo-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl animate-blob animation-delay-4000" />
-          </div>
-
-          {/* Content overlay */}
-          <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-center">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Start Your Journey
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-md">
-              Join thousands of users managing their finances with ease. Track
-              expenses, create budgets, and achieve your financial goals.
-            </p>
-          </div>
-        </div>
+        <AuthSidePanel
+          title="Start Your Journey"
+          description="Join thousands of users managing their finances with ease. Track expenses, create budgets, and achieve your financial goals."
+        />
 
         {/* Signup Form Section */}
         <div className="w-full lg:w-1/2 relative">
