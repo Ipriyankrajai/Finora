@@ -5,12 +5,7 @@ import { signIn } from "@finora/auth/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { cn } from "@/lib/utils";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 
 interface EmailSignInProps {
   className?: string;
