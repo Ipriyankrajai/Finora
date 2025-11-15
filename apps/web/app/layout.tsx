@@ -7,7 +7,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Finora",
-  description: "Finora is a platform for managing your finances",
+  description:
+    "Finora is a modern finance management platform that helps individuals and businesses track expenses, monitor budgets, and make informed financial decisions with clarity and confidence.",
 };
 
 const lora = Lora({
