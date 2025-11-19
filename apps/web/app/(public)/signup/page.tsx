@@ -82,13 +82,6 @@ export default function SignupPage() {
 
   return (
     <div className="h-screen p-2">
-      {/* Header - Logo */}
-      <header className="absolute top-0 left-0 z-30 w-full">
-        <div className="p-6 md:p-8">
-          <div className="text-2xl font-bold">Finora</div>
-        </div>
-      </header>
-
       {/* Main Layout */}
       <div className="flex h-full">
         {/* Background Section - Hidden on mobile, visible on desktop */}
