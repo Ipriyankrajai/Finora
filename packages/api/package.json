@@ -1,0 +1,27 @@
+{
+  "name": "@finora2/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@finora2/auth": "workspace:*",
+    "@finora2/db": "workspace:*",
+    "@finora2/env": "workspace:*",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "dotenv": "catalog:",
+    "next": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@finora2/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

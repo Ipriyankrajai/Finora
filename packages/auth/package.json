@@ -1,0 +1,24 @@
+{
+  "name": "@finora2/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@finora2/db": "workspace:*",
+    "@finora2/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@finora2/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
