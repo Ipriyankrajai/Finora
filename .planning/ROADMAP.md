@@ -30,11 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. All monetary values stored as integer cents with composite indexes for performant queries
   3. Calculation utilities (amortization, payoff projection, monthly payment) produce results matching bank calculators within $1
   4. Money conversion utilities (cents to display, display to cents) work consistently across the codebase
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Prisma schema and migrations
-- [ ] 01-02: Calculation utilities module
+- [ ] 01-01-PLAN.md — Prisma schema with finance models and migrations
+- [ ] 01-02-PLAN.md — Money and loan calculation utilities (TDD)
 
 ### Phase 2: API Layer
 **Goal**: Type-safe tRPC endpoints for all entities with proper authorization and validation
@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Not started | - |
+| 1. Foundation | 0/2 | Planned | - |
 | 2. API Layer | 0/4 | Not started | - |
 | 3. Tags & Transactions UI | 0/3 | Not started | - |
 | 4. Loans UI | 0/3 | Not started | - |
