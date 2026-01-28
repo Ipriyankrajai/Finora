@@ -122,48 +122,56 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | ✓ Existing |
-| AUTH-02 | — | ✓ Existing |
-| AUTH-03 | — | ✓ Existing |
-| TAG-01 | TBD | Pending |
-| TAG-02 | TBD | Pending |
-| TAG-03 | TBD | Pending |
-| TAG-04 | TBD | Pending |
-| TXN-01 | TBD | Pending |
-| TXN-02 | TBD | Pending |
-| TXN-03 | TBD | Pending |
-| TXN-04 | TBD | Pending |
-| TXN-05 | TBD | Pending |
-| TXN-06 | TBD | Pending |
-| TXN-07 | TBD | Pending |
-| TXN-08 | TBD | Pending |
-| TXN-09 | TBD | Pending |
-| LOAN-01 | TBD | Pending |
-| LOAN-02 | TBD | Pending |
-| LOAN-03 | TBD | Pending |
-| LOAN-04 | TBD | Pending |
-| LOAN-05 | TBD | Pending |
-| LOAN-06 | TBD | Pending |
-| LOAN-07 | TBD | Pending |
-| LOAN-08 | TBD | Pending |
-| VIZ-01 | TBD | Pending |
-| VIZ-02 | TBD | Pending |
-| VIZ-03 | TBD | Pending |
-| VIZ-04 | TBD | Pending |
-| DASH-01 | TBD | Pending |
-| DASH-02 | TBD | Pending |
-| DASH-03 | TBD | Pending |
-| DASH-04 | TBD | Pending |
-| ONBD-01 | TBD | Pending |
-| ONBD-02 | TBD | Pending |
-| SETT-01 | TBD | Pending |
-| SETT-02 | TBD | Pending |
+| AUTH-01 | - | Existing |
+| AUTH-02 | - | Existing |
+| AUTH-03 | - | Existing |
+| TAG-01 | Phase 2, 3 | Pending |
+| TAG-02 | Phase 2, 3 | Pending |
+| TAG-03 | Phase 2, 3 | Pending |
+| TAG-04 | Phase 5 | Pending |
+| TXN-01 | Phase 2, 3 | Pending |
+| TXN-02 | Phase 2, 3 | Pending |
+| TXN-03 | Phase 2, 3 | Pending |
+| TXN-04 | Phase 2, 3 | Pending |
+| TXN-05 | Phase 2, 3 | Pending |
+| TXN-06 | Phase 2, 3 | Pending |
+| TXN-07 | Phase 2, 3 | Pending |
+| TXN-08 | Phase 2, 3 | Pending |
+| TXN-09 | Phase 2, 3 | Pending |
+| LOAN-01 | Phase 2, 4 | Pending |
+| LOAN-02 | Phase 2, 4 | Pending |
+| LOAN-03 | Phase 2, 4 | Pending |
+| LOAN-04 | Phase 2, 4 | Pending |
+| LOAN-05 | Phase 2, 4 | Pending |
+| LOAN-06 | Phase 2, 4 | Pending |
+| LOAN-07 | Phase 2, 4 | Pending |
+| LOAN-08 | Phase 2, 4 | Pending |
+| VIZ-01 | Phase 5 | Pending |
+| VIZ-02 | Phase 5 | Pending |
+| VIZ-03 | Phase 5 | Pending |
+| VIZ-04 | Phase 5 | Pending |
+| DASH-01 | Phase 2, 5 | Pending |
+| DASH-02 | Phase 2, 5 | Pending |
+| DASH-03 | Phase 2, 5 | Pending |
+| DASH-04 | Phase 5 | Pending |
+| ONBD-01 | Phase 6 | Pending |
+| ONBD-02 | Phase 6 | Pending |
+| SETT-01 | Phase 6 | Pending |
+| SETT-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 28 total (3 existing + 25 new)
-- Mapped to phases: 3 (existing)
-- Unmapped: 25 ⚠️
+- Mapped to phases: 28/28
+- Unmapped: 0
+
+**Phase Mapping Summary:**
+- Phase 1 (Foundation): Infrastructure enabling all features
+- Phase 2 (API Layer): TAG-01-03, TXN-01-09, LOAN-01-08, DASH-01-03 (API support)
+- Phase 3 (Tags & Transactions UI): TAG-01-03, TXN-01-09 (UI implementation)
+- Phase 4 (Loans UI): LOAN-01-08 (UI implementation)
+- Phase 5 (Visualizations & Dashboard): TAG-04, VIZ-01-04, DASH-01-04 (UI implementation)
+- Phase 6 (Onboarding & Polish): ONBD-01-02, SETT-01-02
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-29 after initial definition*
+*Last updated: 2026-01-29 after roadmap creation*
