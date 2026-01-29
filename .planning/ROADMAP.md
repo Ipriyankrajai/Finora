@@ -46,13 +46,13 @@ Plans:
   3. Transaction filtering by date range, type, tag, and amount works correctly
   4. Loan endpoints support CRUD, payment logging (including extra payments), and return calculated balance/interest/payoff
   5. Dashboard endpoint returns pre-aggregated monthly summary, spending by tag, and loan overview
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: Tag router implementation
-- [ ] 02-02: Transaction router implementation
-- [ ] 02-03: Loan router implementation
-- [ ] 02-04: Dashboard router implementation
+- [ ] 02-01-PLAN.md — tRPC superjson setup and tag CRUD router with tests
+- [ ] 02-02-PLAN.md — Transaction CRUD router with multi-tag and filtering
+- [ ] 02-03-PLAN.md — Loan CRUD router with payment tracking and projections
+- [ ] 02-04-PLAN.md — Dashboard aggregation endpoint
 
 ### Phase 3: Tags & Transactions UI
 **Goal**: Users can manage tags and record transactions with full filtering capabilities
@@ -130,7 +130,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | ✓ Complete | 2026-01-29 |
-| 2. API Layer | 0/4 | Not started | - |
+| 2. API Layer | 0/4 | Ready to execute | - |
 | 3. Tags & Transactions UI | 0/3 | Not started | - |
 | 4. Loans UI | 0/3 | Not started | - |
 | 5. Visualizations & Dashboard | 0/3 | Not started | - |
