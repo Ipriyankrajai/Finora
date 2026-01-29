@@ -260,13 +260,24 @@ export default function SignUpPage() {
             className={`transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
             <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="relative size-10 border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-emerald-500/50 transition-colors">
-                <TrendingUp className="size-5 text-emerald-500" />
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative size-10 flex items-center justify-center">
+                {/* Outer ring */}
+                <div className="absolute inset-0 border border-white/20 group-hover:border-white/40 transition-colors duration-500" />
+                {/* Inner animated element */}
+                <div className="absolute inset-1.5 border border-white/10 group-hover:border-white/30 group-hover:inset-1 transition-all duration-500" />
+                {/* Center letter */}
+                <span className="relative text-sm font-bold tracking-tighter text-white group-hover:scale-110 transition-transform duration-300">
+                  F
+                </span>
               </div>
-              <span className="text-xl font-light tracking-tight text-white">
-                finora
-              </span>
+              <div className="flex flex-col">
+                <span className="text-lg font-semibold tracking-tight text-white leading-none">
+                  finora
+                </span>
+                <span className="text-[9px] text-white/40 tracking-widest uppercase mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  finance clarity
+                </span>
+              </div>
             </Link>
           </div>
 
@@ -357,11 +368,15 @@ export default function SignUpPage() {
           <div
             className={`lg:hidden mb-12 transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Link href="/" className="inline-flex items-center gap-3">
-              <div className="size-10 border border-white/10 bg-white/5 flex items-center justify-center">
-                <TrendingUp className="size-5 text-emerald-500" />
+            <Link href="/" className="inline-flex items-center gap-3 group">
+              <div className="relative size-10 flex items-center justify-center">
+                <div className="absolute inset-0 border border-white/20" />
+                <div className="absolute inset-1.5 border border-white/10" />
+                <span className="relative text-sm font-bold tracking-tighter text-white">
+                  F
+                </span>
               </div>
-              <span className="text-xl font-light tracking-tight text-white">
+              <span className="text-lg font-semibold tracking-tight text-white">
                 finora
               </span>
             </Link>
