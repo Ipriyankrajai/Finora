@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import type { Route } from "next";
 import Link from "next/link";
-
 import { ArrowRight, Calendar, Clock } from "lucide-react";
+
+import { getAllPosts, type BlogPostMeta } from "@/lib/blog";
+import { PageBackground } from "@/components/page-background";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -15,65 +18,20 @@ export const metadata: Metadata = {
   },
 };
 
-import { PageBackground } from "@/components/page-background";
-import { Button } from "@/components/ui/button";
-
-const blogPosts = [
-  {
-    slug: "getting-started-expense-tracking",
-    title: "Getting Started with Expense Tracking",
-    excerpt:
-      "Learn how to effectively track your expenses and gain insights into your spending habits with our comprehensive guide.",
-    category: "Guides",
-    readTime: "5 min read",
-    publishedAt: "2024-01-15",
-    featured: true,
-  },
-  {
-    slug: "budget-tips-2024",
-    title: "10 Budgeting Tips for 2024",
-    excerpt:
-      "Start the new year right with these proven budgeting strategies that will help you save more and stress less.",
-    category: "Tips",
-    readTime: "7 min read",
-    publishedAt: "2024-01-10",
-    featured: false,
-  },
-  {
-    slug: "understanding-loan-amortization",
-    title: "Understanding Loan Amortization",
-    excerpt:
-      "A deep dive into how loan payments work and how you can use this knowledge to pay off debt faster.",
-    category: "Education",
-    readTime: "8 min read",
-    publishedAt: "2024-01-05",
-    featured: false,
-  },
-  {
-    slug: "emergency-fund-basics",
-    title: "Building Your Emergency Fund",
-    excerpt:
-      "Why everyone needs an emergency fund and practical steps to build one, even on a tight budget.",
-    category: "Guides",
-    readTime: "6 min read",
-    publishedAt: "2024-01-01",
-    featured: false,
-  },
-];
-
 function BlogCard({
   post,
   featured = false,
   className,
 }: {
-  post: (typeof blogPosts)[0];
+  post: BlogPostMeta;
   featured?: boolean;
   className?: string;
 }) {
   return (
     <article
-      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${featured ? "md:col-span-2 md:row-span-2" : ""
-        } ${className}`}
+      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
+        featured ? "md:col-span-2 md:row-span-2" : ""
+      } ${className}`}
     >
       <Link href={`/blog/${post.slug}` as Route} className="block p-6 h-full">
         <div className="flex flex-col h-full">
@@ -86,16 +44,18 @@ function BlogCard({
 
           {/* Title */}
           <h2
-            className={`font-semibold tracking-tight mb-3 group-hover:text-primary transition-colors ${featured ? "text-2xl md:text-3xl" : "text-lg"
-              }`}
+            className={`font-semibold tracking-tight mb-3 group-hover:text-primary transition-colors ${
+              featured ? "text-2xl md:text-3xl" : "text-lg"
+            }`}
           >
             {post.title}
           </h2>
 
           {/* Excerpt */}
           <p
-            className={`text-muted-foreground leading-relaxed mb-6 flex-1 ${featured ? "text-base" : "text-sm"
-              }`}
+            className={`text-muted-foreground leading-relaxed mb-6 flex-1 ${
+              featured ? "text-base" : "text-sm"
+            }`}
           >
             {post.excerpt}
           </p>
@@ -127,8 +87,9 @@ function BlogCard({
 }
 
 export default function BlogPage() {
-  const featuredPost = blogPosts.find((post) => post.featured);
-  const otherPosts = blogPosts.filter((post) => !post.featured);
+  const posts = getAllPosts();
+  const featuredPost = posts.find((post) => post.featured);
+  const otherPosts = posts.filter((post) => !post.featured);
 
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
@@ -145,7 +106,8 @@ export default function BlogPage() {
               Financial <span className="shimmer-text">Insights</span>
             </h1>
             <p className="text-lg text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
-              Tips, guides, and strategies to help you take control of your finances.
+              Tips, guides, and strategies to help you take control of your
+              finances.
             </p>
           </div>
         </div>
@@ -153,25 +115,30 @@ export default function BlogPage() {
 
       {/* Posts Grid */}
       <section className="relative z-10 mx-auto max-w-5xl px-6 py-12">
-        <div className="grid md:grid-cols-2 gap-6">
-          {featuredPost && (
-            <BlogCard post={featuredPost} featured className="delay-300" />
-          )}
-          {otherPosts.map((post, index) => (
-            <BlogCard
-              key={post.slug}
-              post={post}
-              className={index === 0 ? "delay-500" : index === 1 ? "delay-700" : "delay-1000"}
-            />
-          ))}
-        </div>
-
-        {/* Load more */}
-        <div className="mt-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-700 fill-mode-both">
-          <Button variant="outline" size="lg">
-            Load More Posts
-          </Button>
-        </div>
+        {posts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No posts yet. Check back soon!</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            {featuredPost && (
+              <BlogCard post={featuredPost} featured className="delay-300" />
+            )}
+            {otherPosts.map((post, index) => (
+              <BlogCard
+                key={post.slug}
+                post={post}
+                className={
+                  index === 0
+                    ? "delay-500"
+                    : index === 1
+                      ? "delay-700"
+                      : "delay-1000"
+                }
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Newsletter CTA */}
@@ -182,7 +149,8 @@ export default function BlogPage() {
               Stay Updated
             </h2>
             <p className="text-muted-foreground mb-6">
-              Get the latest financial tips and Finora updates delivered to your inbox.
+              Get the latest financial tips and Finora updates delivered to your
+              inbox.
             </p>
             <div className="flex gap-3 max-w-md mx-auto">
               <input
