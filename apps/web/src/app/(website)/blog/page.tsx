@@ -60,9 +60,8 @@ function BlogCard({
 }) {
   return (
     <article
-      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
-        featured ? "md:col-span-2 md:row-span-2" : ""
-      } ${className}`}
+      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${featured ? "md:col-span-2 md:row-span-2" : ""
+        } ${className}`}
     >
       <Link href={`/blog/${post.slug}` as Route} className="block p-6 h-full">
         <div className="flex flex-col h-full">
@@ -75,18 +74,16 @@ function BlogCard({
 
           {/* Title */}
           <h2
-            className={`font-semibold tracking-tight mb-3 group-hover:text-primary transition-colors ${
-              featured ? "text-2xl md:text-3xl" : "text-lg"
-            }`}
+            className={`font-semibold tracking-tight mb-3 group-hover:text-primary transition-colors ${featured ? "text-2xl md:text-3xl" : "text-lg"
+              }`}
           >
             {post.title}
           </h2>
 
           {/* Excerpt */}
           <p
-            className={`text-muted-foreground leading-relaxed mb-6 flex-1 ${
-              featured ? "text-base" : "text-sm"
-            }`}
+            className={`text-muted-foreground leading-relaxed mb-6 flex-1 ${featured ? "text-base" : "text-sm"
+              }`}
           >
             {post.excerpt}
           </p>
