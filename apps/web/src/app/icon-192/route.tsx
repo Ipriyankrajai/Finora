@@ -7,39 +7,63 @@ export async function GET() {
     (
       <div
         style={{
-          fontSize: 110,
-          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: 32,
-          position: "relative",
+          background: "#fafafa",
+          padding: 16,
         }}
       >
-        {/* Offset shadow box */}
         <div
           style={{
-            position: "absolute",
-            top: 12,
-            left: 12,
-            right: -12,
-            bottom: -12,
-            border: "4px solid rgba(255,255,255,0.25)",
-            borderRadius: 28,
-          }}
-        />
-        {/* Letter */}
-        <span
-          style={{
-            color: "white",
-            fontWeight: 700,
-            letterSpacing: "-0.05em",
+            position: "relative",
+            width: 150,
+            height: 150,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          F
-        </span>
+          {/* Offset shadow box */}
+          <div
+            style={{
+              position: "absolute",
+              top: 14,
+              left: 14,
+              width: 136,
+              height: 136,
+              border: "4px solid rgba(16, 185, 129, 0.5)",
+            }}
+          />
+          {/* Main box */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: 136,
+              height: 136,
+              border: "4px solid #262626",
+              background: "#fafafa",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 80,
+                fontWeight: 700,
+                color: "#171717",
+                letterSpacing: "-0.05em",
+              }}
+            >
+              F
+            </span>
+          </div>
+        </div>
       </div>
     ),
     {

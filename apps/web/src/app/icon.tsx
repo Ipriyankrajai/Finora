@@ -13,39 +13,63 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 18,
-          background: "#10b981",
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: 4,
-          position: "relative",
+          background: "#fafafa",
+          padding: 2,
         }}
       >
-        {/* Offset shadow box */}
         <div
           style={{
-            position: "absolute",
-            top: 3,
-            left: 3,
-            right: -3,
-            bottom: -3,
-            border: "2px solid rgba(255,255,255,0.3)",
-            borderRadius: 4,
-          }}
-        />
-        {/* Letter */}
-        <span
-          style={{
-            color: "white",
-            fontWeight: 700,
-            letterSpacing: "-0.05em",
+            position: "relative",
+            width: 26,
+            height: 26,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          F
-        </span>
+          {/* Offset shadow box */}
+          <div
+            style={{
+              position: "absolute",
+              top: 3,
+              left: 3,
+              width: 24,
+              height: 24,
+              border: "2px solid rgba(16, 185, 129, 0.5)",
+            }}
+          />
+          {/* Main box */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: 24,
+              height: 24,
+              border: "2px solid #262626",
+              background: "#fafafa",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#171717",
+                letterSpacing: "-0.05em",
+              }}
+            >
+              F
+            </span>
+          </div>
+        </div>
       </div>
     ),
     {
