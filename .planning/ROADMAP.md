@@ -12,7 +12,7 @@ Finora delivers personal finance tracking in two complementary domains: expense 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Prisma schema, calculation utilities, money-as-cents patterns
+- [x] **Phase 1: Foundation** - Prisma schema, calculation utilities, money-as-cents patterns
 - [ ] **Phase 2: API Layer** - tRPC routers for tags, transactions, loans, and dashboard
 - [ ] **Phase 3: Tags & Transactions UI** - Tag management and transaction CRUD with filtering
 - [ ] **Phase 4: Loans UI** - Loan management, payment tracking, balance calculations
@@ -33,8 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Prisma schema with finance models and migrations
-- [ ] 01-02-PLAN.md — Money and loan calculation utilities (TDD)
+- [x] 01-01-PLAN.md — Prisma schema with finance models and migrations
+- [x] 01-02-PLAN.md — Money and loan calculation utilities (TDD)
 
 ### Phase 2: API Layer
 **Goal**: Type-safe tRPC endpoints for all entities with proper authorization and validation
@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Planned | - |
+| 1. Foundation | 2/2 | ✓ Complete | 2026-01-29 |
 | 2. API Layer | 0/4 | Not started | - |
 | 3. Tags & Transactions UI | 0/3 | Not started | - |
 | 4. Loans UI | 0/3 | Not started | - |
