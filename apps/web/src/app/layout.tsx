@@ -37,7 +37,7 @@ export const metadata: Metadata = createMetadata({
   creator: "Finora",
   publisher: "Finora",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://finora.app"
+    process.env.NEXT_PUBLIC_APP_URL || "https://finora.priyankrajai.com"
   ),
   openGraph: {
     type: "website",
