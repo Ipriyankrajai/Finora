@@ -1,4 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../.. && if [ \"$VERCEL_ENV\" = \"production\" ]; then bunx prisma migrate deploy --schema=packages/db/prisma/schema.prisma; fi && turbo build --filter=web"
+  "buildCommand": "cd ../.. && if [ \"$VERCEL_ENV\" = \"production\" ]; then bunx prisma migrate deploy --schema=packages/db/prisma/schema/schema.prisma; fi && turbo build --filter=web"
 }
