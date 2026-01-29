@@ -9,6 +9,7 @@ import z from "zod";
 
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 
+import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,11 +44,8 @@ function AnimatedLine({ delay }: { delay: number }) {
   }, [delay]);
 
   return (
-    <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent overflow-hidden">
-      <div
-        className="h-full bg-gradient-to-r from-emerald-500/50 via-cyan-500/50 to-emerald-500/50 transition-all duration-1000 ease-out"
-        style={{ width: `${width}%` }}
-      />
+    <div className="h-px bg-linear-to-r from-transparent via-white/20 to-transparent overflow-hidden">
+      <div className="h-full bg-linear-to-r from-emerald-500/50 via-cyan-500/50 to-emerald-500/50 transition-all duration-1000 ease-out" style={{ width: `${width}%` }} />
     </div>
   );
 }
@@ -235,23 +233,7 @@ export default function SignInPage() {
           <div
             className={`transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="relative size-10 flex items-center justify-center">
-                {/* Shadow/offset layer */}
-                <div className="absolute inset-0 border border-emerald-500/30 translate-x-1 translate-y-1 group-hover:translate-x-1.5 group-hover:translate-y-1.5 transition-transform" />
-                {/* Main box */}
-                <div className="absolute inset-0 border border-white/40 bg-[#0a0a0b] group-hover:border-white/60 transition-colors" />
-                <span className="relative text-base font-bold tracking-tighter text-white">F</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold tracking-tight text-white leading-none">
-                  Finora
-                </span>
-                <span className="text-[9px] text-white/40 tracking-widest uppercase mt-0.5">
-                  finance clarity
-                </span>
-              </div>
-            </Link>
+            <Logo dark />
           </div>
 
           {/* Center - Main headline */}
@@ -314,23 +296,7 @@ export default function SignInPage() {
           <div
             className={`lg:hidden mb-12 transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="relative size-10 flex items-center justify-center">
-                {/* Shadow/offset layer */}
-                <div className="absolute inset-0 border border-emerald-500/30 translate-x-1 translate-y-1" />
-                {/* Main box */}
-                <div className="absolute inset-0 border border-white/40 bg-[#0a0a0b]" />
-                <span className="relative text-base font-bold tracking-tighter text-white">F</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold tracking-tight text-white leading-none">
-                  Finora
-                </span>
-                <span className="text-[9px] text-white/40 tracking-widest uppercase mt-0.5">
-                  finance clarity
-                </span>
-              </div>
-            </Link>
+            <Logo dark />
           </div>
 
           {/* Form header */}

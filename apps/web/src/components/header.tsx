@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { ArrowRight, Menu, X } from "lucide-react";
 
+import { Logo } from "./logo";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
 import { authClient } from "@/lib/auth-client";
@@ -16,36 +17,6 @@ const navLinks = [
   { href: "#pricing", label: "Pricing" },
   { href: "#about", label: "About" },
 ] as const;
-
-function Logo() {
-  return (
-    <Link href="/" className="flex items-center gap-3 group">
-      {/* Animated logo mark */}
-      <div className="relative size-8 flex items-center justify-center">
-        {/* Outer ring */}
-        <div className="absolute inset-0 border border-foreground/20 group-hover:border-foreground/40 transition-colors duration-500" />
-
-        {/* Inner animated element */}
-        <div className="absolute inset-1.5 border border-foreground/10 group-hover:border-foreground/30 group-hover:inset-1 transition-all duration-500" />
-
-        {/* Center letter */}
-        <span className="relative text-sm font-bold tracking-tighter group-hover:scale-110 transition-transform duration-300">
-          F
-        </span>
-      </div>
-
-      {/* Wordmark */}
-      <div className="flex flex-col">
-        <span className="text-base font-semibold tracking-tight leading-none">
-          finora
-        </span>
-        <span className="text-[10px] text-muted-foreground tracking-widest uppercase mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          finance clarity
-        </span>
-      </div>
-    </Link>
-  );
-}
 
 function NavLink({ href, label }: { href: string; label: string }) {
   return (
@@ -194,7 +165,7 @@ export default function Header() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Logo />
+            <Logo size="sm" />
 
             {/* Desktop Navigation - only show on landing page */}
             {isLandingPage && (
