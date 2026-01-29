@@ -261,20 +261,17 @@ export default function SignUpPage() {
           >
             <Link href="/" className="inline-flex items-center gap-3 group">
               <div className="relative size-10 flex items-center justify-center">
-                {/* Outer ring */}
-                <div className="absolute inset-0 border border-white/20 group-hover:border-white/40 transition-colors duration-500" />
-                {/* Inner animated element */}
-                <div className="absolute inset-1.5 border border-white/10 group-hover:border-white/30 group-hover:inset-1 transition-all duration-500" />
-                {/* Center letter */}
-                <span className="relative text-sm font-bold tracking-tighter text-white group-hover:scale-110 transition-transform duration-300">
-                  F
-                </span>
+                {/* Shadow/offset layer */}
+                <div className="absolute inset-0 border border-emerald-500/30 translate-x-1 translate-y-1 group-hover:translate-x-1.5 group-hover:translate-y-1.5 transition-transform" />
+                {/* Main box */}
+                <div className="absolute inset-0 border border-white/40 bg-[#0a0a0b] group-hover:border-white/60 transition-colors" />
+                <span className="relative text-base font-bold tracking-tighter text-white">F</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-semibold tracking-tight text-white leading-none">
-                  finora
+                  Finora
                 </span>
-                <span className="text-[9px] text-white/40 tracking-widest uppercase mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="text-[9px] text-white/40 tracking-widest uppercase mt-0.5">
                   finance clarity
                 </span>
               </div>
@@ -370,15 +367,20 @@ export default function SignUpPage() {
           >
             <Link href="/" className="inline-flex items-center gap-3 group">
               <div className="relative size-10 flex items-center justify-center">
-                <div className="absolute inset-0 border border-white/20" />
-                <div className="absolute inset-1.5 border border-white/10" />
-                <span className="relative text-sm font-bold tracking-tighter text-white">
-                  F
+                {/* Shadow/offset layer */}
+                <div className="absolute inset-0 border border-emerald-500/30 translate-x-1 translate-y-1" />
+                {/* Main box */}
+                <div className="absolute inset-0 border border-white/40 bg-[#0a0a0b]" />
+                <span className="relative text-base font-bold tracking-tighter text-white">F</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-semibold tracking-tight text-white leading-none">
+                  Finora
+                </span>
+                <span className="text-[9px] text-white/40 tracking-widest uppercase mt-0.5">
+                  finance clarity
                 </span>
               </div>
-              <span className="text-lg font-semibold tracking-tight text-white">
-                finora
-              </span>
             </Link>
           </div>
 
