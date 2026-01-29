@@ -19,6 +19,7 @@
   },
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate --schema=packages/db/prisma/schema",
     "dev": "turbo dev",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@finora2/config": "workspace:*",
     "@types/node": "^22.13.14",
+    "prisma": "^7.2.0",
     "turbo": "^2.6.3",
     "typescript": "catalog:"
   },
