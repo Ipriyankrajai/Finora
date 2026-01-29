@@ -1,14 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { ArrowRight, Heart, Lock, Sparkles, Target } from "lucide-react";
 
+import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "About - Finora",
-  description: "Learn about Finora's mission to help you achieve financial clarity and peace of mind.",
-};
 
 const values = [
   {
@@ -44,21 +42,42 @@ const stats = [
 ];
 
 export default function AboutPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="min-h-[calc(100svh-4rem)]">
+    <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
+      <PageBackground variant="top-heavy" />
+
       {/* Hero */}
-      <section className="border-b border-border/50">
+      <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24">
           <div className="max-w-2xl">
-            <span className="inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6">
+            <span
+              className={`inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+              }`}
+            >
               About Us
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-              Financial clarity for everyone
+            <h1
+              className={`text-4xl md:text-5xl font-bold tracking-tight mb-6 transition-all duration-700 delay-100 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
+              Financial clarity for{" "}
+              <span className="shimmer-text">everyone</span>
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p
+              className={`text-lg text-muted-foreground leading-relaxed transition-all duration-700 delay-200 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               Finora was built with a simple belief: understanding your money should be
-              easy, private, and free. We're on a mission to help millions achieve
+              easy, private, and free. We&apos;re on a mission to help millions achieve
               financial peace of mind.
             </p>
           </div>
@@ -66,11 +85,17 @@ export default function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="border-b border-border/50">
+      <section className="relative z-10 border-b border-border/50 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-6">
           <div className="grid grid-cols-3 divide-x divide-border/50">
-            {stats.map((stat) => (
-              <div key={stat.label} className="py-12 text-center">
+            {stats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className={`py-12 text-center transition-all duration-700 ${
+                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+                style={{ transitionDelay: `${300 + index * 100}ms` }}
+              >
                 <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
                   {stat.value}
                 </div>
@@ -84,10 +109,14 @@ export default function AboutPage() {
       </section>
 
       {/* Story */}
-      <section className="py-16 md:py-24">
+      <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <div
+              className={`transition-all duration-700 delay-400 ${
+                mounted ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+              }`}
+            >
               <h2 className="text-3xl font-bold tracking-tight mb-6">Our Story</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
@@ -106,11 +135,15 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="relative">
-              <div className="aspect-square bg-linear-to-br from-emerald-500/10 to-cyan-500/10 rounded-lg border border-border/50 flex items-center justify-center">
+            <div
+              className={`relative transition-all duration-700 delay-500 ${
+                mounted ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+              }`}
+            >
+              <div className="aspect-square bg-linear-to-br from-emerald-500/10 to-cyan-500/10 border border-border/50 flex items-center justify-center backdrop-blur-sm">
                 <div className="text-center p-8">
-                  <div className="text-6xl font-bold text-primary mb-2">F</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-7xl font-bold shimmer-text mb-4">F</div>
+                  <div className="text-sm text-muted-foreground uppercase tracking-wider">
                     Built for clarity
                   </div>
                 </div>
@@ -121,9 +154,13 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-16 md:py-24 bg-card/30 border-y border-border/50">
+      <section className="relative z-10 py-16 md:py-24 bg-card/30 border-y border-border/50 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center mb-12">
+          <div
+            className={`text-center mb-12 transition-all duration-700 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
             <h2 className="text-3xl font-bold tracking-tight mb-4">Our Values</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
               These principles guide everything we do at Finora.
@@ -131,12 +168,15 @@ export default function AboutPage() {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6">
-            {values.map((value) => (
+            {values.map((value, index) => (
               <div
                 key={value.title}
-                className="p-6 border border-border/50 bg-background/50"
+                className={`group p-6 border border-border/50 bg-background/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
+                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
+                style={{ transitionDelay: `${600 + index * 100}ms` }}
               >
-                <div className="inline-flex p-3 border border-border/50 mb-4">
+                <div className="inline-flex p-3 border border-border/50 mb-4 group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
                   <value.icon className="size-5 text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{value.title}</h3>
@@ -150,9 +190,13 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 md:py-24">
+      <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center">
+          <div
+            className={`text-center transition-all duration-700 ${
+              mounted ? "opacity-100" : "opacity-0"
+            }`}
+          >
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Ready to get started?
             </h2>
@@ -177,6 +221,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </div>
   );
 }

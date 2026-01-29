@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
+"use client";
+
 import type { Route } from "next";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 
+import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "Pricing - Finora",
-  description: "Simple, transparent pricing. Finora is free forever with optional premium features.",
-};
 
 const plans = [
   {
@@ -99,35 +97,60 @@ const faqs = [
 ];
 
 export default function PricingPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="min-h-[calc(100svh-4rem)]">
+    <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
+      <PageBackground variant="centered" />
+
       {/* Header */}
-      <section className="border-b border-border/50">
+      <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
-          <span className="inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6">
+          <span
+            className={`inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+            }`}
+          >
             Pricing
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1
+            className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 transition-all duration-700 delay-100 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
             Simple, transparent pricing
           </h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+          <p
+            className={`text-lg text-muted-foreground max-w-xl mx-auto transition-all duration-700 delay-200 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
             Start free, upgrade when you need more. No hidden fees, no surprises.
           </p>
         </div>
       </section>
 
       {/* Plans */}
-      <section className="py-16 md:py-24">
+      <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="grid md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <div
                 key={plan.name}
-                className={`relative flex flex-col p-6 border ${
+                className={`relative flex flex-col p-6 border backdrop-blur-sm transition-all duration-700 ${
                   plan.highlighted
                     ? "border-primary/50 bg-primary/[0.02]"
                     : "border-border/50 bg-card/50"
+                } ${
+                  mounted
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-8"
                 }`}
+                style={{ transitionDelay: `${300 + index * 100}ms` }}
               >
                 {plan.badge && (
                   <div className="absolute -top-3 left-6">
@@ -190,9 +213,13 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 md:py-24 bg-card/30 border-y border-border/50">
+      <section className="relative z-10 py-16 md:py-24 bg-card/30 border-y border-border/50 backdrop-blur-sm">
         <div className="mx-auto max-w-3xl px-6">
-          <div className="text-center mb-12">
+          <div
+            className={`text-center mb-12 transition-all duration-700 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Frequently Asked Questions
             </h2>
@@ -202,10 +229,15 @@ export default function PricingPage() {
           </div>
 
           <div className="space-y-6">
-            {faqs.map((faq) => (
+            {faqs.map((faq, index) => (
               <div
                 key={faq.question}
-                className="p-6 border border-border/50 bg-background/50"
+                className={`p-6 border border-border/50 bg-background/50 backdrop-blur-sm transition-all duration-700 ${
+                  mounted
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                }`}
+                style={{ transitionDelay: `${700 + index * 100}ms` }}
               >
                 <h3 className="font-semibold mb-2">{faq.question}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -218,18 +250,28 @@ export default function PricingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 md:py-24">
+      <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6 text-center">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">
+          <h2
+            className={`text-3xl font-bold tracking-tight mb-4 transition-all duration-700 ${
+              mounted ? "opacity-100" : "opacity-0"
+            }`}
+          >
             Ready to take control?
           </h2>
-          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+          <p
+            className={`text-muted-foreground mb-8 max-w-md mx-auto transition-all duration-700 delay-100 ${
+              mounted ? "opacity-100" : "opacity-0"
+            }`}
+          >
             Start tracking your finances today. It&apos;s free, forever.
           </p>
           <Button
             asChild
             size="lg"
-            className="group bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white"
+            className={`group bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white transition-all duration-700 delay-200 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
           >
             <Link href="/sign-up">
               Get Started Free
@@ -238,6 +280,9 @@ export default function PricingPage() {
           </Button>
         </div>
       </section>
+
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </div>
   );
 }

@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
+"use client";
+
 import type { Route } from "next";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 
+import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "Blog - Finora",
-  description: "Financial tips, guides, and insights to help you manage your money better.",
-};
 
 const blogPosts = [
   {
@@ -57,15 +55,20 @@ const blogPosts = [
 function BlogCard({
   post,
   featured = false,
+  delay = 0,
+  mounted = false,
 }: {
   post: (typeof blogPosts)[0];
   featured?: boolean;
+  delay?: number;
+  mounted?: boolean;
 }) {
   return (
     <article
-      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-card ${
+      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
         featured ? "md:col-span-2 md:row-span-2" : ""
-      }`}
+      } ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      style={{ transitionDelay: `${delay}ms` }}
     >
       <Link href={`/blog/${post.slug}` as Route} className="block p-6 h-full">
         <div className="flex flex-col h-full">
@@ -121,22 +124,41 @@ function BlogCard({
 }
 
 export default function BlogPage() {
+  const [mounted, setMounted] = useState(false);
   const featuredPost = blogPosts.find((post) => post.featured);
   const otherPosts = blogPosts.filter((post) => !post.featured);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="min-h-[calc(100svh-4rem)]">
+    <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
+      <PageBackground variant="centered" />
+
       {/* Header */}
-      <section className="border-b border-border/50">
+      <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24">
           <div className="max-w-2xl">
-            <span className="inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6">
+            <span
+              className={`inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+              }`}
+            >
               Blog
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              Financial Insights
+            <h1
+              className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 transition-all duration-700 delay-100 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
+              Financial <span className="shimmer-text">Insights</span>
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p
+              className={`text-lg text-muted-foreground transition-all duration-700 delay-200 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               Tips, guides, and strategies to help you take control of your finances.
             </p>
           </div>
@@ -144,16 +166,28 @@ export default function BlogPage() {
       </section>
 
       {/* Posts Grid */}
-      <section className="mx-auto max-w-5xl px-6 py-12">
+      <section className="relative z-10 mx-auto max-w-5xl px-6 py-12">
         <div className="grid md:grid-cols-2 gap-6">
-          {featuredPost && <BlogCard post={featuredPost} featured />}
-          {otherPosts.map((post) => (
-            <BlogCard key={post.slug} post={post} />
+          {featuredPost && (
+            <BlogCard post={featuredPost} featured mounted={mounted} delay={300} />
+          )}
+          {otherPosts.map((post, index) => (
+            <BlogCard
+              key={post.slug}
+              post={post}
+              mounted={mounted}
+              delay={400 + index * 100}
+            />
           ))}
         </div>
 
         {/* Load more */}
-        <div className="mt-12 text-center">
+        <div
+          className={`mt-12 text-center transition-all duration-700 ${
+            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+          style={{ transitionDelay: "700ms" }}
+        >
           <Button variant="outline" size="lg">
             Load More Posts
           </Button>
@@ -161,9 +195,13 @@ export default function BlogPage() {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="border-t border-border/50 bg-card/30">
+      <section className="relative z-10 border-t border-border/50 bg-card/30 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <div className="text-center max-w-xl mx-auto">
+          <div
+            className={`text-center max-w-xl mx-auto transition-all duration-700 ${
+              mounted ? "opacity-100" : "opacity-0"
+            }`}
+          >
             <h2 className="text-2xl font-semibold tracking-tight mb-4">
               Stay Updated
             </h2>
@@ -174,7 +212,7 @@ export default function BlogPage() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 h-11 px-4 bg-background border border-border rounded-md text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="flex-1 h-11 px-4 bg-background/50 border border-border rounded-md text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 backdrop-blur-sm"
               />
               <Button className="bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white">
                 Subscribe
@@ -183,6 +221,9 @@ export default function BlogPage() {
           </div>
         </div>
       </section>
+
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </div>
   );
 }

@@ -265,7 +265,7 @@ export default function HomePage() {
         </div>
 
         {/* Features grid */}
-        <div id="features" className="grid md:grid-cols-3 gap-px bg-border/30 mb-20">
+        <div id="features" className="grid md:grid-cols-3 gap-px bg-border/30 mb-8">
           <FeatureCard
             icon={Wallet}
             title="Expense Tracking"
@@ -284,6 +284,21 @@ export default function HomePage() {
             description="Track loans, simulate extra payments, and see your debt-free date move closer."
             delay={1100}
           />
+        </div>
+
+        {/* See all features link */}
+        <div
+          className={`text-center mb-20 transition-all duration-700 delay-700 ${
+            mounted ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <Link
+            href="/features"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+          >
+            See all features
+            <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
 
         {/* Bottom CTA */}
