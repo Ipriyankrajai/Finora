@@ -128,12 +128,12 @@ function MobileMenu({
           ) : (
             <>
               <Button asChild variant="outline" size="lg">
-                <Link href="/login" onClick={onClose}>
+                <Link href="/sign-in" onClick={onClose}>
                   Sign In
                 </Link>
               </Button>
               <Button asChild size="lg">
-                <Link href="/login" onClick={onClose}>
+                <Link href="/sign-up" onClick={onClose}>
                   Get Started
                   <ArrowRight className="size-4 ml-2" />
                 </Link>
@@ -219,10 +219,10 @@ export default function Header() {
               ) : (
                 <>
                   <Button asChild variant="ghost" size="sm">
-                    <Link href="/login">Sign In</Link>
+                    <Link href="/sign-in">Sign In</Link>
                   </Button>
                   <Button asChild size="sm" className="group">
-                    <Link href="/login">
+                    <Link href="/sign-up">
                       Get Started
                       <ArrowRight className="size-3.5 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
                     </Link>

@@ -225,13 +225,13 @@ export default function Home() {
             ) : (
               <>
                 <Button asChild size="lg" className="min-w-[200px] group">
-                  <Link href="/login">
+                  <Link href="/sign-up">
                     Get Started
                     <ArrowRight className="size-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <Link href="/login">Sign In</Link>
+                  <Link href="/sign-in">Sign In</Link>
                 </Button>
               </>
             )}
@@ -308,7 +308,7 @@ export default function Home() {
               </Button>
             ) : (
               <Button asChild variant="outline">
-                <Link href="/login">Create Free Account</Link>
+                <Link href="/sign-up">Create Free Account</Link>
               </Button>
             )}
           </div>
