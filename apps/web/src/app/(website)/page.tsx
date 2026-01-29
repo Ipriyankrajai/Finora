@@ -144,47 +144,6 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
-      {/* Global styles for animations */}
-      <style jsx global>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -30px) scale(1.05);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.95);
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
-        }
-
-        .shimmer-text {
-          background: linear-gradient(
-            90deg,
-            #10b981 0%,
-            #06b6d4 25%,
-            #10b981 50%,
-            #06b6d4 75%,
-            #10b981 100%
-          );
-          background-size: 200% 100%;
-          animation: shimmer 3s linear infinite;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      `}</style>
-
       {/* Background elements */}
       <GridPattern />
 
