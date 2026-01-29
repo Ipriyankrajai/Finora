@@ -193,7 +193,7 @@ export default function SignInPage() {
       `}</style>
 
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[#0a0a0b] via-[#0f1419] to-[#0a0a0b] overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-[#0a0a0b] via-[#0f1419] to-[#0a0a0b] overflow-hidden">
         {/* Animated orbs */}
         <FloatingOrb
           className="w-96 h-96 bg-emerald-500 -top-20 -left-20"
@@ -289,7 +289,7 @@ export default function SignInPage() {
       {/* Right Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative">
         {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-emerald-950/10 via-transparent to-transparent" />
 
         <div className="w-full max-w-md relative z-10">
           {/* Mobile logo */}
@@ -404,7 +404,7 @@ export default function SignInPage() {
                 <Button
                   type="submit"
                   disabled={!state.canSubmit || state.isSubmitting}
-                  className="w-full h-12 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium transition-all duration-300 group relative overflow-hidden"
+                  className="w-full h-12 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium transition-all duration-300 group relative overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {state.isSubmitting ? (
@@ -419,7 +419,7 @@ export default function SignInPage() {
                       </>
                     )}
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-linear-to-r from-emerald-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
               )}
             </form.Subscribe>
