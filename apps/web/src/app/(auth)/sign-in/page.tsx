@@ -139,62 +139,6 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex bg-background overflow-hidden">
-      {/* Global styles for animations */}
-      <style jsx global>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -30px) scale(1.05);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.95);
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
-        }
-
-        @keyframes fadeSlideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-slide-up {
-          animation: fadeSlideUp 0.6s ease-out forwards;
-        }
-
-        .shimmer-text {
-          background: linear-gradient(
-            90deg,
-            #10b981 0%,
-            #06b6d4 25%,
-            #10b981 50%,
-            #06b6d4 75%,
-            #10b981 100%
-          );
-          background-size: 200% 100%;
-          animation: shimmer 3s linear infinite;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      `}</style>
-
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-background via-card to-background overflow-hidden">
         {/* Animated orbs */}
