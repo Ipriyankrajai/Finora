@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
 import type { Route } from "next";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 
 import { getAllPosts, type BlogPostMeta } from "@/lib/blog";
+import { createMetadata } from "@/lib/metadata";
 import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
 
-export const metadata: Metadata = {
+export const metadata = createMetadata({
   title: "Blog",
   description:
     "Financial tips, guides, and insights from Finora. Learn how to manage your money better with our expert articles on budgeting, saving, and investing.",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     description:
       "Financial tips, guides, and insights to help you manage your money better.",
   },
-};
+});
 
 function BlogCard({
   post,

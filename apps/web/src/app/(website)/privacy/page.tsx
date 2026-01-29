@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArrowLeft, Shield } from "lucide-react";
 
-export const metadata: Metadata = {
+import { createMetadata } from "@/lib/metadata";
+
+export const metadata = createMetadata({
   title: "Privacy Policy",
   description:
     "Read Finora's Privacy Policy. Learn how we collect, use, and protect your personal and financial data with bank-level security.",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy - Finora",
     description: "How Finora protects your personal and financial data.",
   },
-};
+});
 
 import { Button } from "@/components/ui/button";
 

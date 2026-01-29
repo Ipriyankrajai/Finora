@@ -6,6 +6,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 
 import { getAllPosts, getAllSlugs, getPostBySlug } from "@/lib/blog";
+import { createMetadata } from "@/lib/metadata";
 import type { Route } from "next";
 import { PageBackground } from "@/components/page-background";
 import { useMDXComponents } from "../../../../../mdx-components";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  return {
+  return createMetadata({
     title: post.title,
     description: post.excerpt,
     openGraph: {
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.publishedAt,
       authors: [post.author],
     },
-  };
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {
