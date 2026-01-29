@@ -9,6 +9,11 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  // Finance relations
+  tags         Tag[]
+  transactions Transaction[]
+  loans        Loan[]
+
   @@unique([email])
   @@map("user")
 }
