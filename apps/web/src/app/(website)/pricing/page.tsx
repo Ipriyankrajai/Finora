@@ -1,8 +1,5 @@
-"use client";
-
 import type { Route } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 
@@ -97,12 +94,6 @@ const faqs = [
 ];
 
 export default function PricingPage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
       <PageBackground variant="centered" />
@@ -110,25 +101,13 @@ export default function PricingPage() {
       {/* Header */}
       <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
-          <span
-            className={`inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-            }`}
-          >
+          <span className="inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
             Pricing
           </span>
-          <h1
-            className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 transition-all duration-700 delay-100 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
             Simple, transparent pricing
           </h1>
-          <p
-            className={`text-lg text-muted-foreground max-w-xl mx-auto transition-all duration-700 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
             Start free, upgrade when you need more. No hidden fees, no surprises.
           </p>
         </div>
@@ -141,16 +120,11 @@ export default function PricingPage() {
             {plans.map((plan, index) => (
               <div
                 key={plan.name}
-                className={`relative flex flex-col p-6 border backdrop-blur-sm transition-all duration-700 ${
+                className={`relative flex flex-col p-6 border backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
                   plan.highlighted
                     ? "border-primary/50 bg-primary/[0.02]"
                     : "border-border/50 bg-card/50"
-                } ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
-                }`}
-                style={{ transitionDelay: `${300 + index * 100}ms` }}
+                } ${index === 0 ? "delay-300" : index === 1 ? "delay-500" : "delay-700"}`}
               >
                 {plan.badge && (
                   <div className="absolute -top-3 left-6">
@@ -215,11 +189,7 @@ export default function PricingPage() {
       {/* FAQ */}
       <section className="relative z-10 py-16 md:py-24 bg-card/30 border-y border-border/50 backdrop-blur-sm">
         <div className="mx-auto max-w-3xl px-6">
-          <div
-            className={`text-center mb-12 transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Frequently Asked Questions
             </h2>
@@ -232,12 +202,9 @@ export default function PricingPage() {
             {faqs.map((faq, index) => (
               <div
                 key={faq.question}
-                className={`p-6 border border-border/50 bg-background/50 backdrop-blur-sm transition-all duration-700 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                className={`p-6 border border-border/50 bg-background/50 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
+                  index === 0 ? "delay-100" : index === 1 ? "delay-200" : index === 2 ? "delay-300" : "delay-500"
                 }`}
-                style={{ transitionDelay: `${700 + index * 100}ms` }}
               >
                 <h3 className="font-semibold mb-2">{faq.question}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -252,26 +219,16 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6 text-center">
-          <h2
-            className={`text-3xl font-bold tracking-tight mb-4 transition-all duration-700 ${
-              mounted ? "opacity-100" : "opacity-0"
-            }`}
-          >
+          <h2 className="text-3xl font-bold tracking-tight mb-4 animate-in fade-in duration-500 fill-mode-both">
             Ready to take control?
           </h2>
-          <p
-            className={`text-muted-foreground mb-8 max-w-md mx-auto transition-all duration-700 delay-100 ${
-              mounted ? "opacity-100" : "opacity-0"
-            }`}
-          >
+          <p className="text-muted-foreground mb-8 max-w-md mx-auto animate-in fade-in duration-500 delay-100 fill-mode-both">
             Start tracking your finances today. It&apos;s free, forever.
           </p>
           <Button
             asChild
             size="lg"
-            className={`group bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white transition-all duration-700 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className="group bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both"
           >
             <Link href="/sign-up">
               Get Started Free

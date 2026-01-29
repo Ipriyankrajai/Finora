@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { ArrowLeft, Shield } from "lucide-react";
 
@@ -45,24 +42,15 @@ function GridPattern() {
 function Section({
   title,
   children,
-  delay,
+  className,
 }: {
   title: string;
   children: React.ReactNode;
-  delay: number;
+  className?: string;
 }) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
   return (
     <section
-      className={`mb-12 transition-all duration-700 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}
+      className={`mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${className}`}
     >
       <h2 className="text-lg font-semibold tracking-tight mb-4 text-foreground flex items-center gap-3">
         <span className="size-1.5 bg-primary" />
@@ -76,12 +64,6 @@ function Section({
 }
 
 export default function PrivacyPage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
       {/* Background elements */}
@@ -100,11 +82,7 @@ export default function PrivacyPage() {
       {/* Main content */}
       <div className="relative z-10 mx-auto max-w-3xl px-6 py-16 md:py-24">
         {/* Back link */}
-        <div
-          className={`mb-12 transition-all duration-700 ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-          }`}
-        >
+        <div className="mb-12 animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
           <Button asChild variant="ghost" size="sm" className="group -ml-4">
             <Link href="/">
               <ArrowLeft className="size-4 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -115,11 +93,7 @@ export default function PrivacyPage() {
 
         {/* Header */}
         <div className="mb-16">
-          <div
-            className={`inline-flex items-center gap-3 mb-6 transition-all duration-700 delay-100 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <div className="inline-flex items-center gap-3 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
             <div className="p-3 border border-border/50 bg-card/50 backdrop-blur-sm">
               <Shield className="size-5 text-primary" />
             </div>
@@ -128,26 +102,18 @@ export default function PrivacyPage() {
             </span>
           </div>
 
-          <h1
-            className={`text-3xl md:text-4xl font-bold tracking-tight mb-4 transition-all duration-700 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
             Privacy Policy
           </h1>
 
-          <p
-            className={`text-muted-foreground transition-all duration-700 delay-300 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <p className="text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
             Last updated: January 2025
           </p>
         </div>
 
         {/* Content */}
         <div className="space-y-0">
-          <Section title="Introduction" delay={400}>
+          <Section title="Introduction" className="delay-300">
             <p>
               At Finora, we take your privacy seriously. This Privacy Policy
               explains how we collect, use, disclose, and safeguard your
@@ -161,7 +127,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="Information We Collect" delay={500}>
+          <Section title="Information We Collect" className="delay-500">
             <p>
               <strong className="text-foreground">
                 Account Information:
@@ -185,7 +151,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="How We Use Your Information" delay={600}>
+          <Section title="How We Use Your Information" className="delay-500">
             <p>We use the information we collect to:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Provide, maintain, and improve our services</li>
@@ -199,7 +165,7 @@ export default function PrivacyPage() {
             </ul>
           </Section>
 
-          <Section title="Data Security" delay={700}>
+          <Section title="Data Security" className="delay-500">
             <p>
               We implement appropriate technical and organizational security
               measures to protect your personal information. Your data is
@@ -213,7 +179,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="Data Retention" delay={800}>
+          <Section title="Data Retention" className="delay-500">
             <p>
               We retain your personal information for as long as your account is
               active or as needed to provide you services. You can request
@@ -222,7 +188,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="Third-Party Services" delay={900}>
+          <Section title="Third-Party Services" className="delay-500">
             <p>
               Finora does not sell, trade, or rent your personal information to
               third parties. We may share generic aggregated demographic
@@ -231,7 +197,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="Your Rights" delay={1000}>
+          <Section title="Your Rights" className="delay-500">
             <p>You have the right to:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Access the personal information we hold about you</li>
@@ -242,7 +208,7 @@ export default function PrivacyPage() {
             </ul>
           </Section>
 
-          <Section title="Changes to This Policy" delay={1100}>
+          <Section title="Changes to This Policy" className="delay-500">
             <p>
               We may update our Privacy Policy from time to time. We will notify
               you of any changes by posting the new Privacy Policy on this page
@@ -250,7 +216,7 @@ export default function PrivacyPage() {
             </p>
           </Section>
 
-          <Section title="Contact Us" delay={1200}>
+          <Section title="Contact Us" className="delay-500">
             <p>
               If you have any questions about this Privacy Policy, please
               contact us at{" "}
@@ -265,11 +231,7 @@ export default function PrivacyPage() {
         </div>
 
         {/* Footer navigation */}
-        <div
-          className={`mt-16 pt-8 border-t border-border/50 flex items-center justify-between transition-all duration-700 delay-[1300ms] ${
-            mounted ? "opacity-100" : "opacity-0"
-          }`}
-        >
+        <div className="mt-16 pt-8 border-t border-border/50 flex items-center justify-between animate-in fade-in duration-500 delay-700 fill-mode-both">
           <Button asChild variant="ghost" size="sm">
             <Link href="/">Back to Home</Link>
           </Button>

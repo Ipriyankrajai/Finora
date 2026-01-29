@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import {
   ArrowRight,
@@ -129,21 +126,16 @@ function FeatureCard({
   icon: Icon,
   title,
   description,
-  delay,
-  mounted,
+  className,
 }: {
   icon: React.ElementType;
   title: string;
   description: string;
-  delay: number;
-  mounted: boolean;
+  className?: string;
 }) {
   return (
     <div
-      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
-        mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${className}`}
     >
       <div className="absolute inset-0 bg-linear-to-br from-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -164,14 +156,11 @@ function FeatureCard({
 function CategorySection({
   category,
   index,
-  mounted,
 }: {
   category: (typeof featureCategories)[0];
   index: number;
-  mounted: boolean;
 }) {
   const Icon = category.icon;
-  const baseDelay = 400 + index * 200;
   const isEven = index % 2 === 0;
 
   return (
@@ -184,10 +173,7 @@ function CategorySection({
         >
           {/* Category header */}
           <div
-            className={`transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            } ${isEven ? "" : "md:order-2"}`}
-            style={{ transitionDelay: `${baseDelay}ms` }}
+            className={`animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${isEven ? "" : "md:order-2"}`}
           >
             <div className="sticky top-24">
               <div className="inline-flex p-4 border border-primary/20 bg-primary/5 mb-6">
@@ -210,8 +196,7 @@ function CategorySection({
                 icon={feature.icon}
                 title={feature.title}
                 description={feature.description}
-                delay={baseDelay + 100 + featureIndex * 100}
-                mounted={mounted}
+                className={featureIndex === 0 ? "delay-100" : featureIndex === 1 ? "delay-200" : "delay-300"}
               />
             ))}
           </div>
@@ -222,12 +207,6 @@ function CategorySection({
 }
 
 export default function FeaturesPage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
       <PageBackground variant="default" />
@@ -235,36 +214,20 @@ export default function FeaturesPage() {
       {/* Hero */}
       <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24 text-center">
-          <span
-            className={`inline-flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-            }`}
-          >
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
             Features
           </span>
-          <h1
-            className={`text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 transition-all duration-700 delay-100 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
             Everything you need for
             <br />
             <span className="shimmer-text">financial clarity</span>
           </h1>
-          <p
-            className={`max-w-2xl mx-auto text-lg text-muted-foreground leading-relaxed mb-10 transition-all duration-700 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <p className="max-w-2xl mx-auto text-lg text-muted-foreground leading-relaxed mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
             Powerful tools designed to be simple. Track expenses, visualize spending,
             manage loans, and finally understand where your money goes.
           </p>
-          <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-300 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
             <Button
               asChild
               size="lg"
@@ -288,18 +251,14 @@ export default function FeaturesPage() {
           key={category.title}
           className={index % 2 === 1 ? "bg-card/30 backdrop-blur-sm border-y border-border/50" : ""}
         >
-          <CategorySection category={category} index={index} mounted={mounted} />
+          <CategorySection category={category} index={index} />
         </div>
       ))}
 
       {/* Additional Features Grid */}
       <section className="relative z-10 py-16 md:py-24 bg-card/30 backdrop-blur-sm border-y border-border/50">
         <div className="mx-auto max-w-5xl px-6">
-          <div
-            className={`text-center mb-12 transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               And so much more
             </h2>
@@ -312,10 +271,9 @@ export default function FeaturesPage() {
             {additionalFeatures.map((feature, index) => (
               <div
                 key={feature.title}
-                className={`group p-6 border border-border/50 bg-background/50 backdrop-blur-sm text-center transition-all duration-700 hover:border-primary/30 ${
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                className={`group p-6 border border-border/50 bg-background/50 backdrop-blur-sm text-center transition-all duration-700 hover:border-primary/30 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
+                  index === 0 ? "delay-100" : index === 1 ? "delay-200" : index === 2 ? "delay-300" : "delay-500"
                 }`}
-                style={{ transitionDelay: `${1200 + index * 100}ms` }}
               >
                 <div className="inline-flex p-3 border border-border/50 mb-4 group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
                   <feature.icon className="size-5 text-primary" />
@@ -333,11 +291,7 @@ export default function FeaturesPage() {
       {/* CTA */}
       <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6 text-center">
-          <div
-            className={`inline-flex flex-col items-center p-12 border border-dashed border-primary/30 bg-primary/2 backdrop-blur-sm transition-all duration-700 ${
-              mounted ? "opacity-100" : "opacity-0"
-            }`}
-          >
+          <div className="inline-flex flex-col items-center p-12 border border-dashed border-primary/30 bg-primary/2 backdrop-blur-sm animate-in fade-in duration-500 fill-mode-both">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Ready to take control?
             </h2>

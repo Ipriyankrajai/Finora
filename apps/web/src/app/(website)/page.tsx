@@ -1,64 +1,10 @@
-"use client";
-
+import { auth } from "@finora2/auth";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { ArrowRight, PieChart, TrendingUp, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
-
-function AnimatedNumber({
-  value,
-  prefix = "",
-  suffix = "",
-  delay = 0,
-}: {
-  value: number;
-  prefix?: string;
-  suffix?: string;
-  delay?: number;
-}) {
-  const [displayValue, setDisplayValue] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const duration = 1500;
-    const steps = 60;
-    const stepDuration = duration / steps;
-    const increment = value / steps;
-    let current = 0;
-
-    const interval = setInterval(() => {
-      current += increment;
-      if (current >= value) {
-        setDisplayValue(value);
-        clearInterval(interval);
-      } else {
-        setDisplayValue(Math.floor(current));
-      }
-    }, stepDuration);
-
-    return () => clearInterval(interval);
-  }, [value, isVisible]);
-
-  return (
-    <span
-      className={`transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
-    >
-      {prefix}
-      {displayValue.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
 
 function FloatingOrb({
   className,
@@ -99,24 +45,16 @@ function FeatureCard({
   icon: Icon,
   title,
   description,
-  delay,
+  className,
 }: {
   icon: React.ElementType;
   title: string;
   description: string;
-  delay: number;
+  className?: string;
 }) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
   return (
     <div
-      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${className}`}
     >
       <div className="absolute inset-0 bg-linear-to-br from-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -134,13 +72,33 @@ function FeatureCard({
   );
 }
 
-export default function HomePage() {
-  const { data: session } = authClient.useSession();
-  const [mounted, setMounted] = useState(false);
+function StatItem({
+  value,
+  label,
+  className,
+}: {
+  value: string;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`bg-background p-6 text-center animate-in fade-in duration-500 fill-mode-both ${className}`}
+    >
+      <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
+        {value}
+      </div>
+      <div className="text-xs text-muted-foreground uppercase tracking-wider">
+        {label}
+      </div>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export default async function HomePage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
@@ -175,37 +133,25 @@ export default function HomePage() {
         {/* Hero section */}
         <div className="text-center mb-20">
           {/* Eyebrow */}
-          <div
-            className={`inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-primary/20 bg-primary/5 text-xs text-primary tracking-wide transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-              }`}
-          >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-primary/20 bg-primary/5 text-xs text-primary tracking-wide animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
             PERSONAL FINANCE CLARITY
           </div>
 
           {/* Main headline */}
-          <h1
-            className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-          >
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
             <span className="block">Know where your</span>
             <span className="block mt-2 shimmer-text">money goes</span>
           </h1>
 
           {/* Subheadline */}
-          <p
-            className={`max-w-xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10 transition-all duration-700 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-          >
+          <p className="max-w-xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
             Track expenses with tags, visualize spending patterns, and see
             exactly when your loans will be paid off.
           </p>
 
           {/* CTA */}
-          <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-          >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
             {session ? (
               <Button asChild size="lg" className="min-w-[200px] group">
                 <Link href="/dashboard">
@@ -234,34 +180,10 @@ export default function HomePage() {
         </div>
 
         {/* Stats section */}
-        <div
-          className={`grid grid-cols-3 gap-px bg-border/50 border border-border/50 mb-20 transition-all duration-700 delay-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
-        >
-          <div className="bg-background p-6 text-center">
-            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
-              <AnimatedNumber value={100} suffix="%" delay={600} />
-            </div>
-            <div className="text-xs text-muted-foreground uppercase tracking-wider">
-              Privacy First
-            </div>
-          </div>
-          <div className="bg-background p-6 text-center">
-            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
-              <AnimatedNumber prefix="$" value={0} delay={800} />
-            </div>
-            <div className="text-xs text-muted-foreground uppercase tracking-wider">
-              Monthly Cost
-            </div>
-          </div>
-          <div className="bg-background p-6 text-center">
-            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
-              <AnimatedNumber value={2} delay={1000} />
-            </div>
-            <div className="text-xs text-muted-foreground uppercase tracking-wider">
-              Min to Start
-            </div>
-          </div>
+        <div className="grid grid-cols-3 gap-px bg-border/50 border border-border/50 mb-20 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
+          <StatItem value="100%" label="Privacy First" className="delay-100" />
+          <StatItem value="$0" label="Monthly Cost" className="delay-200" />
+          <StatItem value="2" label="Min to Start" className="delay-300" />
         </div>
 
         {/* Features grid */}
@@ -270,28 +192,24 @@ export default function HomePage() {
             icon={Wallet}
             title="Expense Tracking"
             description="Log income and expenses with custom tags. See exactly where your money flows each month."
-            delay={700}
+            className="delay-500"
           />
           <FeatureCard
             icon={PieChart}
             title="Visual Insights"
             description="Beautiful charts show spending breakdowns by category and trends over time."
-            delay={900}
+            className="delay-700"
           />
           <FeatureCard
             icon={TrendingUp}
             title="Loan Management"
             description="Track loans, simulate extra payments, and see your debt-free date move closer."
-            delay={1100}
+            className="delay-1000"
           />
         </div>
 
         {/* See all features link */}
-        <div
-          className={`text-center mb-20 transition-all duration-700 delay-700 ${
-            mounted ? "opacity-100" : "opacity-0"
-          }`}
-        >
+        <div className="text-center mb-20 animate-in fade-in duration-500 delay-700 fill-mode-both">
           <Link
             href="/features"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
@@ -302,10 +220,7 @@ export default function HomePage() {
         </div>
 
         {/* Bottom CTA */}
-        <div
-          className={`text-center transition-all duration-700 delay-700 ${mounted ? "opacity-100" : "opacity-0"
-            }`}
-        >
+        <div className="text-center animate-in fade-in duration-500 delay-700 fill-mode-both">
           <div className="inline-flex flex-col items-center p-8 border border-dashed border-primary/30 bg-primary/2">
             <p className="text-sm text-muted-foreground mb-4">
               Ready to take control of your finances?

@@ -1,8 +1,5 @@
-"use client";
-
 import type { Route } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 
@@ -55,20 +52,17 @@ const blogPosts = [
 function BlogCard({
   post,
   featured = false,
-  delay = 0,
-  mounted = false,
+  className,
 }: {
   post: (typeof blogPosts)[0];
   featured?: boolean;
-  delay?: number;
-  mounted?: boolean;
+  className?: string;
 }) {
   return (
     <article
-      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
+      className={`group relative border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
         featured ? "md:col-span-2 md:row-span-2" : ""
-      } ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      } ${className}`}
     >
       <Link href={`/blog/${post.slug}` as Route} className="block p-6 h-full">
         <div className="flex flex-col h-full">
@@ -124,13 +118,8 @@ function BlogCard({
 }
 
 export default function BlogPage() {
-  const [mounted, setMounted] = useState(false);
   const featuredPost = blogPosts.find((post) => post.featured);
   const otherPosts = blogPosts.filter((post) => !post.featured);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
@@ -140,25 +129,13 @@ export default function BlogPage() {
       <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24">
           <div className="max-w-2xl">
-            <span
-              className={`inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-              }`}
-            >
+            <span className="inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
               Blog
             </span>
-            <h1
-              className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 transition-all duration-700 delay-100 ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            >
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
               Financial <span className="shimmer-text">Insights</span>
             </h1>
-            <p
-              className={`text-lg text-muted-foreground transition-all duration-700 delay-200 ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            >
+            <p className="text-lg text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
               Tips, guides, and strategies to help you take control of your finances.
             </p>
           </div>
@@ -169,25 +146,19 @@ export default function BlogPage() {
       <section className="relative z-10 mx-auto max-w-5xl px-6 py-12">
         <div className="grid md:grid-cols-2 gap-6">
           {featuredPost && (
-            <BlogCard post={featuredPost} featured mounted={mounted} delay={300} />
+            <BlogCard post={featuredPost} featured className="delay-300" />
           )}
           {otherPosts.map((post, index) => (
             <BlogCard
               key={post.slug}
               post={post}
-              mounted={mounted}
-              delay={400 + index * 100}
+              className={index === 0 ? "delay-500" : index === 1 ? "delay-700" : "delay-1000"}
             />
           ))}
         </div>
 
         {/* Load more */}
-        <div
-          className={`mt-12 text-center transition-all duration-700 ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-          style={{ transitionDelay: "700ms" }}
-        >
+        <div className="mt-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-700 fill-mode-both">
           <Button variant="outline" size="lg">
             Load More Posts
           </Button>
@@ -197,11 +168,7 @@ export default function BlogPage() {
       {/* Newsletter CTA */}
       <section className="relative z-10 border-t border-border/50 bg-card/30 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <div
-            className={`text-center max-w-xl mx-auto transition-all duration-700 ${
-              mounted ? "opacity-100" : "opacity-0"
-            }`}
-          >
+          <div className="text-center max-w-xl mx-auto animate-in fade-in duration-500 fill-mode-both">
             <h2 className="text-2xl font-semibold tracking-tight mb-4">
               Stay Updated
             </h2>

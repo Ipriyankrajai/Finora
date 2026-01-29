@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { ArrowRight, Heart, Lock, Sparkles, Target } from "lucide-react";
 
@@ -42,12 +39,6 @@ const stats = [
 ];
 
 export default function AboutPage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
       <PageBackground variant="top-heavy" />
@@ -56,26 +47,14 @@ export default function AboutPage() {
       <section className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-24">
           <div className="max-w-2xl">
-            <span
-              className={`inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 transition-all duration-700 ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-              }`}
-            >
+            <span className="inline-flex px-3 py-1.5 text-[10px] uppercase tracking-[0.3em] text-primary border border-primary/20 bg-primary/5 mb-6 animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
               About Us
             </span>
-            <h1
-              className={`text-4xl md:text-5xl font-bold tracking-tight mb-6 transition-all duration-700 delay-100 ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            >
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
               Financial clarity for{" "}
               <span className="shimmer-text">everyone</span>
             </h1>
-            <p
-              className={`text-lg text-muted-foreground leading-relaxed transition-all duration-700 delay-200 ${
-                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            >
+            <p className="text-lg text-muted-foreground leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
               Finora was built with a simple belief: understanding your money should be
               easy, private, and free. We&apos;re on a mission to help millions achieve
               financial peace of mind.
@@ -91,10 +70,9 @@ export default function AboutPage() {
             {stats.map((stat, index) => (
               <div
                 key={stat.label}
-                className={`py-12 text-center transition-all duration-700 ${
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                className={`py-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
+                  index === 0 ? "delay-300" : index === 1 ? "delay-500" : "delay-700"
                 }`}
-                style={{ transitionDelay: `${300 + index * 100}ms` }}
               >
                 <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
                   {stat.value}
@@ -112,11 +90,7 @@ export default function AboutPage() {
       <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div
-              className={`transition-all duration-700 delay-400 ${
-                mounted ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
-              }`}
-            >
+            <div className="animate-in fade-in slide-in-from-left-8 duration-700 delay-300 fill-mode-both">
               <h2 className="text-3xl font-bold tracking-tight mb-6">Our Story</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
@@ -135,11 +109,7 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            <div
-              className={`relative transition-all duration-700 delay-500 ${
-                mounted ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
-              }`}
-            >
+            <div className="relative animate-in fade-in slide-in-from-right-8 duration-700 delay-500 fill-mode-both">
               <div className="aspect-square bg-linear-to-br from-emerald-500/10 to-cyan-500/10 border border-border/50 flex items-center justify-center backdrop-blur-sm">
                 <div className="text-center p-8">
                   <div className="text-7xl font-bold shimmer-text mb-4">F</div>
@@ -156,11 +126,7 @@ export default function AboutPage() {
       {/* Values */}
       <section className="relative z-10 py-16 md:py-24 bg-card/30 border-y border-border/50 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-6">
-          <div
-            className={`text-center mb-12 transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
             <h2 className="text-3xl font-bold tracking-tight mb-4">Our Values</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
               These principles guide everything we do at Finora.
@@ -171,10 +137,9 @@ export default function AboutPage() {
             {values.map((value, index) => (
               <div
                 key={value.title}
-                className={`group p-6 border border-border/50 bg-background/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                className={`group p-6 border border-border/50 bg-background/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${
+                  index === 0 ? "delay-100" : index === 1 ? "delay-200" : index === 2 ? "delay-300" : "delay-500"
                 }`}
-                style={{ transitionDelay: `${600 + index * 100}ms` }}
               >
                 <div className="inline-flex p-3 border border-border/50 mb-4 group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
                   <value.icon className="size-5 text-primary" />
@@ -192,11 +157,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="relative z-10 py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
-          <div
-            className={`text-center transition-all duration-700 ${
-              mounted ? "opacity-100" : "opacity-0"
-            }`}
-          >
+          <div className="text-center animate-in fade-in duration-500 fill-mode-both">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
               Ready to get started?
             </h2>
