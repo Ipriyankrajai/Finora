@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Transactions - Finora",
+  title: "Transactions",
   description: "Track and manage your income and expenses.",
 };
 

@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import type { Route } from "next";
 import Link from "next/link";
 
 import { ArrowRight, Check, Sparkles } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Pricing",
+  description:
+    "Simple, transparent pricing for Finora. Start free with unlimited expense tracking, or upgrade to Pro for advanced analytics and premium features.",
+  openGraph: {
+    title: "Pricing - Finora",
+    description:
+      "Simple, transparent pricing. Start free with unlimited expense tracking.",
+  },
+};
 
 import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";

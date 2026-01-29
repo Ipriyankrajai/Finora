@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
+
 import { auth } from "@finora2/auth";
 import { headers } from "next/headers";
 
 import { ArrowDownRight, ArrowUpRight, DollarSign, TrendingUp } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Your financial overview at a glance.",
+};
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

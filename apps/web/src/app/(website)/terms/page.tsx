@@ -1,6 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArrowLeft, FileText } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "Read Finora's Terms of Service. Understand your rights and responsibilities when using our personal finance management platform.",
+  openGraph: {
+    title: "Terms of Service - Finora",
+    description: "Finora Terms of Service and user agreement.",
+  },
+};
 
 import { Button } from "@/components/ui/button";
 

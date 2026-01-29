@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import type { Route } from "next";
 import Link from "next/link";
 
 import { ArrowRight, Calendar, Clock } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Financial tips, guides, and insights from Finora. Learn how to manage your money better with our expert articles on budgeting, saving, and investing.",
+  openGraph: {
+    title: "Blog - Finora",
+    description:
+      "Financial tips, guides, and insights to help you manage your money better.",
+  },
+};
 
 import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";

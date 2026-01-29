@@ -1,8 +1,21 @@
+import type { Metadata } from "next";
+
 import { auth } from "@finora2/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
 
 import { ArrowRight, PieChart, TrendingUp, Wallet } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Finora - Finance Clarity | Personal Finance Management",
+  description:
+    "Take control of your finances with Finora. Track expenses, manage income, monitor loans, and gain insights into your financial habits through visual analytics.",
+  openGraph: {
+    title: "Finora - Finance Clarity",
+    description:
+      "Take control of your finances with Finora. Track expenses, manage income, and gain insights into your financial habits.",
+  },
+};
 
 import { Button } from "@/components/ui/button";
 

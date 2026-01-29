@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Analytics - Finora",
+  title: "Analytics",
   description: "Visualize your spending patterns and financial trends.",
 };
 

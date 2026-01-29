@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArrowRight, Heart, Lock, Sparkles, Target } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Learn about Finora's mission to bring financial clarity to everyone. We believe in privacy-first, simple, and powerful personal finance tools.",
+  openGraph: {
+    title: "About Finora",
+    description:
+      "Learn about Finora's mission to bring financial clarity to everyone.",
+  },
+};
 
 import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
