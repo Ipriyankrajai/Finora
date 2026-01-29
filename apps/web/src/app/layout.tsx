@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "../index.css";
 import Providers from "@/components/providers";
+import { createMetadata } from "@/lib/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createMetadata({
   title: {
     default: "Finora - Finance Clarity",
     template: "%s | Finora",
@@ -45,14 +46,6 @@ export const metadata: Metadata = {
     title: "Finora - Finance Clarity",
     description:
       "Take control of your finances with Finora. Track expenses, manage income, monitor loans, and gain insights into your financial habits.",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Finora - Finance Clarity",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -60,7 +53,6 @@ export const metadata: Metadata = {
     description:
       "Take control of your finances with Finora. Track expenses, manage income, monitor loans, and gain insights.",
     creator: "@finora",
-    images: ["/twitter-image"],
   },
   robots: {
     index: true,
@@ -74,7 +66,7 @@ export const metadata: Metadata = {
     },
   },
   manifest: "/manifest.json",
-};
+});
 
 export const viewport: Viewport = {
   themeColor: [

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
@@ -19,7 +18,9 @@ import {
   Zap,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+import { createMetadata } from "@/lib/metadata";
+
+export const metadata = createMetadata({
   title: "Features",
   description:
     "Discover Finora's powerful features: expense tracking, income management, loan monitoring, visual analytics, custom tags, recurring transactions, and more.",
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     description:
       "Powerful personal finance features: expense tracking, analytics, loan management, and more.",
   },
-};
+});
 
 import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
