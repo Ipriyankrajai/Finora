@@ -10,6 +10,8 @@
     }
   },
   "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -18,12 +20,14 @@
     "@finora2/env": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
+    "currency.js": "^2.0.4",
     "dotenv": "catalog:",
     "next": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@finora2/config": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^4.0.18"
   }
 }

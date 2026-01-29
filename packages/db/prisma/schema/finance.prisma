@@ -1,0 +1,104 @@
+// Finance domain models for Finora
+// All monetary values stored as BigInt cents for precision
+// All DateTime fields use @db.Timestamptz(3) for timezone preservation
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum InterestType {
+  SIMPLE
+  COMPOUND
+}
+
+model Transaction {
+  id           String          @id @default(cuid())
+  userId       String
+  type         TransactionType
+  amountCents  BigInt
+  date         DateTime        @db.Timestamptz(3)
+  description  String?
+  currencyCode String          @default("USD")
+  createdAt    DateTime        @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime        @updatedAt @db.Timestamptz(3)
+
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags              TransactionTag[]
+  linkedLoanPayment LoanPayment?
+
+  @@index([userId, date])
+  @@index([userId, type, date])
+  @@map("transaction")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  color     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions TransactionTag[]
+
+  @@unique([userId, name])
+  @@index([userId, isActive])
+  @@map("tag")
+}
+
+model TransactionTag {
+  transactionId String
+  tagId         String
+  assignedAt    DateTime @default(now()) @db.Timestamptz(3)
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  tag         Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([transactionId, tagId])
+  @@index([tagId])
+  @@map("transaction_tag")
+}
+
+model Loan {
+  id                 String       @id @default(cuid())
+  userId             String
+  name               String
+  interestType       InterestType @default(COMPOUND)
+  principalCents     BigInt
+  annualRatePercent  Float
+  termMonths         Int
+  monthlyPaymentCents BigInt
+  currencyCode       String       @default("USD")
+  startDate          DateTime     @db.Timestamptz(3)
+  createdAt          DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime     @updatedAt @db.Timestamptz(3)
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments LoanPayment[]
+
+  @@index([userId])
+  @@map("loan")
+}
+
+model LoanPayment {
+  id                  String   @id @default(cuid())
+  loanId              String
+  amountCents         BigInt
+  principalCents      BigInt
+  interestCents       BigInt
+  lateFeeCents        BigInt   @default(0)
+  isExtra             Boolean  @default(false)
+  paidAt              DateTime @db.Timestamptz(3)
+  linkedTransactionId String?  @unique
+  createdAt           DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime @updatedAt @db.Timestamptz(3)
+
+  loan              Loan         @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  linkedTransaction Transaction? @relation(fields: [linkedTransactionId], references: [id])
+
+  @@index([loanId, paidAt])
+  @@map("loan_payment")
+}
