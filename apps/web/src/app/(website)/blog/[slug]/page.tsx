@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Clock, User } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 import { getAllPosts, getAllSlugs, getPostBySlug } from "@/lib/blog";
 import type { Route } from "next";
@@ -114,7 +115,15 @@ export default async function BlogPostPage({ params }: Props) {
       <article className="relative z-10">
         <div className="mx-auto max-w-3xl px-6 py-12">
           <div className="prose prose-neutral dark:prose-invert max-w-none animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
-            <MDXRemote source={post.content} components={components} />
+            <MDXRemote
+              source={post.content}
+              components={components}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                },
+              }}
+            />
           </div>
         </div>
       </article>
