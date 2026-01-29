@@ -32,7 +32,7 @@ function FloatingOrb({
 }) {
   return (
     <div
-      className={`absolute rounded-full blur-[100px] opacity-30 ${className}`}
+      className={`absolute rounded-full blur-[100px] opacity-20 dark:opacity-30 ${className}`}
       style={{
         animation: `float 15s ease-in-out infinite`,
         animationDelay: delay,
@@ -63,12 +63,14 @@ function FeatureItem({
     <div
       className={`flex gap-4 transition-all duration-700 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
     >
-      <div className="shrink-0 size-10 border border-white/10 bg-white/5 flex items-center justify-center">
-        <Icon className="size-4 text-emerald-400" />
+      <div className="shrink-0 size-10 border border-border bg-foreground/5 flex items-center justify-center">
+        <Icon className="size-4 text-emerald-600 dark:text-emerald-400" />
       </div>
       <div>
-        <h3 className="text-sm font-medium text-white mb-1">{title}</h3>
-        <p className="text-xs text-white/40 leading-relaxed">{description}</p>
+        <h3 className="text-sm font-medium text-foreground mb-1">{title}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          {description}
+        </p>
       </div>
     </div>
   );
@@ -103,14 +105,14 @@ function PasswordStrength({ password }: { password: string }) {
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${i < strength ? strengthColors[strength - 1] : "bg-white/10"}`}
+            className={`h-1 flex-1 rounded-full transition-all duration-300 ${i < strength ? strengthColors[strength - 1] : "bg-foreground/10"}`}
           />
         ))}
       </div>
-      <p className="text-xs text-white/40">
+      <p className="text-xs text-muted-foreground">
         Password strength:{" "}
         <span
-          className={`${strength >= 4 ? "text-emerald-400" : strength >= 3 ? "text-yellow-400" : "text-red-400"}`}
+          className={`${strength >= 4 ? "text-emerald-600 dark:text-emerald-400" : strength >= 3 ? "text-yellow-600 dark:text-yellow-400" : "text-red-600 dark:text-red-400"}`}
         >
           {strengthLabels[strength - 1] || "Very weak"}
         </span>
@@ -170,14 +172,14 @@ export default function SignUpPage() {
 
   if (isPending || session) {
     return (
-      <div className="min-h-screen bg-[#0a0a0b] flex items-center justify-center">
-        <div className="size-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-[#0a0a0b] overflow-hidden">
+    <div className="min-h-screen flex bg-background overflow-hidden">
       {/* Global styles for animations */}
       <style jsx global>{`
         @keyframes float {
@@ -220,7 +222,7 @@ export default function SignUpPage() {
       `}</style>
 
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[#0a0a0b] via-[#0f1419] to-[#0a0a0b] overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-background via-card to-background overflow-hidden">
         {/* Animated orbs */}
         <FloatingOrb
           className="w-96 h-96 bg-emerald-500 -top-20 -left-20"
@@ -246,10 +248,10 @@ export default function SignUpPage() {
 
         {/* Grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
           style={{
-            backgroundImage: `linear-gradient(to right, white 1px, transparent 1px),
-                             linear-gradient(to bottom, white 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px),
+                             linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
@@ -260,7 +262,7 @@ export default function SignUpPage() {
           <div
             className={`transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Logo dark />
+            <Logo />
           </div>
 
           {/* Center - Main headline */}
@@ -269,13 +271,13 @@ export default function SignUpPage() {
               <div
                 className={`transition-all duration-700 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               >
-                <span className="inline-block px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-emerald-400/80 border border-emerald-500/20 bg-emerald-500/5 mb-8">
+                <span className="inline-block px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400/80 border border-emerald-500/20 bg-emerald-500/5 mb-8">
                   Get started free
                 </span>
               </div>
 
               <h1
-                className={`text-5xl xl:text-6xl font-extralight tracking-tight text-white leading-[1.1] mb-6 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`text-5xl xl:text-6xl font-extralight tracking-tight text-foreground leading-[1.1] mb-6 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               >
                 Take control of
                 <br />
@@ -283,7 +285,7 @@ export default function SignUpPage() {
               </h1>
 
               <p
-                className={`text-base text-white/50 leading-relaxed max-w-md transition-all duration-700 delay-400 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`text-base text-muted-foreground leading-relaxed max-w-md transition-all duration-700 delay-400 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               >
                 Join thousands who&apos;ve transformed their financial life
                 with clear insights and smart tracking.
@@ -324,16 +326,17 @@ export default function SignUpPage() {
                 {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="size-8 rounded-full border-2 border-[#0a0a0b] bg-gradient-to-br from-emerald-400 to-cyan-500"
+                    className="size-8 rounded-full border-2 border-background bg-linear-to-br from-emerald-400 to-cyan-500"
                     style={{
                       opacity: 1 - i * 0.15,
                     }}
                   />
                 ))}
               </div>
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-muted-foreground">
                 Trusted by{" "}
-                <span className="text-white/60 font-medium">10,000+</span> users
+                <span className="text-foreground/80 font-medium">10,000+</span>{" "}
+                users
               </p>
             </div>
           </div>
@@ -343,24 +346,24 @@ export default function SignUpPage() {
       {/* Right Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative">
         {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-emerald-950/5 dark:from-emerald-950/10 via-transparent to-transparent" />
 
         <div className="w-full max-w-md relative z-10">
           {/* Mobile logo */}
           <div
             className={`lg:hidden mb-12 transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Logo dark />
+            <Logo />
           </div>
 
           {/* Form header */}
           <div
             className={`mb-10 transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <h2 className="text-2xl font-light tracking-tight text-white mb-2">
+            <h2 className="text-2xl font-light tracking-tight text-foreground mb-2">
               Create your account
             </h2>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-muted-foreground">
               Start your journey to financial clarity
             </p>
           </div>
@@ -380,7 +383,7 @@ export default function SignUpPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor={field.name}
-                      className="text-xs uppercase tracking-wider text-white/50"
+                      className="text-xs uppercase tracking-wider text-muted-foreground"
                     >
                       Full Name
                     </Label>
@@ -392,12 +395,12 @@ export default function SignUpPage() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50 focus:bg-white/[0.07] transition-all"
+                      className="h-12 bg-foreground/5 border-border text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:bg-foreground/[0.07] transition-all"
                     />
                     {field.state.meta.errors.map((error) => (
                       <p
                         key={error?.message}
-                        className="text-xs text-red-400/80"
+                        className="text-xs text-destructive/80"
                       >
                         {error?.message}
                       </p>
@@ -413,7 +416,7 @@ export default function SignUpPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor={field.name}
-                      className="text-xs uppercase tracking-wider text-white/50"
+                      className="text-xs uppercase tracking-wider text-muted-foreground"
                     >
                       Email
                     </Label>
@@ -425,12 +428,12 @@ export default function SignUpPage() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50 focus:bg-white/[0.07] transition-all"
+                      className="h-12 bg-foreground/5 border-border text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:bg-foreground/[0.07] transition-all"
                     />
                     {field.state.meta.errors.map((error) => (
                       <p
                         key={error?.message}
-                        className="text-xs text-red-400/80"
+                        className="text-xs text-destructive/80"
                       >
                         {error?.message}
                       </p>
@@ -446,7 +449,7 @@ export default function SignUpPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor={field.name}
-                      className="text-xs uppercase tracking-wider text-white/50"
+                      className="text-xs uppercase tracking-wider text-muted-foreground"
                     >
                       Password
                     </Label>
@@ -459,12 +462,12 @@ export default function SignUpPage() {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50 focus:bg-white/[0.07] transition-all pr-12"
+                        className="h-12 bg-foreground/5 border-border text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:bg-foreground/[0.07] transition-all pr-12"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-muted-foreground transition-colors"
                       >
                         {showPassword ? (
                           <EyeOff className="size-4" />
@@ -476,7 +479,7 @@ export default function SignUpPage() {
                     {field.state.meta.errors.map((error) => (
                       <p
                         key={error?.message}
-                        className="text-xs text-red-400/80"
+                        className="text-xs text-destructive/80"
                       >
                         {error?.message}
                       </p>
@@ -500,9 +503,11 @@ export default function SignUpPage() {
                   style={{ transitionDelay: `${300 + index * 100}ms` }}
                 >
                   <div className="size-5 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                    <Check className="size-3 text-emerald-400" />
+                    <Check className="size-3 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <span className="text-xs text-white/50">{benefit}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {benefit}
+                  </span>
                 </div>
               ))}
             </div>
@@ -512,7 +517,7 @@ export default function SignUpPage() {
                 <Button
                   type="submit"
                   disabled={!state.canSubmit || state.isSubmitting}
-                  className="w-full h-12 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium transition-all duration-300 group relative overflow-hidden"
+                  className="w-full h-12 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium transition-all duration-300 group relative overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {state.isSubmitting ? (
@@ -527,7 +532,7 @@ export default function SignUpPage() {
                       </>
                     )}
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-linear-to-r from-emerald-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
               )}
             </form.Subscribe>
@@ -537,20 +542,20 @@ export default function SignUpPage() {
           <div
             className={`flex items-center gap-4 my-8 transition-all duration-700 delay-300 ${mounted ? "opacity-100" : "opacity-0"}`}
           >
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-white/30">or</span>
-            <div className="flex-1 h-px bg-white/10" />
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-muted-foreground/50">or</span>
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Sign in link */}
           <div
             className={`text-center transition-all duration-700 delay-400 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link
                 href="/sign-in"
-                className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+                className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors font-medium"
               >
                 Sign in
               </Link>
@@ -561,13 +566,19 @@ export default function SignUpPage() {
           <div
             className={`mt-12 text-center transition-all duration-700 delay-500 ${mounted ? "opacity-100" : "opacity-0"}`}
           >
-            <p className="text-xs text-white/20">
+            <p className="text-xs text-muted-foreground/40">
               By creating an account, you agree to our{" "}
-              <Link href="#" className="text-white/40 hover:text-white/60">
+              <Link
+                href="#"
+                className="text-muted-foreground/60 hover:text-muted-foreground"
+              >
                 Terms
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-white/40 hover:text-white/60">
+              <Link
+                href="#"
+                className="text-muted-foreground/60 hover:text-muted-foreground"
+              >
                 Privacy Policy
               </Link>
             </p>

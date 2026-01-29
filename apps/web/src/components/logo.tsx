@@ -5,8 +5,6 @@ import { cn } from "@/lib/utils";
 interface LogoProps {
   /** Show subtitle "finance clarity" */
   showSubtitle?: boolean;
-  /** Use dark theme variant (for dark backgrounds) */
-  dark?: boolean;
   /** Size variant */
   size?: "sm" | "default" | "lg";
   /** Additional className for the container */
@@ -21,27 +19,29 @@ const sizeConfig = {
     letter: "text-sm",
     title: "text-base",
     subtitle: "text-[8px]",
-    offset: "translate-x-0.5 translate-y-0.5 group-hover:translate-x-1 group-hover:translate-y-1",
+    offset:
+      "translate-x-0.5 translate-y-0.5 group-hover:translate-x-1 group-hover:translate-y-1",
   },
   default: {
     box: "size-10",
     letter: "text-base",
     title: "text-lg",
     subtitle: "text-[9px]",
-    offset: "translate-x-1 translate-y-1 group-hover:translate-x-1.5 group-hover:translate-y-1.5",
+    offset:
+      "translate-x-1 translate-y-1 group-hover:translate-x-1.5 group-hover:translate-y-1.5",
   },
   lg: {
     box: "size-12",
     letter: "text-lg",
     title: "text-xl",
     subtitle: "text-[10px]",
-    offset: "translate-x-1.5 translate-y-1.5 group-hover:translate-x-2 group-hover:translate-y-2",
+    offset:
+      "translate-x-1.5 translate-y-1.5 group-hover:translate-x-2 group-hover:translate-y-2",
   },
 };
 
 export function Logo({
   showSubtitle = true,
-  dark = false,
   size = "default",
   className,
   asLink = true,
@@ -51,22 +51,25 @@ export function Logo({
   const content = (
     <div className={cn("inline-flex items-center gap-3 group", className)}>
       {/* Logo mark */}
-      <div className={cn("relative flex items-center justify-center", config.box)}>
+      <div
+        className={cn(
+          "relative flex items-center justify-center",
+          config.box
+        )}
+      >
         {/* Shadow/offset layer */}
         <div
           className={cn(
             "absolute inset-0 border transition-transform",
             config.offset,
-            dark ? "border-emerald-500/30" : "border-emerald-500/40"
+            "border-emerald-500/30 dark:border-emerald-500/40"
           )}
         />
         {/* Main box */}
         <div
           className={cn(
             "absolute inset-0 border transition-colors",
-            dark
-              ? "border-white/40 bg-[#0a0a0b] group-hover:border-white/60"
-              : "border-foreground/30 bg-background group-hover:border-foreground/50"
+            "border-foreground/30 bg-background group-hover:border-foreground/50"
           )}
         />
         {/* Letter */}
@@ -74,7 +77,7 @@ export function Logo({
           className={cn(
             "relative font-bold tracking-tighter",
             config.letter,
-            dark ? "text-white" : "text-foreground"
+            "text-foreground"
           )}
         >
           F
@@ -87,7 +90,7 @@ export function Logo({
           className={cn(
             "font-semibold tracking-tight leading-none",
             config.title,
-            dark ? "text-white" : "text-foreground"
+            "text-foreground"
           )}
         >
           Finora
@@ -97,7 +100,7 @@ export function Logo({
             className={cn(
               "tracking-widest uppercase mt-0.5",
               config.subtitle,
-              dark ? "text-white/40" : "text-muted-foreground"
+              "text-muted-foreground"
             )}
           >
             finance clarity

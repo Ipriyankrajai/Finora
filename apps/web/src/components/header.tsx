@@ -26,7 +26,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
     >
       {label}
       {/* Animated underline */}
-      <span className="absolute bottom-0 left-0 w-0 h-px bg-foreground group-hover:w-full transition-all duration-300 ease-out" />
+      <span className="absolute bottom-0 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300 ease-out" />
     </a>
   );
 }
@@ -103,7 +103,11 @@ function MobileMenu({
                   Sign In
                 </Link>
               </Button>
-              <Button asChild size="lg">
+              <Button
+                asChild
+                size="lg"
+                className="bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white"
+              >
                 <Link href="/sign-up" onClick={onClose}>
                   Get Started
                   <ArrowRight className="size-4 ml-2" />
@@ -192,7 +196,11 @@ export default function Header() {
                   <Button asChild variant="ghost" size="sm">
                     <Link href="/sign-in">Sign In</Link>
                   </Button>
-                  <Button asChild size="sm" className="group">
+                  <Button
+                    asChild
+                    size="sm"
+                    className="group bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white"
+                  >
                     <Link href="/sign-up">
                       Get Started
                       <ArrowRight className="size-3.5 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
@@ -219,7 +227,7 @@ export default function Header() {
         {/* Subtle bottom border animation on scroll */}
         <div
           className={cn(
-            "absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent transition-opacity duration-500",
+            "absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent transition-opacity duration-500",
             scrolled ? "opacity-100" : "opacity-0"
           )}
         />

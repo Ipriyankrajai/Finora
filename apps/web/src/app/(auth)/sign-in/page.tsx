@@ -24,7 +24,7 @@ function FloatingOrb({
 }) {
   return (
     <div
-      className={`absolute rounded-full blur-[100px] opacity-30 ${className}`}
+      className={`absolute rounded-full blur-[100px] opacity-20 dark:opacity-30 ${className}`}
       style={{
         animation: `float 15s ease-in-out infinite`,
         animationDelay: delay,
@@ -44,8 +44,11 @@ function AnimatedLine({ delay }: { delay: number }) {
   }, [delay]);
 
   return (
-    <div className="h-px bg-linear-to-r from-transparent via-white/20 to-transparent overflow-hidden">
-      <div className="h-full bg-linear-to-r from-emerald-500/50 via-cyan-500/50 to-emerald-500/50 transition-all duration-1000 ease-out" style={{ width: `${width}%` }} />
+    <div className="h-px bg-linear-to-r from-transparent via-foreground/20 to-transparent overflow-hidden">
+      <div
+        className="h-full bg-linear-to-r from-emerald-500/50 via-cyan-500/50 to-emerald-500/50 transition-all duration-1000 ease-out"
+        style={{ width: `${width}%` }}
+      />
     </div>
   );
 }
@@ -70,10 +73,10 @@ function StatCard({
     <div
       className={`text-center transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
     >
-      <div className="text-2xl font-light tracking-tight text-white/90">
+      <div className="text-2xl font-light tracking-tight text-foreground/90">
         {value}
       </div>
-      <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-1">
+      <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
         {label}
       </div>
     </div>
@@ -128,14 +131,14 @@ export default function SignInPage() {
 
   if (isPending || session) {
     return (
-      <div className="min-h-screen bg-[#0a0a0b] flex items-center justify-center">
-        <div className="size-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-[#0a0a0b] overflow-hidden">
+    <div className="min-h-screen flex bg-background overflow-hidden">
       {/* Global styles for animations */}
       <style jsx global>{`
         @keyframes float {
@@ -193,7 +196,7 @@ export default function SignInPage() {
       `}</style>
 
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-[#0a0a0b] via-[#0f1419] to-[#0a0a0b] overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-background via-card to-background overflow-hidden">
         {/* Animated orbs */}
         <FloatingOrb
           className="w-96 h-96 bg-emerald-500 -top-20 -left-20"
@@ -219,10 +222,10 @@ export default function SignInPage() {
 
         {/* Grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
           style={{
-            backgroundImage: `linear-gradient(to right, white 1px, transparent 1px),
-                             linear-gradient(to bottom, white 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px),
+                             linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
@@ -233,7 +236,7 @@ export default function SignInPage() {
           <div
             className={`transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Logo dark />
+            <Logo />
           </div>
 
           {/* Center - Main headline */}
@@ -242,13 +245,13 @@ export default function SignInPage() {
               <div
                 className={`transition-all duration-700 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               >
-                <span className="inline-block px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-emerald-400/80 border border-emerald-500/20 bg-emerald-500/5 mb-8">
+                <span className="inline-block px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400/80 border border-emerald-500/20 bg-emerald-500/5 mb-8">
                   Welcome back
                 </span>
               </div>
 
               <h1
-                className={`text-5xl xl:text-6xl font-extralight tracking-tight text-white leading-[1.1] mb-6 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`text-5xl xl:text-6xl font-extralight tracking-tight text-foreground leading-[1.1] mb-6 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               >
                 Your financial
                 <br />
@@ -256,7 +259,7 @@ export default function SignInPage() {
               </h1>
 
               <p
-                className={`text-base text-white/50 leading-relaxed max-w-md transition-all duration-700 delay-400 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`text-base text-muted-foreground leading-relaxed max-w-md transition-all duration-700 delay-400 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               >
                 Pick up where you left off. Your expenses, loans, and insights
                 are ready for you.
@@ -279,7 +282,7 @@ export default function SignInPage() {
           <div
             className={`transition-all duration-700 delay-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <p className="text-xs text-white/30">
+            <p className="text-xs text-muted-foreground/60">
               Your data never leaves your control
             </p>
           </div>
@@ -289,24 +292,24 @@ export default function SignInPage() {
       {/* Right Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative">
         {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-linear-to-t from-emerald-950/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-emerald-950/5 dark:from-emerald-950/10 via-transparent to-transparent" />
 
         <div className="w-full max-w-md relative z-10">
           {/* Mobile logo */}
           <div
             className={`lg:hidden mb-12 transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
           >
-            <Logo dark />
+            <Logo />
           </div>
 
           {/* Form header */}
           <div
             className={`mb-10 transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <h2 className="text-2xl font-light tracking-tight text-white mb-2">
+            <h2 className="text-2xl font-light tracking-tight text-foreground mb-2">
               Sign in
             </h2>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-muted-foreground">
               Enter your credentials to continue
             </p>
           </div>
@@ -326,7 +329,7 @@ export default function SignInPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor={field.name}
-                      className="text-xs uppercase tracking-wider text-white/50"
+                      className="text-xs uppercase tracking-wider text-muted-foreground"
                     >
                       Email
                     </Label>
@@ -338,12 +341,12 @@ export default function SignInPage() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50 focus:bg-white/[0.07] transition-all"
+                      className="h-12 bg-foreground/5 border-border text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:bg-foreground/[0.07] transition-all"
                     />
                     {field.state.meta.errors.map((error) => (
                       <p
                         key={error?.message}
-                        className="text-xs text-red-400/80"
+                        className="text-xs text-destructive/80"
                       >
                         {error?.message}
                       </p>
@@ -359,7 +362,7 @@ export default function SignInPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor={field.name}
-                      className="text-xs uppercase tracking-wider text-white/50"
+                      className="text-xs uppercase tracking-wider text-muted-foreground"
                     >
                       Password
                     </Label>
@@ -372,12 +375,12 @@ export default function SignInPage() {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-emerald-500/50 focus:bg-white/[0.07] transition-all pr-12"
+                        className="h-12 bg-foreground/5 border-border text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:bg-foreground/[0.07] transition-all pr-12"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-muted-foreground transition-colors"
                       >
                         {showPassword ? (
                           <EyeOff className="size-4" />
@@ -389,7 +392,7 @@ export default function SignInPage() {
                     {field.state.meta.errors.map((error) => (
                       <p
                         key={error?.message}
-                        className="text-xs text-red-400/80"
+                        className="text-xs text-destructive/80"
                       >
                         {error?.message}
                       </p>
@@ -429,20 +432,20 @@ export default function SignInPage() {
           <div
             className={`flex items-center gap-4 my-8 transition-all duration-700 delay-300 ${mounted ? "opacity-100" : "opacity-0"}`}
           >
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-white/30">or</span>
-            <div className="flex-1 h-px bg-white/10" />
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-muted-foreground/50">or</span>
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Sign up link */}
           <div
             className={`text-center transition-all duration-700 delay-400 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link
                 href="/sign-up"
-                className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+                className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors font-medium"
               >
                 Create one
               </Link>
@@ -453,13 +456,19 @@ export default function SignInPage() {
           <div
             className={`mt-16 text-center transition-all duration-700 delay-500 ${mounted ? "opacity-100" : "opacity-0"}`}
           >
-            <p className="text-xs text-white/20">
+            <p className="text-xs text-muted-foreground/40">
               By signing in, you agree to our{" "}
-              <Link href="#" className="text-white/40 hover:text-white/60">
+              <Link
+                href="#"
+                className="text-muted-foreground/60 hover:text-muted-foreground"
+              >
                 Terms
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-white/40 hover:text-white/60">
+              <Link
+                href="#"
+                className="text-muted-foreground/60 hover:text-muted-foreground"
+              >
                 Privacy Policy
               </Link>
             </p>

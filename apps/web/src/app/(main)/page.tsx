@@ -61,24 +61,18 @@ function AnimatedNumber({
 }
 
 function FloatingOrb({
-  size,
-  delay,
-  duration,
   className,
+  delay = "0s",
 }: {
-  size: string;
-  delay: string;
-  duration: string;
   className?: string;
+  delay?: string;
 }) {
   return (
     <div
-      className={`absolute rounded-full blur-3xl opacity-20 animate-pulse ${className}`}
+      className={`absolute rounded-full blur-[100px] opacity-15 dark:opacity-25 ${className}`}
       style={{
-        width: size,
-        height: size,
+        animation: `float 15s ease-in-out infinite`,
         animationDelay: delay,
-        animationDuration: duration,
       }}
     />
   );
@@ -121,15 +115,15 @@ function FeatureCard({
 
   return (
     <div
-      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-foreground/20 hover:bg-card ${
+      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-linear-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       <div className="relative">
-        <div className="inline-flex p-3 border border-border/50 mb-4 group-hover:border-foreground/20 transition-colors duration-300">
-          <Icon className="size-5 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
+        <div className="inline-flex p-3 border border-border/50 mb-4 group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
+          <Icon className="size-5 text-foreground/70 group-hover:text-primary transition-colors duration-300" />
         </div>
 
         <h3 className="text-sm font-semibold tracking-tight mb-2">{title}</h3>
@@ -150,27 +144,72 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative min-h-[calc(100svh-3rem)] overflow-hidden">
+    <div className="relative min-h-[calc(100svh-4rem)] overflow-hidden">
+      {/* Global styles for animations */}
+      <style jsx global>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+          33% {
+            transform: translate(30px, -30px) scale(1.05);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.95);
+          }
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+
+        .shimmer-text {
+          background: linear-gradient(
+            90deg,
+            #10b981 0%,
+            #06b6d4 25%,
+            #10b981 50%,
+            #06b6d4 75%,
+            #10b981 100%
+          );
+          background-size: 200% 100%;
+          animation: shimmer 3s linear infinite;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      `}</style>
+
       {/* Background elements */}
       <GridPattern />
 
+      {/* Floating orbs - matching auth pages */}
       <FloatingOrb
-        size="400px"
+        className="w-[500px] h-[500px] bg-emerald-500 -top-40 -left-40"
         delay="0s"
-        duration="8s"
-        className="bg-chart-1 -top-20 -left-20"
       />
       <FloatingOrb
-        size="300px"
-        delay="2s"
-        duration="10s"
-        className="bg-chart-3 top-1/2 -right-20"
+        className="w-[400px] h-[400px] bg-cyan-500 top-1/2 -right-40"
+        delay="3s"
       />
       <FloatingOrb
-        size="200px"
-        delay="4s"
-        duration="12s"
-        className="bg-chart-5 bottom-20 left-1/3"
+        className="w-[300px] h-[300px] bg-emerald-400 bottom-20 left-1/4"
+        delay="6s"
+      />
+
+      {/* Gradient mesh overlay */}
+      <div
+        className="absolute inset-0 opacity-30 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                           radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 50%)`,
+        }}
       />
 
       {/* Main content */}
@@ -179,11 +218,11 @@ export default function Home() {
         <div className="text-center mb-20">
           {/* Eyebrow */}
           <div
-            className={`inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-border/50 text-xs text-muted-foreground tracking-wide transition-all duration-700 ${
+            className={`inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-primary/20 bg-primary/5 text-xs text-primary tracking-wide transition-all duration-700 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
             }`}
           >
-            <span className="size-1.5 rounded-full bg-chart-2 animate-pulse" />
+            <span className="size-1.5 rounded-full bg-primary animate-pulse" />
             PERSONAL FINANCE CLARITY
           </div>
 
@@ -194,9 +233,7 @@ export default function Home() {
             }`}
           >
             <span className="block">Know where your</span>
-            <span className="block mt-2 bg-gradient-to-r from-foreground via-foreground/80 to-foreground bg-clip-text">
-              money goes
-            </span>
+            <span className="block mt-2 shimmer-text">money goes</span>
           </h1>
 
           {/* Subheadline */}
@@ -224,7 +261,11 @@ export default function Home() {
               </Button>
             ) : (
               <>
-                <Button asChild size="lg" className="min-w-[200px] group">
+                <Button
+                  asChild
+                  size="lg"
+                  className="min-w-[200px] group bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white"
+                >
                   <Link href="/sign-up">
                     Get Started
                     <ArrowRight className="size-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -245,7 +286,7 @@ export default function Home() {
           }`}
         >
           <div className="bg-background p-6 text-center">
-            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
               <AnimatedNumber value={100} suffix="%" delay={600} />
             </div>
             <div className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -253,7 +294,7 @@ export default function Home() {
             </div>
           </div>
           <div className="bg-background p-6 text-center">
-            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
               <AnimatedNumber prefix="$" value={0} delay={800} />
             </div>
             <div className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -261,7 +302,7 @@ export default function Home() {
             </div>
           </div>
           <div className="bg-background p-6 text-center">
-            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+            <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
               <AnimatedNumber value={2} delay={1000} />
             </div>
             <div className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -298,7 +339,7 @@ export default function Home() {
             mounted ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="inline-flex flex-col items-center p-8 border border-dashed border-border/50">
+          <div className="inline-flex flex-col items-center p-8 border border-dashed border-primary/30 bg-primary/[0.02]">
             <p className="text-sm text-muted-foreground mb-4">
               Ready to take control of your finances?
             </p>
@@ -307,7 +348,10 @@ export default function Home() {
                 <Link href="/dashboard">View Dashboard</Link>
               </Button>
             ) : (
-              <Button asChild variant="outline">
+              <Button
+                asChild
+                className="bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white"
+              >
                 <Link href="/sign-up">Create Free Account</Link>
               </Button>
             )}
@@ -316,7 +360,7 @@ export default function Home() {
       </div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </div>
   );
 }
