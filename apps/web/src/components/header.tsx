@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,21 +14,35 @@ import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "#features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#about", label: "About" },
+  { href: "/#features", label: "Features" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
+  { href: "/blog", label: "Blog" },
 ] as const;
 
 function NavLink({ href, label }: { href: string; label: string }) {
+  const isHashLink = href.startsWith("/#");
+
+  if (isHashLink) {
+    return (
+      <a
+        href={href}
+        className="relative py-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 group"
+      >
+        {label}
+        <span className="absolute bottom-0 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300 ease-out" />
+      </a>
+    );
+  }
+
   return (
-    <a
-      href={href}
+    <Link
+      href={href as Route}
       className="relative py-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 group"
     >
       {label}
-      {/* Animated underline */}
       <span className="absolute bottom-0 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300 ease-out" />
-    </a>
+    </Link>
   );
 }
 
@@ -60,24 +75,42 @@ function MobileMenu({
 
       {/* Mobile nav content */}
       <nav className="flex flex-col items-center justify-center h-full gap-8">
-        {navLinks.map((link, index) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={onClose}
-            className={cn(
-              "text-2xl font-medium text-muted-foreground hover:text-foreground transition-all duration-300",
-              isOpen
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
-            )}
-            style={{
-              transitionDelay: isOpen ? `${index * 100 + 100}ms` : "0ms",
-            }}
-          >
-            {link.label}
-          </a>
-        ))}
+        {navLinks.map((link, index) => {
+          const isHashLink = link.href.startsWith("/#");
+          const className = cn(
+            "text-2xl font-medium text-muted-foreground hover:text-foreground transition-all duration-300",
+            isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          );
+          const style = {
+            transitionDelay: isOpen ? `${index * 100 + 100}ms` : "0ms",
+          };
+
+          if (isHashLink) {
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={onClose}
+                className={className}
+                style={style}
+              >
+                {link.label}
+              </a>
+            );
+          }
+
+          return (
+            <Link
+              key={link.href}
+              href={link.href as Route}
+              onClick={onClose}
+              className={className}
+              style={style}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
 
         {/* Mobile CTAs */}
         <div
@@ -171,14 +204,12 @@ export default function Header() {
             {/* Logo */}
             <Logo size="sm" />
 
-            {/* Desktop Navigation - only show on landing page */}
-            {isLandingPage && (
-              <nav className="hidden md:flex items-center gap-8">
-                {navLinks.map((link) => (
-                  <NavLink key={link.href} {...link} />
-                ))}
-              </nav>
-            )}
+            {/* Desktop Navigation - show on all website pages */}
+            <nav className="hidden md:flex items-center gap-8">
+              {navLinks.map((link) => (
+                <NavLink key={link.href} {...link} />
+              ))}
+            </nav>
 
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-3">

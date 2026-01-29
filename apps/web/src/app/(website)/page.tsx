@@ -115,11 +115,10 @@ function FeatureCard({
 
   return (
     <div
-      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}
+      className={`group relative p-6 border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
     >
-      <div className="absolute inset-0 bg-linear-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-linear-to-br from-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       <div className="relative">
         <div className="inline-flex p-3 border border-border/50 mb-4 group-hover:border-primary/30 group-hover:bg-primary/5 transition-all duration-300">
@@ -135,7 +134,7 @@ function FeatureCard({
   );
 }
 
-export default function Home() {
+export default function HomePage() {
   const { data: session } = authClient.useSession();
   const [mounted, setMounted] = useState(false);
 
@@ -218,9 +217,8 @@ export default function Home() {
         <div className="text-center mb-20">
           {/* Eyebrow */}
           <div
-            className={`inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-primary/20 bg-primary/5 text-xs text-primary tracking-wide transition-all duration-700 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-            }`}
+            className={`inline-flex items-center gap-2 px-3 py-1.5 mb-8 border border-primary/20 bg-primary/5 text-xs text-primary tracking-wide transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+              }`}
           >
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
             PERSONAL FINANCE CLARITY
@@ -228,9 +226,8 @@ export default function Home() {
 
           {/* Main headline */}
           <h1
-            className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 transition-all duration-700 delay-100 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             <span className="block">Know where your</span>
             <span className="block mt-2 shimmer-text">money goes</span>
@@ -238,9 +235,8 @@ export default function Home() {
 
           {/* Subheadline */}
           <p
-            className={`max-w-xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10 transition-all duration-700 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`max-w-xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10 transition-all duration-700 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             Track expenses with tags, visualize spending patterns, and see
             exactly when your loans will be paid off.
@@ -248,9 +244,8 @@ export default function Home() {
 
           {/* CTA */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-300 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             {session ? (
               <Button asChild size="lg" className="min-w-[200px] group">
@@ -281,9 +276,8 @@ export default function Home() {
 
         {/* Stats section */}
         <div
-          className={`grid grid-cols-3 gap-px bg-border/50 border border-border/50 mb-20 transition-all duration-700 delay-500 ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`grid grid-cols-3 gap-px bg-border/50 border border-border/50 mb-20 transition-all duration-700 delay-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <div className="bg-background p-6 text-center">
             <div className="text-2xl md:text-3xl font-bold tracking-tight mb-1 text-primary">
@@ -312,7 +306,7 @@ export default function Home() {
         </div>
 
         {/* Features grid */}
-        <div className="grid md:grid-cols-3 gap-px bg-border/30 mb-20">
+        <div id="features" className="grid md:grid-cols-3 gap-px bg-border/30 mb-20">
           <FeatureCard
             icon={Wallet}
             title="Expense Tracking"
@@ -335,11 +329,10 @@ export default function Home() {
 
         {/* Bottom CTA */}
         <div
-          className={`text-center transition-all duration-700 delay-700 ${
-            mounted ? "opacity-100" : "opacity-0"
-          }`}
+          className={`text-center transition-all duration-700 delay-700 ${mounted ? "opacity-100" : "opacity-0"
+            }`}
         >
-          <div className="inline-flex flex-col items-center p-8 border border-dashed border-primary/30 bg-primary/[0.02]">
+          <div className="inline-flex flex-col items-center p-8 border border-dashed border-primary/30 bg-primary/2">
             <p className="text-sm text-muted-foreground mb-4">
               Ready to take control of your finances?
             </p>
