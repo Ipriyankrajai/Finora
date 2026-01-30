@@ -44,13 +44,19 @@ describe("loan router", () => {
   };
   const mockSession = {
     user: mockUser,
-    session: { id: MOCK_SESSION_ID, userId: mockUser.id },
+    session: {
+      id: MOCK_SESSION_ID,
+      userId: mockUser.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      expiresAt: new Date(Date.now() + 86400000),
+      token: "test-token",
+    },
   };
 
   // Create caller with mock session
-  const caller = createCaller({
-    session: mockSession,
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const caller = createCaller({ session: mockSession } as any);
 
   const mockLoan = {
     id: MOCK_LOAN_ID,
@@ -82,15 +88,16 @@ describe("loan router", () => {
           ],
         },
       ];
-      vi.mocked(prisma.loan.findMany).mockResolvedValue(mockLoans);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      vi.mocked(prisma.loan.findMany).mockResolvedValue(mockLoans as any);
 
       const result = await caller.loan.list();
 
       expect(result).toHaveLength(1);
-      expect(result[0].balanceCents).toBe(
+      expect(result[0]!.balanceCents).toBe(
         BigInt(1000000) - BigInt(10000) - BigInt(15000)
       ); // Principal - payments
-      expect(result[0].totalInterestPaidCents).toBe(
+      expect(result[0]!.totalInterestPaidCents).toBe(
         BigInt(5000) + BigInt(4500)
       );
       // Should not include payments array in response
@@ -126,7 +133,8 @@ describe("loan router", () => {
           },
         ],
       };
-      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithPayments);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithPayments as any);
 
       const result = await caller.loan.getById({ id: MOCK_LOAN_ID });
 
@@ -170,9 +178,8 @@ describe("loan router", () => {
           },
         ],
       };
-      vi.mocked(prisma.loan.findUnique).mockResolvedValue(
-        loanWithMultiplePayments
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithMultiplePayments as any);
 
       const result = await caller.loan.getById({ id: MOCK_LOAN_ID });
 
@@ -198,11 +205,12 @@ describe("loan router", () => {
     });
 
     it("throws UNAUTHORIZED for other user's loan", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.mocked(prisma.loan.findUnique).mockResolvedValue({
         ...mockLoan,
         userId: "other-user",
         payments: [],
-      });
+      } as any);
 
       await expect(caller.loan.getById({ id: MOCK_LOAN_ID })).rejects.toThrow(
         expect.objectContaining({
@@ -364,7 +372,8 @@ describe("loan router", () => {
         ...mockLoan,
         payments: [], // No previous payments, full balance
       };
-      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithPayments);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithPayments as any);
 
       const createdPayment = {
         id: MOCK_PAYMENT_ID,
@@ -400,10 +409,11 @@ describe("loan router", () => {
     });
 
     it("marks extra payments with isExtra = true", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.mocked(prisma.loan.findUnique).mockResolvedValue({
         ...mockLoan,
         payments: [],
-      });
+      } as any);
       vi.mocked(prisma.loanPayment.create).mockResolvedValue({
         id: MOCK_PAYMENT_ID,
         loanId: MOCK_LOAN_ID,
@@ -451,11 +461,12 @@ describe("loan router", () => {
     });
 
     it("throws when loan belongs to other user", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.mocked(prisma.loan.findUnique).mockResolvedValue({
         ...mockLoan,
         userId: "other-user",
         payments: [],
-      });
+      } as any);
 
       await expect(
         caller.loan.addPayment({
@@ -476,35 +487,33 @@ describe("loan router", () => {
       // Monthly rate = 6% / 12 = 0.5%
       // Interest for 1 month = $10,000 * 0.005 = $50
       // Payment of $1000 should split as ~$50 interest, ~$950 principal
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.mocked(prisma.loan.findUnique).mockResolvedValue({
         ...mockLoan,
         principalCents: BigInt(1000000), // $10,000
         annualRatePercent: 6.0,
         payments: [], // No payments yet
-      });
+      } as any);
 
-      let capturedData: {
-        principalCents?: bigint;
-        interestCents?: bigint;
-      } | null = null;
-      vi.mocked(prisma.loanPayment.create).mockImplementation(
-        async ({ data }) => {
-          capturedData = data;
-          return {
-            id: MOCK_PAYMENT_ID,
-            loanId: data.loanId,
-            amountCents: data.amountCents,
-            principalCents: data.principalCents,
-            interestCents: data.interestCents,
-            lateFeeCents: BigInt(0),
-            isExtra: data.isExtra,
-            paidAt: data.paidAt,
-            linkedTransactionId: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          };
-        }
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let capturedData: any = null;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (prisma.loanPayment.create as any).mockImplementation(async ({ data }: any) => {
+        capturedData = data;
+        return {
+          id: MOCK_PAYMENT_ID,
+          loanId: data.loanId,
+          amountCents: data.amountCents,
+          principalCents: data.principalCents,
+          interestCents: data.interestCents,
+          lateFeeCents: BigInt(0),
+          isExtra: data.isExtra,
+          paidAt: data.paidAt,
+          linkedTransactionId: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      });
 
       await caller.loan.addPayment({
         loanId: MOCK_LOAN_ID,
@@ -523,6 +532,7 @@ describe("loan router", () => {
 
   describe("deletePayment", () => {
     it("deletes payment", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.mocked(prisma.loanPayment.findUnique).mockResolvedValue({
         id: MOCK_PAYMENT_ID,
         loanId: MOCK_LOAN_ID,
@@ -536,7 +546,7 @@ describe("loan router", () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         loan: { userId: MOCK_USER_ID },
-      });
+      } as any);
       vi.mocked(prisma.loanPayment.delete).mockResolvedValue({
         id: MOCK_PAYMENT_ID,
         loanId: MOCK_LOAN_ID,
@@ -573,6 +583,7 @@ describe("loan router", () => {
     });
 
     it("throws when payment belongs to other user's loan", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.mocked(prisma.loanPayment.findUnique).mockResolvedValue({
         id: MOCK_PAYMENT_ID,
         loanId: MOCK_LOAN_ID,
@@ -586,7 +597,7 @@ describe("loan router", () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         loan: { userId: "other-user" },
-      });
+      } as any);
 
       await expect(
         caller.loan.deletePayment({ id: MOCK_PAYMENT_ID })
