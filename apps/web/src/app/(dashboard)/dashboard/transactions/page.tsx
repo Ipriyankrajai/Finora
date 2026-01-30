@@ -4,6 +4,8 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TransactionFilters } from "@/components/transactions/transaction-filters";
+import { TransactionList } from "@/components/transactions/transaction-list";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -11,8 +13,22 @@ export const metadata: Metadata = {
 };
 
 export default function TransactionsPage() {
+  // TODO: Wire up add transaction modal in plan 03-04
+  const handleAddTransaction = () => {
+    // Placeholder - will open transaction form modal
+  };
+
+  // TODO: Wire up edit/delete handlers in plan 03-04
+  const handleEdit = (id: string) => {
+    console.log("Edit transaction:", id);
+  };
+
+  const handleDelete = (id: string) => {
+    console.log("Delete transaction:", id);
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -21,24 +37,25 @@ export default function TransactionsPage() {
             Track your income and expenses.
           </p>
         </div>
-        <Button className="bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white">
+        <Button
+          className="bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white"
+          onClick={handleAddTransaction}
+        >
           <Plus className="size-4 mr-2" />
           Add Transaction
         </Button>
       </div>
+
+      {/* Filters */}
+      <TransactionFilters />
 
       {/* Transactions List */}
       <Card>
         <CardHeader>
           <CardTitle>All Transactions</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-center py-12 text-muted-foreground">
-            <p>No transactions recorded yet.</p>
-            <p className="text-sm mt-1">
-              Click &quot;Add Transaction&quot; to start tracking.
-            </p>
-          </div>
+        <CardContent className="p-0">
+          <TransactionList onEdit={handleEdit} onDelete={handleDelete} />
         </CardContent>
       </Card>
     </div>
