@@ -4,25 +4,66 @@ import { AlertCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTransactions } from "@/hooks/use-transactions";
+import {
+  useDeleteTransaction,
+  useTransactions,
+  type TransactionWithTags,
+} from "@/hooks/use-transactions";
 import { useTransactionFilters } from "@/hooks/use-transaction-filters";
 
 import { DateGroupHeader } from "./date-group-header";
 import { TransactionRow } from "./transaction-row";
 
 interface TransactionListProps {
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onEditTransaction?: (transaction: TransactionWithTags) => void;
 }
 
 /**
  * Paginated transaction list with date grouping.
  * Per CONTEXT.md: "Grouped by date with daily sections", "Page numbers"
  */
-export function TransactionList({ onEdit, onDelete }: TransactionListProps) {
-  const { groups, isLoading, error, hasNextPage, refetch } = useTransactions();
+export function TransactionList({ onEditTransaction }: TransactionListProps) {
+  const { groups, items, isLoading, error, hasNextPage, refetch } = useTransactions();
   const { filters, setFilter } = useTransactionFilters();
+  const deleteTransaction = useDeleteTransaction();
+
+  // State for delete confirmation dialog
+  const [deletingTransactionId, setDeletingTransactionId] = React.useState<string | null>(null);
+  const deletingTransaction = deletingTransactionId
+    ? items.find((t) => t.id === deletingTransactionId)
+    : null;
+
+  const handleEdit = (id: string) => {
+    const transaction = items.find((t) => t.id === id);
+    if (transaction && onEditTransaction) {
+      onEditTransaction(transaction);
+    }
+  };
+
+  const handleDeleteRequest = (id: string) => {
+    setDeletingTransactionId(id);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deletingTransactionId) {
+      await deleteTransaction.mutateAsync({ id: deletingTransactionId });
+      setDeletingTransactionId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeletingTransactionId(null);
+  };
 
   // Handle page navigation
   const handlePrevPage = () => {
@@ -116,8 +157,8 @@ export function TransactionList({ onEdit, onDelete }: TransactionListProps) {
                 <TransactionRow
                   key={transaction.id}
                   transaction={transaction}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
+                  onEdit={handleEdit}
+                  onDelete={handleDeleteRequest}
                   className="group"
                 />
               ))}
@@ -152,6 +193,38 @@ export function TransactionList({ onEdit, onDelete }: TransactionListProps) {
           <ChevronRight className="ml-1 size-4" />
         </Button>
       </div>
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={!!deletingTransactionId} onOpenChange={(open) => !open && handleDeleteCancel()}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete Transaction</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this transaction? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="pt-4">
+            <DialogClose
+              render={
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={deleteTransaction.isPending}
+                >
+                  Cancel
+                </Button>
+              }
+            />
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deleteTransaction.isPending}
+            >
+              {deleteTransaction.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
