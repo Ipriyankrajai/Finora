@@ -150,11 +150,13 @@ export function TagForm({
           </form.Field>
 
           <DialogFooter className="pt-4">
-            <DialogClose asChild>
-              <Button type="button" variant="outline" disabled={isPending}>
-                Cancel
-              </Button>
-            </DialogClose>
+            <DialogClose
+              render={
+                <Button type="button" variant="outline" disabled={isPending}>
+                  Cancel
+                </Button>
+              }
+            />
             <form.Subscribe>
               {(state) => (
                 <Button
