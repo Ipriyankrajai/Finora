@@ -5,34 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Users can see exactly where their money goes and when their loans will be paid off
-**Current focus:** Phase 2 - API Layer
+**Current focus:** Phase 2 - API Layer (COMPLETE)
 
 ## Current Position
 
-Phase: 2 of 6 (API Layer)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-01-30 - Completed 02-03-PLAN.md (Loan Router)
+Phase: 2 of 6 (API Layer) - COMPLETE
+Plan: 4 of 4 in current phase
+Status: Phase complete
+Last activity: 2026-01-30 - Completed 02-04-PLAN.md (Dashboard Router)
 
-Progress: [████░░░░░░] 41.7% (5/12 plans)
+Progress: [█████░░░░░] 50.0% (6/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 6.4 min
-- Total execution time: 32 min
+- Total plans completed: 6
+- Average duration: 5.8 min
+- Total execution time: 35 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 2 | 10 min | 5 min |
-| 02-api-layer | 3 | 22 min | 7.3 min |
+| 02-api-layer | 4 | 25 min | 6.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (6 min), 02-02 (6 min), 02-03 (10 min)
-- Trend: Slight increase due to comprehensive test coverage
+- Last 5 plans: 01-02 (5 min), 02-01 (6 min), 02-02 (6 min), 02-03 (10 min), 02-04 (3 min)
+- Trend: Stable with variance based on test coverage
 
 *Updated after each plan completion*
 
@@ -59,6 +59,9 @@ Recent decisions affecting current work:
 - [02-03]: loanType (car/home/personal/other) separate from interestType (SIMPLE/COMPOUND)
 - [02-03]: Balance calculated from payments each time (not stored)
 - [02-03]: Payment split: interest = balance * (rate/100/12), principal = payment - interest
+- [02-04]: Single combined endpoint for dashboard data (reduces network overhead)
+- [02-04]: Raw SQL ($queryRaw) for complex tag spending aggregation
+- [02-04]: Top 5 tags with "Other" grouping for dashboard display
 
 ### Pending Todos
 
@@ -66,10 +69,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None - Loan router complete. Ready for Dashboard router (02-04).
+None - Phase 2 (API Layer) complete. Ready for Phase 3 (Dashboard UI).
 
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Completed 02-03-PLAN.md
+Stopped at: Completed 02-04-PLAN.md (Phase 2 complete)
 Resume file: None
