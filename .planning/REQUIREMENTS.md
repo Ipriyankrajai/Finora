@@ -125,34 +125,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | - | Existing |
 | AUTH-02 | - | Existing |
 | AUTH-03 | - | Existing |
-| TAG-01 | Phase 2, 3 | Pending |
-| TAG-02 | Phase 2, 3 | Pending |
-| TAG-03 | Phase 2, 3 | Pending |
+| TAG-01 | Phase 2, 3 | API Complete |
+| TAG-02 | Phase 2, 3 | API Complete |
+| TAG-03 | Phase 2, 3 | API Complete |
 | TAG-04 | Phase 5 | Pending |
-| TXN-01 | Phase 2, 3 | Pending |
-| TXN-02 | Phase 2, 3 | Pending |
-| TXN-03 | Phase 2, 3 | Pending |
-| TXN-04 | Phase 2, 3 | Pending |
-| TXN-05 | Phase 2, 3 | Pending |
-| TXN-06 | Phase 2, 3 | Pending |
-| TXN-07 | Phase 2, 3 | Pending |
-| TXN-08 | Phase 2, 3 | Pending |
-| TXN-09 | Phase 2, 3 | Pending |
-| LOAN-01 | Phase 2, 4 | Pending |
-| LOAN-02 | Phase 2, 4 | Pending |
-| LOAN-03 | Phase 2, 4 | Pending |
-| LOAN-04 | Phase 2, 4 | Pending |
-| LOAN-05 | Phase 2, 4 | Pending |
-| LOAN-06 | Phase 2, 4 | Pending |
-| LOAN-07 | Phase 2, 4 | Pending |
-| LOAN-08 | Phase 2, 4 | Pending |
+| TXN-01 | Phase 2, 3 | API Complete |
+| TXN-02 | Phase 2, 3 | API Complete |
+| TXN-03 | Phase 2, 3 | API Complete |
+| TXN-04 | Phase 2, 3 | API Complete |
+| TXN-05 | Phase 2, 3 | API Complete |
+| TXN-06 | Phase 2, 3 | API Complete |
+| TXN-07 | Phase 2, 3 | API Complete |
+| TXN-08 | Phase 2, 3 | API Complete |
+| TXN-09 | Phase 2, 3 | API Complete |
+| LOAN-01 | Phase 2, 4 | API Complete |
+| LOAN-02 | Phase 2, 4 | API Complete |
+| LOAN-03 | Phase 2, 4 | API Complete |
+| LOAN-04 | Phase 2, 4 | API Complete |
+| LOAN-05 | Phase 2, 4 | API Complete |
+| LOAN-06 | Phase 2, 4 | API Complete |
+| LOAN-07 | Phase 2, 4 | API Complete |
+| LOAN-08 | Phase 2, 4 | API Complete |
 | VIZ-01 | Phase 5 | Pending |
 | VIZ-02 | Phase 5 | Pending |
 | VIZ-03 | Phase 5 | Pending |
 | VIZ-04 | Phase 5 | Pending |
-| DASH-01 | Phase 2, 5 | Pending |
-| DASH-02 | Phase 2, 5 | Pending |
-| DASH-03 | Phase 2, 5 | Pending |
+| DASH-01 | Phase 2, 5 | API Complete |
+| DASH-02 | Phase 2, 5 | API Complete |
+| DASH-03 | Phase 2, 5 | API Complete |
 | DASH-04 | Phase 5 | Pending |
 | ONBD-01 | Phase 6 | Pending |
 | ONBD-02 | Phase 6 | Pending |
@@ -174,4 +174,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-29 after roadmap creation*
+*Last updated: 2026-01-30 after Phase 2 completion*

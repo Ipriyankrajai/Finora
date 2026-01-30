@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { Logo } from "./logo";
+import { TagList } from "./tags/tag-list";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
@@ -68,6 +69,11 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           );
         })}
       </nav>
+
+      {/* Tags section */}
+      <div className="border-t border-border/50">
+        <TagList />
+      </div>
 
       {/* User info */}
       <div className="p-4 border-t border-border/50">
