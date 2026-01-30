@@ -75,21 +75,29 @@ export function useTransactions() {
 
   const limit = 20;
 
-  // Build query input from filters
+  // Build query input from filters, excluding undefined values
+  // The API schema rejects undefined - fields must be omitted entirely
   const queryInput = useMemo(() => {
-    return {
-      limit,
-      datePreset: filters.datePreset,
-      dateFrom: filters.dateFrom ? new Date(filters.dateFrom) : undefined,
-      dateTo: filters.dateTo ? new Date(filters.dateTo) : undefined,
-      type: filters.type,
-      tagId: filters.tagId,
-      amountMin: filters.amountMin,
-      amountMax: filters.amountMax,
-      // For page-based pagination on cursor API:
-      // We'll implement basic first-page support now and
-      // extend pagination in the list component
-    };
+    const input: {
+      limit: number;
+      datePreset?: "last7days" | "last30days" | "thisMonth" | "lastMonth" | "thisYear";
+      dateFrom?: Date;
+      dateTo?: Date;
+      type?: "INCOME" | "EXPENSE";
+      tagId?: string;
+      amountMin?: string;
+      amountMax?: string;
+    } = { limit };
+
+    if (filters.datePreset) input.datePreset = filters.datePreset;
+    if (filters.dateFrom) input.dateFrom = new Date(filters.dateFrom);
+    if (filters.dateTo) input.dateTo = new Date(filters.dateTo);
+    if (filters.type) input.type = filters.type;
+    if (filters.tagId) input.tagId = filters.tagId;
+    if (filters.amountMin) input.amountMin = filters.amountMin;
+    if (filters.amountMax) input.amountMax = filters.amountMax;
+
+    return input;
   }, [filters]);
 
   const queryOptions = trpc.transaction.list.queryOptions(queryInput);
