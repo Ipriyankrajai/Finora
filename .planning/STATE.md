@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Users can see exactly where their money goes and when their loans will be paid off
-**Current focus:** Phase 2 - API Layer (COMPLETE)
+**Current focus:** Phase 3 - Tags & Transactions UI
 
 ## Current Position
 
-Phase: 2 of 6 (API Layer) - COMPLETE
-Plan: 4 of 4 in current phase
-Status: Phase complete
-Last activity: 2026-01-30 - Completed 02-04-PLAN.md (Dashboard Router)
+Phase: 3 of 6 (Tags & Transactions UI)
+Plan: 0 of 4 in current phase
+Status: Ready to plan
+Last activity: 2026-01-30 — Completed Phase 2 (API Layer)
 
 Progress: [█████░░░░░] 50.0% (6/12 plans)
 
@@ -69,10 +69,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None - Phase 2 (API Layer) complete. Ready for Phase 3 (Dashboard UI).
+None - Phase 2 complete. Ready for Phase 3.
 
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Completed 02-04-PLAN.md (Phase 2 complete)
+Stopped at: Phase 2 complete
 Resume file: None

@@ -13,7 +13,7 @@ Finora delivers personal finance tracking in two complementary domains: expense 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Prisma schema, calculation utilities, money-as-cents patterns
-- [ ] **Phase 2: API Layer** - tRPC routers for tags, transactions, loans, and dashboard
+- [x] **Phase 2: API Layer** - tRPC routers for tags, transactions, loans, and dashboard
 - [ ] **Phase 3: Tags & Transactions UI** - Tag management and transaction CRUD with filtering
 - [ ] **Phase 4: Loans UI** - Loan management, payment tracking, balance calculations
 - [ ] **Phase 5: Visualizations & Dashboard** - Charts, dashboard widgets, what-if simulator
@@ -49,10 +49,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — tRPC superjson setup and tag CRUD router with tests
-- [ ] 02-02-PLAN.md — Transaction CRUD router with multi-tag and filtering
-- [ ] 02-03-PLAN.md — Loan CRUD router with payment tracking and projections
-- [ ] 02-04-PLAN.md — Dashboard aggregation endpoint
+- [x] 02-01-PLAN.md — tRPC superjson setup and tag CRUD router with tests
+- [x] 02-02-PLAN.md — Transaction CRUD router with multi-tag and filtering
+- [x] 02-03-PLAN.md — Loan CRUD router with payment tracking and projections
+- [x] 02-04-PLAN.md — Dashboard aggregation endpoint
 
 ### Phase 3: Tags & Transactions UI
 **Goal**: Users can manage tags and record transactions with full filtering capabilities
@@ -131,7 +131,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | ✓ Complete | 2026-01-29 |
-| 2. API Layer | 0/4 | Ready to execute | - |
+| 2. API Layer | 4/4 | ✓ Complete | 2026-01-30 |
 | 3. Tags & Transactions UI | 0/4 | Ready to plan | - |
 | 4. Loans UI | 0/3 | Not started | - |
 | 5. Visualizations & Dashboard | 0/3 | Not started | - |
