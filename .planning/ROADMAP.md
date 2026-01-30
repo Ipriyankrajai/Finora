@@ -64,12 +64,13 @@ Plans:
   3. User can edit and delete existing transactions
   4. User can filter transaction list by date range, type (income/expense), tag, and amount range
   5. Transaction list displays with proper currency formatting and tag indicators
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: Tag management UI (CRUD, color picker)
-- [ ] 03-02: Transaction list and filtering
-- [ ] 03-03: Transaction forms (add/edit with multi-tag selector)
+- [ ] 03-01-PLAN.md — UI foundation: deps, tRPC client superjson, shared components
+- [ ] 03-02-PLAN.md — Tag management UI in sidebar with CRUD
+- [ ] 03-03-PLAN.md — Transaction list with date grouping and filtering
+- [ ] 03-04-PLAN.md — Transaction form modal with multi-tag selection
 
 ### Phase 4: Loans UI
 **Goal**: Users can manage loans and track payments with accurate balance and payoff calculations
@@ -131,11 +132,11 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | ✓ Complete | 2026-01-29 |
 | 2. API Layer | 0/4 | Ready to execute | - |
-| 3. Tags & Transactions UI | 0/3 | Not started | - |
+| 3. Tags & Transactions UI | 0/4 | Ready to plan | - |
 | 4. Loans UI | 0/3 | Not started | - |
 | 5. Visualizations & Dashboard | 0/3 | Not started | - |
 | 6. Onboarding & Polish | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-01-29*
-*Last updated: 2026-01-29*
+*Last updated: 2026-01-30*
