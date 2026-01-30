@@ -171,15 +171,20 @@ export function useCreateTransaction() {
     ...mutationOptions,
     onMutate: async (newTransaction) => {
       // Cancel any outgoing refetches for all transaction.list queries
+      // tRPC query keys are nested arrays like [["trpc", "transaction", "list"], ...]
       await queryClient.cancelQueries({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
 
       // Snapshot the previous values for all transaction.list queries
       const previousQueries = queryClient.getQueriesData<TransactionListCache>({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
 
       // Create optimistic transaction
@@ -240,8 +245,10 @@ export function useCreateTransaction() {
     onSettled: () => {
       // Refetch to sync with server
       queryClient.invalidateQueries({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
     },
   });
@@ -259,13 +266,17 @@ export function useUpdateTransaction() {
     ...mutationOptions,
     onMutate: async (updatedTransaction) => {
       await queryClient.cancelQueries({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
 
       const previousQueries = queryClient.getQueriesData<TransactionListCache>({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
 
       const now = new Date();
@@ -328,8 +339,10 @@ export function useUpdateTransaction() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
     },
   });
@@ -348,13 +361,17 @@ export function useDeleteTransaction() {
     ...mutationOptions,
     onMutate: async (deleteInput) => {
       await queryClient.cancelQueries({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
 
       const previousQueries = queryClient.getQueriesData<TransactionListCache>({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
 
       // Optimistically remove from all matching caches
@@ -383,8 +400,10 @@ export function useDeleteTransaction() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["transaction", "list"],
-        exact: false,
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("transaction") &&
+          query.queryKey[0].includes("list"),
       });
     },
   });
