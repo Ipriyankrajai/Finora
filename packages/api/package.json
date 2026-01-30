@@ -23,6 +23,7 @@
     "currency.js": "^2.0.4",
     "dotenv": "catalog:",
     "next": "catalog:",
+    "superjson": "^2.2.6",
     "zod": "catalog:"
   },
   "devDependencies": {
