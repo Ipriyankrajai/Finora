@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Phase: 2 of 6 (API Layer)
-Plan: 2 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: In progress
-Last activity: 2026-01-30 - Completed 02-02-PLAN.md (Transaction Router)
+Last activity: 2026-01-30 - Completed 02-03-PLAN.md (Loan Router)
 
-Progress: [███░░░░░░░] 33.3% (4/12 plans)
+Progress: [████░░░░░░] 41.7% (5/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 5.5 min
-- Total execution time: 22 min
+- Total plans completed: 5
+- Average duration: 6.4 min
+- Total execution time: 32 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 2 | 10 min | 5 min |
-| 02-api-layer | 2 | 12 min | 6 min |
+| 02-api-layer | 3 | 22 min | 7.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (6 min), 02-02 (6 min)
-- Trend: Consistent
+- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (6 min), 02-02 (6 min), 02-03 (10 min)
+- Trend: Slight increase due to comprehensive test coverage
 
 *Updated after each plan completion*
 
@@ -56,6 +56,9 @@ Recent decisions affecting current work:
 - [02-02]: Date presets calculate ranges at query time (not stored)
 - [02-02]: Multi-tag assignment uses Prisma $transaction for atomicity
 - [02-02]: Amount filters as string for BigInt compatibility
+- [02-03]: loanType (car/home/personal/other) separate from interestType (SIMPLE/COMPOUND)
+- [02-03]: Balance calculated from payments each time (not stored)
+- [02-03]: Payment split: interest = balance * (rate/100/12), principal = payment - interest
 
 ### Pending Todos
 
@@ -63,10 +66,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None - Transaction router complete. Ready for Loan router (02-03) or Dashboard (02-04).
+None - Loan router complete. Ready for Dashboard router (02-04).
 
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Completed 02-02-PLAN.md
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
