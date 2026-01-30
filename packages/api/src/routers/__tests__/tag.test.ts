@@ -32,13 +32,21 @@ describe("tag router", () => {
   const mockUser = { id: TEST_USER_ID, email: "test@test.com", name: "Test User" };
   const mockSession = {
     user: mockUser,
-    session: { id: "cuid1234567890sess01", userId: mockUser.id },
+    session: {
+      id: "cuid1234567890sess01",
+      userId: mockUser.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      expiresAt: new Date(Date.now() + 86400000),
+      token: "test-token",
+      ipAddress: null,
+      userAgent: null,
+    },
   };
 
   // Create caller with mock session
-  const caller = createCaller({
-    session: mockSession,
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const caller = createCaller({ session: mockSession } as any);
 
   beforeEach(() => {
     vi.clearAllMocks();
