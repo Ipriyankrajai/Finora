@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Phase: 4 of 6 (Loans UI)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-01-31 - Completed 04-01-PLAN.md
+Last activity: 2026-01-31 - Completed 04-02-PLAN.md
 
-Progress: [███████████░░░] 73% (11/15 plans through Phase 4)
+Progress: [████████████░░] 80% (12/15 plans through Phase 4)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 6.8 min
-- Total execution time: 73 min
+- Total execution time: 81 min
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [███████████░░░] 73% (11/15 plans through 
 | 01-foundation | 2 | 10 min | 5 min |
 | 02-api-layer | 4 | 25 min | 6.3 min |
 | 03-tags-transactions-ui | 4 | 30 min | 7.5 min |
-| 04-loans-ui | 1 | 8 min | 8 min |
+| 04-loans-ui | 2 | 16 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (5 min), 03-02 (5 min), 03-03 (8 min), 03-04 (12 min), 04-01 (8 min)
+- Last 5 plans: 03-02 (5 min), 03-03 (8 min), 03-04 (12 min), 04-01 (8 min), 04-02 (8 min)
 - Trend: Stable with variance based on complexity
 
 *Updated after each plan completion*
@@ -80,6 +80,9 @@ Recent decisions affecting current work:
 - [04-01]: loanType not persisted in DB; UI shows interestType (SIMPLE/COMPOUND) on cards
 - [04-01]: PMT formula auto-calculation in loan form with recalculatePayment helper
 - [04-01]: Balance sorting (highest first) per CONTEXT.md snowball-style view
+- [04-02]: Simpler payment summary without payoff date change (avoids extra API call)
+- [04-02]: Server calculates principal/interest split, not client
+- [04-02]: Two-state dialog pattern: form view -> summary view after success
 
 ### Pending Todos
 
@@ -94,5 +97,5 @@ NOTE: loanType field defined in API input schema but not stored in database. Cur
 ## Session Continuity
 
 Last session: 2026-01-31
-Stopped at: Completed 04-01-PLAN.md
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
