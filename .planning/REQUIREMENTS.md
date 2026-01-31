@@ -15,22 +15,22 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Tags
 
-- [ ] **TAG-01**: User can create a tag with name and color
-- [ ] **TAG-02**: User can edit a tag's name and color
-- [ ] **TAG-03**: User can delete a tag
+- [x] **TAG-01**: User can create a tag with name and color
+- [x] **TAG-02**: User can edit a tag's name and color
+- [x] **TAG-03**: User can delete a tag
 - [ ] **TAG-04**: User can view spending totals grouped by tag
 
 ### Transactions
 
-- [ ] **TXN-01**: User can add an expense with amount, date, and optional notes
-- [ ] **TXN-02**: User can add an income with amount, date, and optional notes
-- [ ] **TXN-03**: User can assign one or more tags to a transaction
-- [ ] **TXN-04**: User can edit a transaction
-- [ ] **TXN-05**: User can delete a transaction
-- [ ] **TXN-06**: User can filter transactions by date range
-- [ ] **TXN-07**: User can filter transactions by type (income/expense)
-- [ ] **TXN-08**: User can filter transactions by tag
-- [ ] **TXN-09**: User can filter transactions by amount range
+- [x] **TXN-01**: User can add an expense with amount, date, and optional notes
+- [x] **TXN-02**: User can add an income with amount, date, and optional notes
+- [x] **TXN-03**: User can assign one or more tags to a transaction
+- [x] **TXN-04**: User can edit a transaction
+- [x] **TXN-05**: User can delete a transaction
+- [x] **TXN-06**: User can filter transactions by date range
+- [x] **TXN-07**: User can filter transactions by type (income/expense)
+- [x] **TXN-08**: User can filter transactions by tag
+- [x] **TXN-09**: User can filter transactions by amount range
 
 ### Loans
 
@@ -125,19 +125,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | - | Existing |
 | AUTH-02 | - | Existing |
 | AUTH-03 | - | Existing |
-| TAG-01 | Phase 2, 3 | API Complete |
-| TAG-02 | Phase 2, 3 | API Complete |
-| TAG-03 | Phase 2, 3 | API Complete |
+| TAG-01 | Phase 2, 3 | Complete |
+| TAG-02 | Phase 2, 3 | Complete |
+| TAG-03 | Phase 2, 3 | Complete |
 | TAG-04 | Phase 5 | Pending |
-| TXN-01 | Phase 2, 3 | API Complete |
-| TXN-02 | Phase 2, 3 | API Complete |
-| TXN-03 | Phase 2, 3 | API Complete |
-| TXN-04 | Phase 2, 3 | API Complete |
-| TXN-05 | Phase 2, 3 | API Complete |
-| TXN-06 | Phase 2, 3 | API Complete |
-| TXN-07 | Phase 2, 3 | API Complete |
-| TXN-08 | Phase 2, 3 | API Complete |
-| TXN-09 | Phase 2, 3 | API Complete |
+| TXN-01 | Phase 2, 3 | Complete |
+| TXN-02 | Phase 2, 3 | Complete |
+| TXN-03 | Phase 2, 3 | Complete |
+| TXN-04 | Phase 2, 3 | Complete |
+| TXN-05 | Phase 2, 3 | Complete |
+| TXN-06 | Phase 2, 3 | Complete |
+| TXN-07 | Phase 2, 3 | Complete |
+| TXN-08 | Phase 2, 3 | Complete |
+| TXN-09 | Phase 2, 3 | Complete |
 | LOAN-01 | Phase 2, 4 | API Complete |
 | LOAN-02 | Phase 2, 4 | API Complete |
 | LOAN-03 | Phase 2, 4 | API Complete |
@@ -174,4 +174,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-30 after Phase 2 completion*
+*Last updated: 2026-01-31 after Phase 3 completion*
