@@ -39,6 +39,7 @@
     "react-day-picker": "^9.13.0",
     "react-dom": "^19.2.3",
     "reading-time": "^1.5.0",
+    "recharts": "^3.7.0",
     "remark-gfm": "^4.0.1",
     "shadcn": "^3.6.2",
     "sonner": "^2.0.5",
