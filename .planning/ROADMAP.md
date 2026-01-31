@@ -82,12 +82,12 @@ Plans:
   3. User can see current remaining balance on each loan
   4. User can see total interest paid to date for each loan
   5. User can see projected payoff date based on current payment schedule
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Loan management UI (CRUD with type/rate/term inputs)
-- [ ] 04-02: Payment logging and history
-- [ ] 04-03: Loan detail page (balance, interest, payoff summary)
+- [ ] 04-01-PLAN.md — Loan hooks, LoanCard, LoanForm, and loans list page
+- [ ] 04-02-PLAN.md — Payment form modal with extra payment toggle and summary
+- [ ] 04-03-PLAN.md — Loan detail page with stats and payment history
 
 ### Phase 5: Visualizations & Dashboard
 **Goal**: Users can see spending patterns and loan progress through delightful charts and interactive simulation
@@ -133,7 +133,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation | 2/2 | ✓ Complete | 2026-01-29 |
 | 2. API Layer | 4/4 | ✓ Complete | 2026-01-30 |
 | 3. Tags & Transactions UI | 4/4 | ✓ Complete | 2026-01-31 |
-| 4. Loans UI | 0/3 | Ready to plan | - |
+| 4. Loans UI | 0/3 | Ready to execute | - |
 | 5. Visualizations & Dashboard | 0/3 | Not started | - |
 | 6. Onboarding & Polish | 0/2 | Not started | - |
 
