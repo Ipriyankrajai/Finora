@@ -14,6 +14,7 @@ import { trpc } from "@/utils/trpc";
 import { MonthlySummary } from "./monthly-summary";
 import { RecentTransactions } from "./recent-transactions";
 import { SpendingPieChart } from "./spending-pie-chart";
+import { SpendingTimeline } from "./spending-timeline";
 
 /**
  * Stable keys for skeleton items (skeletons don't reorder)
@@ -287,6 +288,9 @@ export function DashboardPageClient() {
 				{/* Recent Transactions */}
 				<RecentTransactions />
 			</div>
+
+			{/* Spending Timeline - full width */}
+			<SpendingTimeline />
 		</div>
 	);
 }
