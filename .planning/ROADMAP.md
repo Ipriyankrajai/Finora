@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Prisma schema, calculation utilities, money-as-cents patterns
 - [x] **Phase 2: API Layer** - tRPC routers for tags, transactions, loans, and dashboard
 - [x] **Phase 3: Tags & Transactions UI** - Tag management and transaction CRUD with filtering
-- [ ] **Phase 4: Loans UI** - Loan management, payment tracking, balance calculations
+- [x] **Phase 4: Loans UI** - Loan management, payment tracking, balance calculations
 - [ ] **Phase 5: Visualizations & Dashboard** - Charts, dashboard widgets, what-if simulator
 - [ ] **Phase 6: Onboarding & Polish** - Guided onboarding, settings, empty states
 
@@ -85,9 +85,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Loan hooks, LoanCard, LoanForm, and loans list page
-- [ ] 04-02-PLAN.md — Payment form modal with extra payment toggle and summary
-- [ ] 04-03-PLAN.md — Loan detail page with stats and payment history
+- [x] 04-01-PLAN.md — Loan hooks, LoanCard, LoanForm, and loans list page
+- [x] 04-02-PLAN.md — Payment form modal with extra payment toggle and summary
+- [x] 04-03-PLAN.md — Loan detail page with stats and payment history
 
 ### Phase 5: Visualizations & Dashboard
 **Goal**: Users can see spending patterns and loan progress through delightful charts and interactive simulation
@@ -133,10 +133,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation | 2/2 | ✓ Complete | 2026-01-29 |
 | 2. API Layer | 4/4 | ✓ Complete | 2026-01-30 |
 | 3. Tags & Transactions UI | 4/4 | ✓ Complete | 2026-01-31 |
-| 4. Loans UI | 0/3 | Ready to execute | - |
+| 4. Loans UI | 3/3 | ✓ Complete | 2026-01-31 |
 | 5. Visualizations & Dashboard | 0/3 | Not started | - |
 | 6. Onboarding & Polish | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-01-29*
-*Last updated: 2026-01-31*
+*Last updated: 2026-01-31 (Phase 4 complete)*
