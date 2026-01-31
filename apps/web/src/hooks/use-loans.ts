@@ -16,6 +16,8 @@ export interface LoanWithBalance {
   principalCents: bigint;
   balanceCents: bigint;
   totalInterestPaidCents: bigint;
+  payoffAmountCents: bigint;
+  currentPeriodInterestCents: bigint;
   annualRatePercent: number;
   termMonths: number;
   monthlyPaymentCents: bigint;

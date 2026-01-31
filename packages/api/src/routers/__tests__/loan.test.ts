@@ -7,11 +7,6 @@ type LoanWithPayments = Loan & {
   payments: Pick<LoanPayment, "principalCents">[];
 };
 
-// Type for loan with full payment details
-type LoanWithFullPayments = Loan & {
-  payments: LoanPayment[];
-};
-
 // Mock Prisma before importing modules that use it
 vi.mock("@finora2/db", () => ({
   default: {

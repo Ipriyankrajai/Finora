@@ -102,8 +102,10 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
     );
   }
 
-  // Cast to include full loan details with projection
+  // Cast to include full loan details with projection and payoff fields
   const loanWithDetails = loan as typeof loan & {
+    payoffAmountCents: bigint;
+    currentPeriodInterestCents: bigint;
     projection: {
       monthsRemaining: number;
       totalInterestRemainingCents: bigint;
@@ -127,6 +129,8 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
     principalCents: loan.principalCents,
     balanceCents: loan.balanceCents,
     totalInterestPaidCents: loan.totalInterestPaidCents,
+    payoffAmountCents: loanWithDetails.payoffAmountCents,
+    currentPeriodInterestCents: loanWithDetails.currentPeriodInterestCents,
     annualRatePercent: loan.annualRatePercent,
     termMonths: loan.termMonths,
     monthlyPaymentCents: loan.monthlyPaymentCents,
@@ -182,19 +186,23 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Remaining Balance */}
+        {/* Payoff Amount - what you'd pay today to close the loan */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Remaining Balance
+              Payoff Amount
             </CardTitle>
           </CardHeader>
           <CardContent>
             <MoneyDisplay
-              cents={loan.balanceCents}
+              cents={loanWithDetails.payoffAmountCents}
               showSign={false}
               className="text-2xl font-bold"
             />
+            <p className="text-xs text-muted-foreground mt-1">
+              Principal: <MoneyDisplay cents={loan.balanceCents} showSign={false} className="inline" /> •{" "}
+              Interest: <MoneyDisplay cents={loanWithDetails.currentPeriodInterestCents} showSign={false} className="inline" />
+            </p>
           </CardContent>
         </Card>
 
@@ -292,6 +300,7 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
           name: loan.name,
           monthlyPaymentCents: loan.monthlyPaymentCents,
           balanceCents: loan.balanceCents,
+          payoffAmountCents: loanWithDetails.payoffAmountCents,
           annualRatePercent: loan.annualRatePercent,
         }}
         open={isPaymentOpen}

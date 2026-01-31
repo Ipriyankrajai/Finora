@@ -103,14 +103,18 @@ export function LoanCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Balance section - prominent */}
+        {/* Payoff Amount section - what you'd pay today */}
         <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Remaining Balance</p>
+          <p className="text-xs text-muted-foreground">Payoff Amount</p>
           <MoneyDisplay
-            cents={loan.balanceCents}
+            cents={loan.payoffAmountCents}
             className="text-2xl font-semibold"
             showSign={false}
           />
+          <p className="text-xs text-muted-foreground">
+            Principal: <MoneyDisplay cents={loan.balanceCents} showSign={false} className="inline" /> •{" "}
+            Interest: <MoneyDisplay cents={loan.currentPeriodInterestCents} showSign={false} className="inline" />
+          </p>
         </div>
 
         {/* Secondary info */}

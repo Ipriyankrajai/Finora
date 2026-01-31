@@ -103,6 +103,7 @@ export function LoansPageClient() {
             name: paymentLoan.name,
             monthlyPaymentCents: paymentLoan.monthlyPaymentCents,
             balanceCents: paymentLoan.balanceCents,
+            payoffAmountCents: paymentLoan.payoffAmountCents,
             annualRatePercent: paymentLoan.annualRatePercent,
           }}
           open={isPaymentFormOpen}

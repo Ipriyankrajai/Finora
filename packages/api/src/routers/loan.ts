@@ -80,6 +80,28 @@ function calculateTotalInterestPaid(
   return payments.reduce((sum, p) => sum + p.interestCents, 0n);
 }
 
+/**
+ * Calculate the payoff amount (what you'd pay today to close the loan)
+ * This includes remaining principal + current period's accrued interest
+ */
+function calculatePayoffAmount(
+  remainingPrincipalCents: bigint,
+  annualRatePercent: number
+): { payoffAmountCents: bigint; currentPeriodInterestCents: bigint } {
+  // If loan is paid off, no payoff needed
+  if (remainingPrincipalCents <= 0n) {
+    return { payoffAmountCents: 0n, currentPeriodInterestCents: 0n };
+  }
+
+  const monthlyRate = annualRatePercent / 100 / 12;
+  const currentPeriodInterestCents = roundCents(
+    Number(remainingPrincipalCents) * monthlyRate
+  );
+  const payoffAmountCents = remainingPrincipalCents + currentPeriodInterestCents;
+
+  return { payoffAmountCents, currentPeriodInterestCents };
+}
+
 export const loanRouter = router({
   /**
    * List all loans for the current user with calculated balances
@@ -108,6 +130,10 @@ export const loanRouter = router({
       );
       const totalInterestPaidCents = calculateTotalInterestPaid(loan.payments);
 
+      // Calculate payoff amount (principal + current period interest)
+      const { payoffAmountCents, currentPeriodInterestCents } =
+        calculatePayoffAmount(balanceCents, loan.annualRatePercent);
+
       // Remove payments from response to keep it clean
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { payments, ...loanWithoutPayments } = loan;
@@ -116,6 +142,8 @@ export const loanRouter = router({
         ...loanWithoutPayments,
         balanceCents,
         totalInterestPaidCents,
+        payoffAmountCents,
+        currentPeriodInterestCents,
       };
     });
   }),
@@ -160,6 +188,10 @@ export const loanRouter = router({
       // Calculate total interest paid
       const totalInterestPaidCents = calculateTotalInterestPaid(loan.payments);
 
+      // Calculate payoff amount (principal + current period interest)
+      const { payoffAmountCents, currentPeriodInterestCents } =
+        calculatePayoffAmount(balanceCents, loan.annualRatePercent);
+
       // Get payoff projection using Phase 1 calculation utilities
       const projection = projectPayoff(
         balanceCents,
@@ -171,6 +203,8 @@ export const loanRouter = router({
         ...loan,
         balanceCents,
         totalInterestPaidCents,
+        payoffAmountCents,
+        currentPeriodInterestCents,
         projection: {
           monthsRemaining: projection.monthsRemaining,
           totalInterestRemainingCents: projection.totalInterestCents,
@@ -344,15 +378,21 @@ export const loanRouter = router({
         });
       }
 
+      // Calculate payoff amount (what you'd pay today to close the loan)
+      const { payoffAmountCents } = calculatePayoffAmount(
+        currentBalance,
+        loan.annualRatePercent
+      );
+
       // Convert payment amount to cents
       const amountCents = displayToCents(input.amount);
 
-      // Validate payment doesn't exceed remaining balance
-      if (amountCents > currentBalance) {
-        const remainingDollars = (Number(currentBalance) / 100).toFixed(2);
+      // Validate payment doesn't exceed payoff amount (principal + current interest)
+      if (amountCents > payoffAmountCents) {
+        const payoffDollars = (Number(payoffAmountCents) / 100).toFixed(2);
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Payment amount exceeds remaining balance. Maximum payment allowed is $${remainingDollars}`,
+          message: `Payment amount exceeds payoff amount. Maximum payment allowed is $${payoffDollars}`,
         });
       }
 

@@ -23,11 +23,12 @@ import { cn } from "@/lib/utils";
 import { PaymentSummary } from "./payment-summary";
 
 /**
- * Create validation schema for payment form with balance check.
+ * Create validation schema for payment form with payoff amount check.
  * Uses cents comparison to avoid floating point precision issues.
+ * Validates against payoff amount (principal + current period interest).
  */
-const createPaymentSchema = (maxAmountCents: bigint) => {
-  const maxAmountNum = Number(maxAmountCents);
+const createPaymentSchema = (payoffAmountCents: bigint) => {
+  const maxAmountNum = Number(payoffAmountCents);
   const maxAmountDisplay = (maxAmountNum / 100).toFixed(2);
 
   return z.object({
@@ -42,7 +43,7 @@ const createPaymentSchema = (maxAmountCents: bigint) => {
           const amountCents = Math.round(parseFloat(val) * 100);
           return amountCents <= maxAmountNum;
         },
-        `Amount exceeds remaining balance of $${maxAmountDisplay}`
+        `Amount exceeds payoff amount of $${maxAmountDisplay}`
       ),
     paidAt: z.date({ message: "Date is required" }),
     isExtra: z.boolean(),
@@ -55,6 +56,7 @@ interface PaymentFormProps {
     name: string;
     monthlyPaymentCents: bigint;
     balanceCents: bigint;
+    payoffAmountCents: bigint;
     annualRatePercent: number;
   };
   open: boolean;
@@ -200,17 +202,18 @@ function PaymentFormContent({
   const addPayment = useAddPayment();
 
   // Calculate default amount based on current loan state
+  // Use payoffAmountCents as the cap since that's the max you can pay
   const defaultAmount = React.useMemo(() => {
     const monthlyPayment = Number(loan.monthlyPaymentCents);
-    const remainingBalance = Number(loan.balanceCents);
-    const prefillAmount = Math.min(monthlyPayment, remainingBalance);
+    const payoffAmount = Number(loan.payoffAmountCents);
+    const prefillAmount = Math.min(monthlyPayment, payoffAmount);
     return (prefillAmount / 100).toFixed(2);
-  }, [loan.monthlyPaymentCents, loan.balanceCents]);
+  }, [loan.monthlyPaymentCents, loan.payoffAmountCents]);
 
-  // Validation schema with current balance
+  // Validation schema with payoff amount (principal + current period interest)
   const validationSchema = React.useMemo(
-    () => createPaymentSchema(loan.balanceCents),
-    [loan.balanceCents]
+    () => createPaymentSchema(loan.payoffAmountCents),
+    [loan.payoffAmountCents]
   );
 
   const form = useForm({
