@@ -9,7 +9,10 @@ import {
 
 import { protectedProcedure, router } from "../index";
 import { projectPayoff } from "../lib/calculations";
-import { spendingTrendInput } from "../schemas/dashboard";
+import {
+	amortizationScheduleInput,
+	spendingTrendInput,
+} from "../schemas/dashboard";
 
 /**
  * Calculate the current balance of a loan from its payments
@@ -250,5 +253,86 @@ export const dashboardRouter = router({
 			);
 
 			return result;
+		}),
+
+	/**
+	 * Get amortization schedule for a specific loan
+	 * Returns month-by-month balance projection (max 360 months = 30 years)
+	 */
+	getAmortizationSchedule: protectedProcedure
+		.input(amortizationScheduleInput)
+		.query(async ({ ctx, input }) => {
+			const userId = ctx.session.user.id;
+
+			// Fetch loan with payments for authorization and balance calculation
+			const loan = await db.loan.findFirst({
+				where: {
+					id: input.loanId,
+					userId, // Authorization check
+				},
+				include: {
+					payments: {
+						select: {
+							principalCents: true,
+						},
+					},
+				},
+			});
+
+			if (!loan) {
+				throw new Error("Loan not found");
+			}
+
+			// Calculate current balance
+			const currentBalance = calculateCurrentBalance(
+				loan.principalCents,
+				loan.payments
+			);
+
+			// Generate amortization schedule
+			const schedule: Array<{ month: Date; balanceCents: bigint }> = [];
+			let balance = Number(currentBalance);
+			const monthlyRate = loan.annualRatePercent / 100 / 12;
+			const payment = Number(loan.monthlyPaymentCents);
+
+			let monthOffset = 0;
+			const now = new Date();
+
+			// Add current balance as starting point
+			schedule.push({
+				month: new Date(now.getFullYear(), now.getMonth(), 1),
+				balanceCents: currentBalance,
+			});
+
+			// Cap at 360 months (30 years) per RESEARCH.md
+			while (balance > 0 && monthOffset < 360) {
+				const interestThisMonth = balance * monthlyRate;
+
+				// Check if payment covers interest
+				if (payment <= interestThisMonth) {
+					// Payment doesn't cover interest - will never pay off
+					// Just return what we have
+					break;
+				}
+
+				const principalThisMonth = Math.min(
+					payment - interestThisMonth,
+					balance
+				);
+				balance -= principalThisMonth;
+				monthOffset++;
+
+				const monthDate = new Date(
+					now.getFullYear(),
+					now.getMonth() + monthOffset,
+					1
+				);
+				schedule.push({
+					month: monthDate,
+					balanceCents: balance > 0 ? BigInt(Math.round(balance)) : 0n,
+				});
+			}
+
+			return schedule;
 		}),
 });
