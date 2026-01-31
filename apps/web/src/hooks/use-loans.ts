@@ -285,3 +285,71 @@ export function useDeleteLoan() {
     },
   });
 }
+
+/**
+ * Payment result type returned from addPayment mutation
+ */
+export type PaymentResult = {
+  id: string;
+  loanId: string;
+  amountCents: bigint;
+  principalCents: bigint;
+  interestCents: bigint;
+  isExtra: boolean;
+  paidAt: Date;
+};
+
+/**
+ * Hook to add a payment to a loan with optimistic cache invalidation.
+ * Server calculates principal/interest split based on current balance.
+ * Input: { loanId, amount (string), paidAt, isExtra }
+ */
+export function useAddPayment() {
+  const queryClient = useQueryClient();
+  const mutationOptions = trpc.loan.addPayment.mutationOptions();
+
+  return useMutation({
+    ...mutationOptions,
+    onMutate: async () => {
+      // Cancel queries for loan list and specific loan
+      await queryClient.cancelQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("loan"),
+      });
+
+      // Snapshot for rollback - capture both list and getById queries
+      const previousQueries = queryClient.getQueriesData({
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("loan"),
+      });
+
+      // Note: We don't optimistically update calculated fields
+      // Server calculates principal/interest split, balance, etc.
+      // Just show loading state in UI
+
+      return { previousQueries };
+    },
+    onError: (_err, _newPayment, context) => {
+      // Rollback all loan queries
+      if (context?.previousQueries) {
+        for (const [queryKey, data] of context.previousQueries) {
+          queryClient.setQueryData(queryKey, data);
+        }
+      }
+      toast.error("Failed to log payment");
+    },
+    onSuccess: () => {
+      toast.success("Payment logged");
+    },
+    onSettled: () => {
+      // Invalidate both loan.list and loan.getById queries
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("loan"),
+      });
+    },
+  });
+}
