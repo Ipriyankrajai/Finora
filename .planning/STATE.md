@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Users can see exactly where their money goes and when their loans will be paid off
-**Current focus:** Phase 3 - Tags & Transactions UI
+**Current focus:** Phase 5 - Visualizations & Dashboard
 
 ## Current Position
 
-Phase: 3 of 6 (Tags & Transactions UI)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-01-30 - Completed 03-03-PLAN.md
+Phase: 5 of 6 (Visualizations & Dashboard)
+Plan: 0 of 3 in current phase
+Status: Ready to plan
+Last activity: 2026-01-31 - Completed Phase 4
 
-Progress: [████████░░] 75% (9/12 plans)
+Progress: [█████████████░] 87% (13/15 plans through Phase 4)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 5.9 min
-- Total execution time: 53 min
+- Total plans completed: 13
+- Average duration: 6.5 min
+- Total execution time: 85 min
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [████████░░] 75% (9/12 plans)
 |-------|-------|-------|----------|
 | 01-foundation | 2 | 10 min | 5 min |
 | 02-api-layer | 4 | 25 min | 6.3 min |
-| 03-tags-transactions-ui | 3 | 18 min | 6 min |
+| 03-tags-transactions-ui | 4 | 30 min | 7.5 min |
+| 04-loans-ui | 3 | 20 min | 6.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (10 min), 02-04 (3 min), 03-01 (5 min), 03-02 (5 min), 03-03 (8 min)
+- Last 5 plans: 03-03 (8 min), 03-04 (12 min), 04-01 (8 min), 04-02 (8 min), 04-03 (4 min)
 - Trend: Stable with variance based on complexity
 
 *Updated after each plan completion*
@@ -72,6 +73,19 @@ Recent decisions affecting current work:
 - [03-03]: URL-based filter state for shareable/bookmarkable filtered views
 - [03-03]: Page-based UI over cursor-based API using limit parameter
 - [03-03]: Date grouping with Today/Yesterday/formatted date labels
+- [03-04]: TanStack Form with Zod validation for transaction form
+- [03-04]: Popover multi-select with checkboxes for tag selection
+- [03-04]: Page-level form state management with edit/create mode switching
+- [03-04]: Predicate-based tRPC query invalidation for mutations
+- [04-01]: loanType not persisted in DB; UI shows interestType (SIMPLE/COMPOUND) on cards
+- [04-01]: PMT formula auto-calculation in loan form with recalculatePayment helper
+- [04-01]: Balance sorting (highest first) per CONTEXT.md snowball-style view
+- [04-02]: Simpler payment summary without payoff date change (avoids extra API call)
+- [04-02]: Server calculates principal/interest split, not client
+- [04-02]: Two-state dialog pattern: form view -> summary view after success
+- [04-03]: Infinity payoff handled with "N/A" message and "Increase payment" hint
+- [04-03]: Delete payment requires confirmation dialog for data safety
+- [04-03]: Detail page pattern: back link, title, actions row, then content sections
 
 ### Pending Todos
 
@@ -81,8 +95,10 @@ None yet.
 
 RESOLVED: TypeScript ES2020 target issue fixed in 03-03. Both apps/web and packages/api now target ES2020.
 
+NOTE: loanType field defined in API input schema but not stored in database. Current UI works around this by displaying interestType instead. Consider adding loanType column to Loan model in future if loan categorization is needed.
+
 ## Session Continuity
 
-Last session: 2026-01-30
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-01-31
+Stopped at: Completed Phase 4 (Loans UI)
 Resume file: None

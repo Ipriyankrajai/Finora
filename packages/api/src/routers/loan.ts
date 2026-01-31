@@ -16,12 +16,27 @@ import {
 /**
  * Calculate the principal/interest split for a payment based on current balance
  * Uses standard amortization formula where interest = balance * monthly_rate
+ * Extra payments go entirely to principal (no interest portion)
  */
 function calculatePaymentSplit(
   currentBalanceCents: bigint,
   annualRatePercent: number,
-  paymentAmountCents: bigint
+  paymentAmountCents: bigint,
+  isExtra: boolean
 ): { principalCents: bigint; interestCents: bigint } {
+  // Extra payments go entirely to principal
+  if (isExtra) {
+    // Principal can't exceed remaining balance
+    const principalCents =
+      paymentAmountCents > currentBalanceCents
+        ? currentBalanceCents
+        : paymentAmountCents;
+    return {
+      principalCents,
+      interestCents: 0n,
+    };
+  }
+
   const monthlyRate = annualRatePercent / 100 / 12;
   const interestCents = roundCents(Number(currentBalanceCents) * monthlyRate);
 
@@ -65,6 +80,28 @@ function calculateTotalInterestPaid(
   return payments.reduce((sum, p) => sum + p.interestCents, 0n);
 }
 
+/**
+ * Calculate the payoff amount (what you'd pay today to close the loan)
+ * This includes remaining principal + current period's accrued interest
+ */
+function calculatePayoffAmount(
+  remainingPrincipalCents: bigint,
+  annualRatePercent: number
+): { payoffAmountCents: bigint; currentPeriodInterestCents: bigint } {
+  // If loan is paid off, no payoff needed
+  if (remainingPrincipalCents <= 0n) {
+    return { payoffAmountCents: 0n, currentPeriodInterestCents: 0n };
+  }
+
+  const monthlyRate = annualRatePercent / 100 / 12;
+  const currentPeriodInterestCents = roundCents(
+    Number(remainingPrincipalCents) * monthlyRate
+  );
+  const payoffAmountCents = remainingPrincipalCents + currentPeriodInterestCents;
+
+  return { payoffAmountCents, currentPeriodInterestCents };
+}
+
 export const loanRouter = router({
   /**
    * List all loans for the current user with calculated balances
@@ -93,6 +130,10 @@ export const loanRouter = router({
       );
       const totalInterestPaidCents = calculateTotalInterestPaid(loan.payments);
 
+      // Calculate payoff amount (principal + current period interest)
+      const { payoffAmountCents, currentPeriodInterestCents } =
+        calculatePayoffAmount(balanceCents, loan.annualRatePercent);
+
       // Remove payments from response to keep it clean
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { payments, ...loanWithoutPayments } = loan;
@@ -101,6 +142,8 @@ export const loanRouter = router({
         ...loanWithoutPayments,
         balanceCents,
         totalInterestPaidCents,
+        payoffAmountCents,
+        currentPeriodInterestCents,
       };
     });
   }),
@@ -145,6 +188,10 @@ export const loanRouter = router({
       // Calculate total interest paid
       const totalInterestPaidCents = calculateTotalInterestPaid(loan.payments);
 
+      // Calculate payoff amount (principal + current period interest)
+      const { payoffAmountCents, currentPeriodInterestCents } =
+        calculatePayoffAmount(balanceCents, loan.annualRatePercent);
+
       // Get payoff projection using Phase 1 calculation utilities
       const projection = projectPayoff(
         balanceCents,
@@ -156,6 +203,8 @@ export const loanRouter = router({
         ...loan,
         balanceCents,
         totalInterestPaidCents,
+        payoffAmountCents,
+        currentPeriodInterestCents,
         projection: {
           monthsRemaining: projection.monthsRemaining,
           totalInterestRemainingCents: projection.totalInterestCents,
@@ -321,14 +370,39 @@ export const loanRouter = router({
         loan.payments
       );
 
+      // Check if loan is already paid off
+      if (currentBalance <= 0n) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This loan has already been paid off",
+        });
+      }
+
+      // Calculate payoff amount (what you'd pay today to close the loan)
+      const { payoffAmountCents } = calculatePayoffAmount(
+        currentBalance,
+        loan.annualRatePercent
+      );
+
       // Convert payment amount to cents
       const amountCents = displayToCents(input.amount);
 
+      // Validate payment doesn't exceed payoff amount (principal + current interest)
+      if (amountCents > payoffAmountCents) {
+        const payoffDollars = (Number(payoffAmountCents) / 100).toFixed(2);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Payment amount exceeds payoff amount. Maximum payment allowed is $${payoffDollars}`,
+        });
+      }
+
       // Calculate principal/interest split based on current balance
+      // Extra payments go entirely to principal (no interest)
       const { principalCents, interestCents } = calculatePaymentSplit(
         currentBalance,
         loan.annualRatePercent,
-        amountCents
+        amountCents,
+        input.isExtra
       );
 
       // Create the payment
