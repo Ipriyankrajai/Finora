@@ -8,6 +8,7 @@ import type { LoanWithBalance } from "@/hooks/use-loans";
 
 import { LoanForm } from "./loan-form";
 import { LoanList } from "./loan-list";
+import { PaymentForm } from "./payment-form";
 
 /**
  * Client-side loans page content with form state management.
@@ -16,8 +17,8 @@ import { LoanList } from "./loan-list";
 export function LoansPageClient() {
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingLoan, setEditingLoan] = React.useState<LoanWithBalance | null>(null);
-  // For future use in Plan 04-02 (payment logging)
-  const [_paymentLoan, setPaymentLoan] = React.useState<LoanWithBalance | null>(null);
+  const [paymentLoan, setPaymentLoan] = React.useState<LoanWithBalance | null>(null);
+  const [isPaymentFormOpen, setIsPaymentFormOpen] = React.useState(false);
 
   const handleAddLoan = () => {
     setEditingLoan(null);
@@ -36,7 +37,14 @@ export function LoansPageClient() {
 
   const handleLogPayment = (loan: LoanWithBalance) => {
     setPaymentLoan(loan);
-    // TODO: Open payment form dialog in Plan 04-02
+    setIsPaymentFormOpen(true);
+  };
+
+  const handlePaymentFormClose = (open: boolean) => {
+    setIsPaymentFormOpen(open);
+    if (!open) {
+      setPaymentLoan(null);
+    }
   };
 
   const handleFormClose = (open: boolean) => {
@@ -79,6 +87,21 @@ export function LoansPageClient() {
         open={isFormOpen}
         onOpenChange={handleFormClose}
       />
+
+      {/* Payment Form Dialog */}
+      {paymentLoan && (
+        <PaymentForm
+          loan={{
+            id: paymentLoan.id,
+            name: paymentLoan.name,
+            monthlyPaymentCents: paymentLoan.monthlyPaymentCents,
+            balanceCents: paymentLoan.balanceCents,
+            annualRatePercent: paymentLoan.annualRatePercent,
+          }}
+          open={isPaymentFormOpen}
+          onOpenChange={handlePaymentFormClose}
+        />
+      )}
     </div>
   );
 }
