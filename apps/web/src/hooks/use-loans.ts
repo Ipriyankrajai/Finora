@@ -353,3 +353,54 @@ export function useAddPayment() {
     },
   });
 }
+
+/**
+ * Hook to delete a payment from a loan with cache invalidation.
+ * Balance is recalculated server-side after deletion.
+ * Input: { id }
+ */
+export function useDeletePayment() {
+  const queryClient = useQueryClient();
+  const mutationOptions = trpc.loan.deletePayment.mutationOptions();
+
+  return useMutation({
+    ...mutationOptions,
+    onMutate: async () => {
+      // Cancel all loan queries
+      await queryClient.cancelQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("loan"),
+      });
+
+      // Snapshot for rollback
+      const previousQueries = queryClient.getQueriesData({
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("loan"),
+      });
+
+      return { previousQueries };
+    },
+    onError: (_err, _deleteInput, context) => {
+      // Rollback all loan queries
+      if (context?.previousQueries) {
+        for (const [queryKey, data] of context.previousQueries) {
+          queryClient.setQueryData(queryKey, data);
+        }
+      }
+      toast.error("Failed to delete payment");
+    },
+    onSuccess: () => {
+      toast.success("Payment deleted");
+    },
+    onSettled: () => {
+      // Invalidate all loan queries to refresh balance calculations
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey[0]) &&
+          query.queryKey[0].includes("loan"),
+      });
+    },
+  });
+}
