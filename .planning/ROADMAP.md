@@ -100,12 +100,12 @@ Plans:
   4. User can see loan amortization chart showing balance over time
   5. User can simulate "what if I pay extra" and see updated payoff date in real-time
   6. User can quick-add a transaction from the dashboard
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: Dashboard layout and monthly summary widgets
-- [ ] 05-02: Spending charts (pie by tag, trend timeline)
-- [ ] 05-03: Loan charts and what-if simulator
+- [ ] 05-01-PLAN.md — Dashboard foundation with summary cards, spending pie chart, and recent transactions
+- [ ] 05-02-PLAN.md — Spending timeline chart with weekly/daily toggle and API endpoint
+- [ ] 05-03-PLAN.md — Loan visualizations, what-if simulator, and quick-add FAB
 
 ### Phase 6: Onboarding & Polish
 **Goal**: New users understand the app's value and get started successfully
@@ -134,9 +134,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. API Layer | 4/4 | ✓ Complete | 2026-01-30 |
 | 3. Tags & Transactions UI | 4/4 | ✓ Complete | 2026-01-31 |
 | 4. Loans UI | 3/3 | ✓ Complete | 2026-01-31 |
-| 5. Visualizations & Dashboard | 0/3 | Not started | - |
+| 5. Visualizations & Dashboard | 0/3 | Planned | - |
 | 6. Onboarding & Polish | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-01-29*
-*Last updated: 2026-01-31 (Phase 4 complete)*
+*Last updated: 2026-01-31 (Phase 5 planned)*
