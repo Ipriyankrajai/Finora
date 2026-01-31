@@ -7,20 +7,25 @@ import { MoneyDisplay } from "@/components/shared/money-display";
 import { TagChip } from "@/components/tags/tag-chip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useDashboard } from "@/hooks/use-dashboard";
+import { type LoanOverview, useDashboard } from "@/hooks/use-dashboard";
 import { formatRelativeDate, formatTime } from "@/lib/format";
 import { trpc } from "@/utils/trpc";
 
+import { LoanAmortizationChart } from "./loan-amortization-chart";
+import { LoanOverviewCard } from "./loan-overview-card";
 import { MonthlySummary } from "./monthly-summary";
+import { QuickAddFAB } from "./quick-add-fab";
 import { RecentTransactions } from "./recent-transactions";
 import { SpendingPieChart } from "./spending-pie-chart";
 import { SpendingTimeline } from "./spending-timeline";
+import { WhatIfSimulator } from "./what-if-simulator";
 
 /**
  * Stable keys for skeleton items (skeletons don't reorder)
  */
 const SUMMARY_SKELETON_KEYS = ["income", "expenses", "net"];
 const TAG_SKELETON_KEYS = ["tag-1", "tag-2", "tag-3"];
+const LOAN_SKELETON_KEYS = ["loan-1", "loan-2"];
 
 /**
  * Loading skeleton for dashboard summary
@@ -49,6 +54,28 @@ function ChartSkeleton() {
 	return (
 		<div className="flex h-[300px] items-center justify-center">
 			<Skeleton className="size-[200px] rounded-full" />
+		</div>
+	);
+}
+
+/**
+ * Loading skeleton for loans section
+ */
+function LoansSkeleton() {
+	return (
+		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			{LOAN_SKELETON_KEYS.map((key) => (
+				<Card key={key}>
+					<CardHeader className="pb-2">
+						<Skeleton className="h-5 w-32" />
+					</CardHeader>
+					<CardContent className="space-y-3">
+						<Skeleton className="h-6 w-24" />
+						<Skeleton className="h-4 w-20" />
+						<Skeleton className="h-1.5 w-full" />
+					</CardContent>
+				</Card>
+			))}
 		</div>
 	);
 }
@@ -191,20 +218,98 @@ function TagTransactionsExpanded({
 }
 
 /**
+ * Expanded loan view with what-if simulator and amortization chart
+ */
+function LoanExpanded({
+	loan,
+	onClose,
+}: {
+	loan: LoanOverview;
+	onClose: () => void;
+}) {
+	// We need additional loan data for the simulator
+	// Fetch the full loan details to get monthlyPaymentCents and annualRatePercent
+	const queryOptions = trpc.loan.getById.queryOptions({ id: loan.id });
+	const { data: fullLoan, isLoading } = useQuery(queryOptions);
+
+	if (isLoading) {
+		return (
+			<div className="mt-4 space-y-4">
+				<Skeleton className="h-48 w-full" />
+				<Skeleton className="h-64 w-full" />
+			</div>
+		);
+	}
+
+	if (!fullLoan) {
+		return (
+			<div className="mt-4 rounded-md border bg-muted/30 p-4">
+				<p className="text-center text-muted-foreground">
+					Could not load loan details
+				</p>
+				<button
+					className="mt-2 text-center text-muted-foreground text-xs hover:text-foreground"
+					onClick={onClose}
+					type="button"
+				>
+					Close
+				</button>
+			</div>
+		);
+	}
+
+	return (
+		<div className="mt-4 space-y-4">
+			{/* What-If Simulator */}
+			<WhatIfSimulator
+				annualRatePercent={fullLoan.annualRatePercent}
+				balanceCents={fullLoan.balanceCents}
+				monthlyPaymentCents={fullLoan.monthlyPaymentCents}
+				name={fullLoan.name}
+			/>
+
+			{/* Amortization Chart */}
+			<div className="rounded-md border bg-muted/30 p-4">
+				<LoanAmortizationChart loanId={loan.id} loanName={loan.name} />
+			</div>
+
+			{/* Close button */}
+			<div className="text-center">
+				<button
+					className="text-muted-foreground text-xs hover:text-foreground"
+					onClick={onClose}
+					type="button"
+				>
+					Close details
+				</button>
+			</div>
+		</div>
+	);
+}
+
+/**
  * Dashboard page client component.
- * Orchestrates monthly summary, spending pie chart, and recent transactions.
+ * Orchestrates monthly summary, spending charts, loans section, and quick-add FAB.
  * Per CONTEXT.md:
  * - Monthly summary (income/expense/net) prominently at top
- * - Below: spending charts, then loans section (loans in later plan)
+ * - Below: spending charts, then loans section
  * - Responsive: stack vertically on mobile/tablet
+ * - Quick-add FAB always visible in bottom-right
  */
 export function DashboardPageClient() {
-	const { monthlySummary, topTags, otherTagsTotal, isLoading, error } =
-		useDashboard();
+	const {
+		monthlySummary,
+		topTags,
+		otherTagsTotal,
+		loanOverview,
+		isLoading,
+		error,
+	} = useDashboard();
 	const [expandedTag, setExpandedTag] = useState<{
 		id: string | "other";
 		name: string;
 	} | null>(null);
+	const [expandedLoanId, setExpandedLoanId] = useState<string | null>(null);
 
 	// Handle pie chart click
 	const handleTagClick = (tagId: string | "other") => {
@@ -219,9 +324,19 @@ export function DashboardPageClient() {
 		}
 	};
 
-	// Handle close
-	const handleCloseExpanded = () => {
+	// Handle close tag
+	const handleCloseExpandedTag = () => {
 		setExpandedTag(null);
+	};
+
+	// Handle loan card click
+	const handleLoanToggle = (loanId: string) => {
+		setExpandedLoanId(expandedLoanId === loanId ? null : loanId);
+	};
+
+	// Handle close loan
+	const handleCloseLoan = () => {
+		setExpandedLoanId(null);
 	};
 
 	if (error) {
@@ -250,6 +365,51 @@ export function DashboardPageClient() {
 		return null;
 	};
 
+	// Get expanded loan if any
+	const expandedLoan = expandedLoanId
+		? loanOverview.find((l) => l.id === expandedLoanId)
+		: null;
+
+	// Render loans section - extracted to avoid nested ternary
+	const renderLoansSection = () => {
+		if (isLoading) {
+			return <LoansSkeleton />;
+		}
+
+		if (loanOverview.length === 0) {
+			return (
+				<Card>
+					<CardContent className="py-8 text-center">
+						<p className="text-muted-foreground">
+							No loans yet. Add a loan to track your payoff progress.
+						</p>
+					</CardContent>
+				</Card>
+			);
+		}
+
+		return (
+			<>
+				{/* Loan cards grid */}
+				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+					{loanOverview.map((loan) => (
+						<LoanOverviewCard
+							isExpanded={expandedLoanId === loan.id}
+							key={loan.id}
+							loan={loan}
+							onToggle={() => handleLoanToggle(loan.id)}
+						/>
+					))}
+				</div>
+
+				{/* Expanded loan details (what-if + chart) */}
+				{expandedLoan && (
+					<LoanExpanded loan={expandedLoan} onClose={handleCloseLoan} />
+				)}
+			</>
+		);
+	};
+
 	return (
 		<div className="space-y-6">
 			{/* Monthly Summary - prominently at top */}
@@ -275,7 +435,7 @@ export function DashboardPageClient() {
 								{/* Expanded tag transactions */}
 								{expandedTag && (
 									<TagTransactionsExpanded
-										onClose={handleCloseExpanded}
+										onClose={handleCloseExpandedTag}
 										tagId={expandedTag.id}
 										tagName={expandedTag.name}
 									/>
@@ -291,6 +451,16 @@ export function DashboardPageClient() {
 
 			{/* Spending Timeline - full width */}
 			<SpendingTimeline />
+
+			{/* Loans Section */}
+			<div className="space-y-4">
+				<h2 className="font-semibold text-lg">Your Loans</h2>
+
+				{renderLoansSection()}
+			</div>
+
+			{/* Quick Add FAB - always visible */}
+			<QuickAddFAB />
 		</div>
 	);
 }
