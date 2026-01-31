@@ -46,6 +46,15 @@ export interface DashboardData {
 }
 
 /**
+ * Spending trend data point from API
+ */
+export interface SpendingTrendDataPoint {
+	date: Date;
+	incomeCents: bigint;
+	expenseCents: bigint;
+}
+
+/**
  * Hook to fetch dashboard summary data.
  * Includes monthly income/expense/net, top spending tags, and loan overview.
  * Follows the pattern from use-loans.ts (useQuery with queryOptions).
@@ -60,6 +69,26 @@ export function useDashboard() {
 		topTags: (query.data?.topTags ?? []) as TagSpending[],
 		otherTagsTotal: query.data?.otherTagsTotal ?? 0n,
 		loanOverview: (query.data?.loanOverview ?? []) as LoanOverview[],
+		isLoading: query.isLoading,
+		isPending: query.isPending,
+		error: query.error,
+		refetch: query.refetch,
+	};
+}
+
+/**
+ * Hook to fetch spending trend data for timeline chart.
+ * Returns time-series data for weekly or daily granularity.
+ */
+export function useSpendingTrend(granularity: "weekly" | "daily", months = 3) {
+	const queryOptions = trpc.dashboard.getSpendingTrend.queryOptions({
+		granularity,
+		months,
+	});
+	const query = useQuery(queryOptions);
+
+	return {
+		data: (query.data ?? []) as SpendingTrendDataPoint[],
 		isLoading: query.isLoading,
 		isPending: query.isPending,
 		error: query.error,
