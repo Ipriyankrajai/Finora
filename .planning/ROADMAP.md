@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: API Layer** - tRPC routers for tags, transactions, loans, and dashboard
 - [x] **Phase 3: Tags & Transactions UI** - Tag management and transaction CRUD with filtering
 - [x] **Phase 4: Loans UI** - Loan management, payment tracking, balance calculations
-- [ ] **Phase 5: Visualizations & Dashboard** - Charts, dashboard widgets, what-if simulator
+- [x] **Phase 5: Visualizations & Dashboard** - Charts, dashboard widgets, what-if simulator
 - [ ] **Phase 6: Onboarding & Polish** - Guided onboarding, settings, empty states
 
 ## Phase Details
@@ -103,9 +103,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Dashboard foundation with summary cards, spending pie chart, and recent transactions
-- [ ] 05-02-PLAN.md — Spending timeline chart with weekly/daily toggle and API endpoint
-- [ ] 05-03-PLAN.md — Loan visualizations, what-if simulator, and quick-add FAB
+- [x] 05-01-PLAN.md — Dashboard foundation with summary cards, spending pie chart, and recent transactions
+- [x] 05-02-PLAN.md — Spending timeline chart with weekly/daily toggle and API endpoint
+- [x] 05-03-PLAN.md — Loan visualizations, what-if simulator, and quick-add FAB
 
 ### Phase 6: Onboarding & Polish
 **Goal**: New users understand the app's value and get started successfully
@@ -134,9 +134,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. API Layer | 4/4 | ✓ Complete | 2026-01-30 |
 | 3. Tags & Transactions UI | 4/4 | ✓ Complete | 2026-01-31 |
 | 4. Loans UI | 3/3 | ✓ Complete | 2026-01-31 |
-| 5. Visualizations & Dashboard | 0/3 | Planned | - |
+| 5. Visualizations & Dashboard | 3/3 | ✓ Complete | 2026-01-31 |
 | 6. Onboarding & Polish | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-01-29*
-*Last updated: 2026-01-31 (Phase 5 planned)*
+*Last updated: 2026-01-31 (Phase 5 complete)*

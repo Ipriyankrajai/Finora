@@ -18,7 +18,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **TAG-01**: User can create a tag with name and color
 - [x] **TAG-02**: User can edit a tag's name and color
 - [x] **TAG-03**: User can delete a tag
-- [ ] **TAG-04**: User can view spending totals grouped by tag
+- [x] **TAG-04**: User can view spending totals grouped by tag
 
 ### Transactions
 
@@ -45,17 +45,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Visualizations
 
-- [ ] **VIZ-01**: User can see spending breakdown pie chart by tag
-- [ ] **VIZ-02**: User can see spending trend timeline (weeks/months)
-- [ ] **VIZ-03**: User can see loan amortization chart (balance over time)
-- [ ] **VIZ-04**: User can simulate "what if I pay extra" and see updated payoff date
+- [x] **VIZ-01**: User can see spending breakdown pie chart by tag
+- [x] **VIZ-02**: User can see spending trend timeline (weeks/months)
+- [x] **VIZ-03**: User can see loan amortization chart (balance over time)
+- [x] **VIZ-04**: User can simulate "what if I pay extra" and see updated payoff date
 
 ### Dashboard
 
-- [ ] **DASH-01**: User can see this month's income, expenses, and net on dashboard
-- [ ] **DASH-02**: User can see top spending tags this month
-- [ ] **DASH-03**: User can see loan cards with balance and payoff date
-- [ ] **DASH-04**: User can quick-add a transaction from dashboard
+- [x] **DASH-01**: User can see this month's income, expenses, and net on dashboard
+- [x] **DASH-02**: User can see top spending tags this month
+- [x] **DASH-03**: User can see loan cards with balance and payoff date
+- [x] **DASH-04**: User can quick-add a transaction from dashboard
 
 ### Onboarding
 
@@ -128,7 +128,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TAG-01 | Phase 2, 3 | Complete |
 | TAG-02 | Phase 2, 3 | Complete |
 | TAG-03 | Phase 2, 3 | Complete |
-| TAG-04 | Phase 5 | Pending |
+| TAG-04 | Phase 5 | Complete |
 | TXN-01 | Phase 2, 3 | Complete |
 | TXN-02 | Phase 2, 3 | Complete |
 | TXN-03 | Phase 2, 3 | Complete |
@@ -146,14 +146,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LOAN-06 | Phase 2, 4 | Complete |
 | LOAN-07 | Phase 2, 4 | Complete |
 | LOAN-08 | Phase 2, 4 | Complete |
-| VIZ-01 | Phase 5 | Pending |
-| VIZ-02 | Phase 5 | Pending |
-| VIZ-03 | Phase 5 | Pending |
-| VIZ-04 | Phase 5 | Pending |
-| DASH-01 | Phase 2, 5 | API Complete |
-| DASH-02 | Phase 2, 5 | API Complete |
-| DASH-03 | Phase 2, 5 | API Complete |
-| DASH-04 | Phase 5 | Pending |
+| VIZ-01 | Phase 5 | Complete |
+| VIZ-02 | Phase 5 | Complete |
+| VIZ-03 | Phase 5 | Complete |
+| VIZ-04 | Phase 5 | Complete |
+| DASH-01 | Phase 2, 5 | Complete |
+| DASH-02 | Phase 2, 5 | Complete |
+| DASH-03 | Phase 2, 5 | Complete |
+| DASH-04 | Phase 5 | Complete |
 | ONBD-01 | Phase 6 | Pending |
 | ONBD-02 | Phase 6 | Pending |
 | SETT-01 | Phase 6 | Pending |
@@ -174,4 +174,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-31 after Phase 4 completion*
+*Last updated: 2026-01-31 after Phase 5 completion*
