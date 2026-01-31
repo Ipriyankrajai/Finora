@@ -1,9 +1,9 @@
-import { roundCents } from './money';
+import { roundCents } from "./money";
 
 export interface PayoffProjection {
-  monthsRemaining: number;
-  totalInterestCents: bigint;
-  payoffDate: Date;
+	monthsRemaining: number;
+	totalInterestCents: bigint;
+	payoffDate: Date;
 }
 
 /**
@@ -14,22 +14,22 @@ export interface PayoffProjection {
  * @returns Monthly payment in cents
  */
 export function calculateMonthlyPayment(
-  principalCents: bigint,
-  annualRatePercent: number,
-  termMonths: number
+	principalCents: bigint,
+	annualRatePercent: number,
+	termMonths: number
 ): bigint {
-  const principal = Number(principalCents);
-  const monthlyRate = annualRatePercent / 100 / 12;
+	const principal = Number(principalCents);
+	const monthlyRate = annualRatePercent / 100 / 12;
 
-  if (monthlyRate === 0) {
-    // Zero interest: simple division
-    return roundCents(principal / termMonths);
-  }
+	if (monthlyRate === 0) {
+		// Zero interest: simple division
+		return roundCents(principal / termMonths);
+	}
 
-  const x = Math.pow(1 + monthlyRate, termMonths);
-  const monthlyPayment = (principal * x * monthlyRate) / (x - 1);
+	const x = (1 + monthlyRate) ** termMonths;
+	const monthlyPayment = (principal * x * monthlyRate) / (x - 1);
 
-  return roundCents(monthlyPayment);
+	return roundCents(monthlyPayment);
 }
 
 /**
@@ -40,13 +40,13 @@ export function calculateMonthlyPayment(
  * @returns Interest in cents
  */
 export function calculateSimpleInterest(
-  principalCents: bigint,
-  annualRatePercent: number,
-  years: number
+	principalCents: bigint,
+	annualRatePercent: number,
+	years: number
 ): bigint {
-  const principal = Number(principalCents);
-  const interest = (principal * annualRatePercent * years) / 100;
-  return roundCents(interest);
+	const principal = Number(principalCents);
+	const interest = (principal * annualRatePercent * years) / 100;
+	return roundCents(interest);
 }
 
 /**
@@ -57,17 +57,17 @@ export function calculateSimpleInterest(
  * @returns Interest in cents
  */
 export function calculateCompoundInterest(
-  principalCents: bigint,
-  annualRatePercent: number,
-  months: number
+	principalCents: bigint,
+	annualRatePercent: number,
+	months: number
 ): bigint {
-  const principal = Number(principalCents);
-  const monthlyRate = annualRatePercent / 100 / 12;
+	const principal = Number(principalCents);
+	const monthlyRate = annualRatePercent / 100 / 12;
 
-  const amount = principal * Math.pow(1 + monthlyRate, months);
-  const interest = amount - principal;
+	const amount = principal * (1 + monthlyRate) ** months;
+	const interest = amount - principal;
 
-  return roundCents(interest);
+	return roundCents(interest);
 }
 
 /**
@@ -78,53 +78,53 @@ export function calculateCompoundInterest(
  * @returns Projection of payoff timeline
  */
 export function projectPayoff(
-  balanceCents: bigint,
-  annualRatePercent: number,
-  monthlyPaymentCents: bigint
+	balanceCents: bigint,
+	annualRatePercent: number,
+	monthlyPaymentCents: bigint
 ): PayoffProjection {
-  // Handle zero balance
-  if (balanceCents <= 0n) {
-    return {
-      monthsRemaining: 0,
-      totalInterestCents: 0n,
-      payoffDate: new Date(),
-    };
-  }
+	// Handle zero balance
+	if (balanceCents <= 0n) {
+		return {
+			monthsRemaining: 0,
+			totalInterestCents: 0n,
+			payoffDate: new Date(),
+		};
+	}
 
-  let balance = Number(balanceCents);
-  const monthlyRate = annualRatePercent / 100 / 12;
-  const payment = Number(monthlyPaymentCents);
+	let balance = Number(balanceCents);
+	const monthlyRate = annualRatePercent / 100 / 12;
+	const payment = Number(monthlyPaymentCents);
 
-  let months = 0;
-  let totalInterest = 0;
+	let months = 0;
+	let totalInterest = 0;
 
-  // Cap at 60 years (720 months) to prevent infinite loops
-  while (balance > 0 && months < 720) {
-    const interestThisMonth = balance * monthlyRate;
+	// Cap at 60 years (720 months) to prevent infinite loops
+	while (balance > 0 && months < 720) {
+		const interestThisMonth = balance * monthlyRate;
 
-    // Check if payment covers interest
-    if (payment <= interestThisMonth) {
-      // Payment doesn't cover interest - will never pay off
-      return {
-        monthsRemaining: Infinity,
-        totalInterestCents: 0n,
-        payoffDate: new Date(8640000000000000), // Max date
-      };
-    }
+		// Check if payment covers interest
+		if (payment <= interestThisMonth) {
+			// Payment doesn't cover interest - will never pay off
+			return {
+				monthsRemaining: Number.POSITIVE_INFINITY,
+				totalInterestCents: 0n,
+				payoffDate: new Date(8_640_000_000_000_000), // Max date
+			};
+		}
 
-    const principalThisMonth = Math.min(payment - interestThisMonth, balance);
+		const principalThisMonth = Math.min(payment - interestThisMonth, balance);
 
-    totalInterest += interestThisMonth;
-    balance -= principalThisMonth;
-    months++;
-  }
+		totalInterest += interestThisMonth;
+		balance -= principalThisMonth;
+		months++;
+	}
 
-  const payoffDate = new Date();
-  payoffDate.setMonth(payoffDate.getMonth() + months);
+	const payoffDate = new Date();
+	payoffDate.setMonth(payoffDate.getMonth() + months);
 
-  return {
-    monthsRemaining: months,
-    totalInterestCents: roundCents(totalInterest),
-    payoffDate,
-  };
+	return {
+		monthsRemaining: months,
+		totalInterestCents: roundCents(totalInterest),
+		payoffDate,
+	};
 }
