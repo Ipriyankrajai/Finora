@@ -55,14 +55,16 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
   // Error state
   if (error) {
     return (
-      <div className="space-y-4">
-        <Link
-          href="/dashboard/loans"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="size-4" />
-          Back to Loans
-        </Link>
+      <div className="space-y-6">
+        <nav className="flex items-center gap-2 text-sm">
+          <Link
+            href="/dashboard/loans"
+            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors group"
+          >
+            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span>Loans</span>
+          </Link>
+        </nav>
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
@@ -79,14 +81,16 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
   // Not found state
   if (!loan) {
     return (
-      <div className="space-y-4">
-        <Link
-          href="/dashboard/loans"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="size-4" />
-          Back to Loans
-        </Link>
+      <div className="space-y-6">
+        <nav className="flex items-center gap-2 text-sm">
+          <Link
+            href="/dashboard/loans"
+            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors group"
+          >
+            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span>Loans</span>
+          </Link>
+        </nav>
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
@@ -139,16 +143,22 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header with navigation and actions */}
+      {/* Breadcrumb navigation - separate from content */}
+      <nav className="flex items-center gap-2 text-sm">
+        <Link
+          href="/dashboard/loans"
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors group"
+        >
+          <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+          <span>Loans</span>
+        </Link>
+        <span className="text-muted-foreground/50">/</span>
+        <span className="text-foreground font-medium truncate">{loan.name}</span>
+      </nav>
+
+      {/* Header with title and actions */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <Link
-            href="/dashboard/loans"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="size-4" />
-            Back to Loans
-          </Link>
           <h1 className="text-2xl font-bold tracking-tight">{loan.name}</h1>
           <p className="text-sm text-muted-foreground">
             {loan.interestType === "COMPOUND" ? "Compound" : "Simple"} Interest Loan

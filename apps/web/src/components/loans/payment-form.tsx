@@ -99,6 +99,7 @@ export function PaymentForm({
   // Reset state when dialog opens/closes
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
+      // Reset form and state when opening
       form.reset();
       setShowSummary(false);
       setPaymentResult(null);
@@ -107,13 +108,19 @@ export function PaymentForm({
       form.setFieldValue("amount", getDefaultAmount());
       form.setFieldValue("paidAt", new Date());
       form.setFieldValue("isExtra", false);
+    } else {
+      // Also reset state when closing to prevent stale data
+      setShowSummary(false);
+      setPaymentResult(null);
+      setPreviousBalance(null);
     }
     onOpenChange(newOpen);
   };
 
   // Handle "Done" button in summary view
   const handleDone = () => {
-    onOpenChange(false);
+    // Use handleOpenChange to ensure state is reset
+    handleOpenChange(false);
     onSuccess?.();
   };
 
@@ -134,7 +141,7 @@ export function PaymentForm({
 
         {showSummary && paymentResult ? (
           // Summary view after successful payment
-          <div className="space-y-4">
+          <div className="space-y-4 py-2">
             <PaymentSummary
               payment={{
                 principalCents: paymentResult.principalCents,
@@ -142,7 +149,7 @@ export function PaymentForm({
               }}
               newBalance={newBalance}
             />
-            <DialogFooter>
+            <DialogFooter className="pt-2">
               <Button onClick={handleDone}>Done</Button>
             </DialogFooter>
           </div>

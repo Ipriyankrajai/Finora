@@ -178,15 +178,16 @@ export function LoanForm({
 
   // Initialize calculated payment on mount for edit mode
   useEffect(() => {
-    if (mode === "edit" && loan) {
-      setCalculatedPayment(getInitialPayment());
+    if (mode === "edit" && loan?.monthlyPaymentCents) {
+      const cents = Number(loan.monthlyPaymentCents);
+      setCalculatedPayment((cents / 100).toFixed(2));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, loan?.id]);
+  }, [mode, loan?.monthlyPaymentCents]);
 
   // Reset form when dialog opens with new loan data
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
+      // Reset form and populate with loan data when opening
       form.reset();
       form.setFieldValue("name", loan?.name ?? "");
       form.setFieldValue("interestType", loan?.interestType ?? "COMPOUND");
@@ -196,6 +197,9 @@ export function LoanForm({
       form.setFieldValue("monthlyPayment", getInitialPayment());
       form.setFieldValue("startDate", loan?.startDate ?? new Date());
       setCalculatedPayment(getInitialPayment());
+    } else {
+      // Also reset calculated payment when closing to prevent stale data
+      setCalculatedPayment("");
     }
     onOpenChange(newOpen);
   };

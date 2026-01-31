@@ -16,12 +16,27 @@ import {
 /**
  * Calculate the principal/interest split for a payment based on current balance
  * Uses standard amortization formula where interest = balance * monthly_rate
+ * Extra payments go entirely to principal (no interest portion)
  */
 function calculatePaymentSplit(
   currentBalanceCents: bigint,
   annualRatePercent: number,
-  paymentAmountCents: bigint
+  paymentAmountCents: bigint,
+  isExtra: boolean
 ): { principalCents: bigint; interestCents: bigint } {
+  // Extra payments go entirely to principal
+  if (isExtra) {
+    // Principal can't exceed remaining balance
+    const principalCents =
+      paymentAmountCents > currentBalanceCents
+        ? currentBalanceCents
+        : paymentAmountCents;
+    return {
+      principalCents,
+      interestCents: 0n,
+    };
+  }
+
   const monthlyRate = annualRatePercent / 100 / 12;
   const interestCents = roundCents(Number(currentBalanceCents) * monthlyRate);
 
@@ -325,10 +340,12 @@ export const loanRouter = router({
       const amountCents = displayToCents(input.amount);
 
       // Calculate principal/interest split based on current balance
+      // Extra payments go entirely to principal (no interest)
       const { principalCents, interestCents } = calculatePaymentSplit(
         currentBalance,
         loan.annualRatePercent,
-        amountCents
+        amountCents,
+        input.isExtra
       );
 
       // Create the payment

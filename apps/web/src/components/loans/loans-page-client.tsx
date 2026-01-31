@@ -43,8 +43,15 @@ export function LoansPageClient() {
   const handlePaymentFormClose = (open: boolean) => {
     setIsPaymentFormOpen(open);
     if (!open) {
+      // Clear the loan state to prevent stale data on next open
       setPaymentLoan(null);
     }
+  };
+
+  // Called when payment is successfully logged - clears stale loan data
+  const handlePaymentSuccess = () => {
+    // Clear stale loan data so next open fetches fresh data
+    setPaymentLoan(null);
   };
 
   const handleFormClose = (open: boolean) => {
@@ -100,6 +107,7 @@ export function LoansPageClient() {
           }}
           open={isPaymentFormOpen}
           onOpenChange={handlePaymentFormClose}
+          onSuccess={handlePaymentSuccess}
         />
       )}
     </div>
