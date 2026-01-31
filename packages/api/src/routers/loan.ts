@@ -336,8 +336,25 @@ export const loanRouter = router({
         loan.payments
       );
 
+      // Check if loan is already paid off
+      if (currentBalance <= 0n) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This loan has already been paid off",
+        });
+      }
+
       // Convert payment amount to cents
       const amountCents = displayToCents(input.amount);
+
+      // Validate payment doesn't exceed remaining balance
+      if (amountCents > currentBalance) {
+        const remainingDollars = (Number(currentBalance) / 100).toFixed(2);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Payment amount exceeds remaining balance. Maximum payment allowed is $${remainingDollars}`,
+        });
+      }
 
       // Calculate principal/interest split based on current balance
       // Extra payments go entirely to principal (no interest)

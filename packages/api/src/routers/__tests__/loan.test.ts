@@ -1,5 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { Loan, LoanPayment } from "@finora2/db";
+
+// Type for loan with payments (as returned by findUnique with include)
+type LoanWithPayments = Loan & {
+  payments: Pick<LoanPayment, "principalCents">[];
+};
+
+// Type for loan with full payment details
+type LoanWithFullPayments = Loan & {
+  payments: LoanPayment[];
+};
+
 // Mock Prisma before importing modules that use it
 vi.mock("@finora2/db", () => ({
   default: {
@@ -480,6 +492,96 @@ describe("loan router", () => {
           message: "You don't have permission to add payments to this loan",
         })
       );
+    });
+
+    it("throws BAD_REQUEST when payment exceeds remaining balance", async () => {
+      // Loan has $100 remaining balance ($10000 principal - $9900 in payments)
+      const loanWithPartialPayment: LoanWithPayments = {
+        ...mockLoan,
+        principalCents: BigInt(1000000), // $10,000
+        payments: [
+          { principalCents: BigInt(990000) }, // $9,900 already paid
+        ],
+      };
+      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithPartialPayment);
+
+      // Try to pay $200 when only $100 remains
+      await expect(
+        caller.loan.addPayment({
+          loanId: MOCK_LOAN_ID,
+          amount: "200.00",
+          paidAt: new Date(),
+          isExtra: false,
+        })
+      ).rejects.toThrow(
+        expect.objectContaining({
+          code: "BAD_REQUEST",
+          message: "Payment amount exceeds remaining balance. Maximum payment allowed is $100.00",
+        })
+      );
+    });
+
+    it("throws BAD_REQUEST when loan is already paid off", async () => {
+      // Loan is fully paid off (balance = 0)
+      const fullyPaidLoan: LoanWithPayments = {
+        ...mockLoan,
+        principalCents: BigInt(1000000), // $10,000
+        payments: [
+          { principalCents: BigInt(1000000) }, // Fully paid
+        ],
+      };
+      vi.mocked(prisma.loan.findUnique).mockResolvedValue(fullyPaidLoan);
+
+      await expect(
+        caller.loan.addPayment({
+          loanId: MOCK_LOAN_ID,
+          amount: "100.00",
+          paidAt: new Date(),
+          isExtra: false,
+        })
+      ).rejects.toThrow(
+        expect.objectContaining({
+          code: "BAD_REQUEST",
+          message: "This loan has already been paid off",
+        })
+      );
+    });
+
+    it("allows payment equal to remaining balance", async () => {
+      // Loan has exactly $100 remaining
+      const loanWithSmallBalance: LoanWithPayments = {
+        ...mockLoan,
+        principalCents: BigInt(1000000), // $10,000
+        annualRatePercent: 6.0,
+        payments: [
+          { principalCents: BigInt(990000) }, // $9,900 already paid, $100 remains
+        ],
+      };
+      vi.mocked(prisma.loan.findUnique).mockResolvedValue(loanWithSmallBalance);
+
+      vi.mocked(prisma.loanPayment.create).mockResolvedValue({
+        id: MOCK_PAYMENT_ID,
+        loanId: MOCK_LOAN_ID,
+        amountCents: BigInt(10000),
+        principalCents: BigInt(9950), // After interest deduction
+        interestCents: BigInt(50),
+        lateFeeCents: BigInt(0),
+        isExtra: false,
+        paidAt: new Date(),
+        linkedTransactionId: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      // Pay exactly $100 when $100 remains - should succeed
+      const result = await caller.loan.addPayment({
+        loanId: MOCK_LOAN_ID,
+        amount: "100.00",
+        paidAt: new Date(),
+        isExtra: false,
+      });
+
+      expect(result.loanId).toBe(MOCK_LOAN_ID);
     });
 
     it("calculates correct split for payment on $10000 balance at 6% rate", async () => {

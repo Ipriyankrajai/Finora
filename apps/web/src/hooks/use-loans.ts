@@ -331,14 +331,15 @@ export function useAddPayment() {
 
       return { previousQueries };
     },
-    onError: (_err, _newPayment, context) => {
+    onError: (err, _newPayment, context) => {
       // Rollback all loan queries
       if (context?.previousQueries) {
         for (const [queryKey, data] of context.previousQueries) {
           queryClient.setQueryData(queryKey, data);
         }
       }
-      toast.error("Failed to log payment");
+      // Show the actual error message from the API
+      toast.error(err.message || "Failed to log payment");
     },
     onSuccess: () => {
       toast.success("Payment logged");
