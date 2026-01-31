@@ -23,10 +23,13 @@ import { cn } from "@/lib/utils";
 import { PaymentSummary } from "./payment-summary";
 
 /**
- * Create validation schema for payment form with balance check
+ * Create validation schema for payment form with balance check.
+ * Uses cents comparison to avoid floating point precision issues.
  */
 const createPaymentSchema = (maxAmountCents: bigint) => {
-  const maxAmount = Number(maxAmountCents) / 100;
+  const maxAmountNum = Number(maxAmountCents);
+  const maxAmountDisplay = (maxAmountNum / 100).toFixed(2);
+
   return z.object({
     amount: z
       .string()
@@ -34,8 +37,12 @@ const createPaymentSchema = (maxAmountCents: bigint) => {
       .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), "Enter a valid amount")
       .refine((val) => parseFloat(val) > 0, "Amount must be positive")
       .refine(
-        (val) => parseFloat(val) <= maxAmount,
-        `Amount exceeds remaining balance of $${maxAmount.toFixed(2)}`
+        (val) => {
+          // Convert to cents (integer) to avoid floating point issues
+          const amountCents = Math.round(parseFloat(val) * 100);
+          return amountCents <= maxAmountNum;
+        },
+        `Amount exceeds remaining balance of $${maxAmountDisplay}`
       ),
     paidAt: z.date({ message: "Date is required" }),
     isExtra: z.boolean(),
@@ -66,60 +73,19 @@ export function PaymentForm({
   onOpenChange,
   onSuccess,
 }: PaymentFormProps) {
-  const addPayment = useAddPayment();
-
-  // Form key to force re-mount on dialog open (ensures clean form state)
-  const [formKey, setFormKey] = React.useState(0);
-
   // Track state for showing summary after successful payment
   // Use a stable view state to prevent flicker during transitions
   const [viewState, setViewState] = React.useState<"form" | "transitioning" | "summary">("form");
   const [paymentResult, setPaymentResult] = React.useState<PaymentResult | null>(null);
   const [previousBalance, setPreviousBalance] = React.useState<bigint | null>(null);
 
-  // Convert cents to display string for pre-fill
-  // Use the smaller of monthly payment or remaining balance
-  const getDefaultAmount = React.useCallback(() => {
-    const monthlyPayment = Number(loan.monthlyPaymentCents);
-    const remainingBalance = Number(loan.balanceCents);
-    const prefillAmount = Math.min(monthlyPayment, remainingBalance);
-    return (prefillAmount / 100).toFixed(2);
-  }, [loan.monthlyPaymentCents, loan.balanceCents]);
+  // Key to force form remount when dialog opens - ensures fresh form state
+  const [formKey, setFormKey] = React.useState(0);
 
-  const form = useForm({
-    defaultValues: {
-      amount: getDefaultAmount(),
-      paidAt: new Date(),
-      isExtra: false,
-    },
-    onSubmit: async ({ value }) => {
-      // Store current balance before submission for summary
-      setPreviousBalance(loan.balanceCents);
-
-      const result = await addPayment.mutateAsync({
-        loanId: loan.id,
-        amount: value.amount,
-        paidAt: value.paidAt,
-        isExtra: value.isExtra,
-      });
-
-      // Transition to summary state smoothly (prevents flicker)
-      setViewState("transitioning");
-      setPaymentResult(result as PaymentResult);
-      // Small delay to ensure state is set before showing summary
-      requestAnimationFrame(() => {
-        setViewState("summary");
-      });
-    },
-    validators: {
-      onSubmit: createPaymentSchema(loan.balanceCents),
-    },
-  });
-
-  // Reset state when dialog opens/closes
+  // Handle dialog open/close
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
-      // Increment form key to force complete form re-mount with fresh state
+      // Increment key to force form component remount with fresh state
       setFormKey((k) => k + 1);
       setViewState("form");
       setPaymentResult(null);
@@ -202,127 +168,188 @@ export function PaymentForm({
             </DialogFooter>
           </div>
         ) : (
-          // Form view for entering payment - uses key to force remount
-          <>
-            <DialogHeader>
-              <DialogTitle>Log Payment - {loan.name}</DialogTitle>
-            </DialogHeader>
-
-            <form
-              key={formKey}
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                form.handleSubmit();
-              }}
-              className="space-y-4"
-            >
-              {/* Amount input */}
-              <form.Field name="amount">
-                {(field) => (
-                  <div className="space-y-2">
-                    <Label htmlFor={field.name}>Amount</Label>
-                    <div className="relative">
-                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                        $
-                      </span>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0.00"
-                        defaultValue={getDefaultAmount()}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => {
-                          // Only allow numbers and one decimal point with max 2 decimals
-                          const val = e.target.value;
-                          if (val === "" || /^\d*\.?\d{0,2}$/.test(val)) {
-                            field.handleChange(val);
-                          }
-                        }}
-                        className="pl-6"
-                        autoFocus
-                      />
-                    </div>
-                    {field.state.meta.errors.map((error) => (
-                      <p key={error?.message} className="text-xs text-destructive">
-                        {error?.message}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </form.Field>
-
-              {/* Date picker */}
-              <form.Field name="paidAt">
-                {(field) => (
-                  <div className="space-y-2">
-                    <Label>Date</Label>
-                    <DatePicker
-                      value={field.state.value}
-                      onChange={(date) => field.handleChange(date ?? new Date())}
-                      className="w-full"
-                    />
-                    {field.state.meta.errors.map((error) => (
-                      <p key={error?.message} className="text-xs text-destructive">
-                        {error?.message}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </form.Field>
-
-              {/* Is Extra Payment checkbox */}
-              <form.Field name="isExtra">
-                {(field) => (
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id={field.name}
-                      checked={field.state.value}
-                      onCheckedChange={(checked) =>
-                        field.handleChange(checked === true)
-                      }
-                    />
-                    <Label
-                      htmlFor={field.name}
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      This is an extra payment
-                    </Label>
-                  </div>
-                )}
-              </form.Field>
-
-              <DialogFooter className="pt-4">
-                <DialogClose
-                  render={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={addPayment.isPending}
-                    >
-                      Cancel
-                    </Button>
-                  }
-                />
-                <form.Subscribe>
-                  {(state) => (
-                    <Button
-                      type="submit"
-                      disabled={
-                        !state.canSubmit || state.isSubmitting || addPayment.isPending
-                      }
-                    >
-                      {addPayment.isPending ? "Logging..." : "Log Payment"}
-                    </Button>
-                  )}
-                </form.Subscribe>
-              </DialogFooter>
-            </form>
-          </>
+          // Form view - key forces remount with fresh state when dialog opens
+          <PaymentFormContent
+            key={formKey}
+            loan={loan}
+            onSubmitSuccess={(result) => {
+              setPreviousBalance(loan.balanceCents);
+              setPaymentResult(result);
+              setViewState("transitioning");
+              requestAnimationFrame(() => {
+                setViewState("summary");
+              });
+            }}
+          />
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+/**
+ * Inner form component - remounted on each dialog open to ensure fresh state
+ */
+function PaymentFormContent({
+  loan,
+  onSubmitSuccess,
+}: {
+  loan: PaymentFormProps["loan"];
+  onSubmitSuccess: (result: PaymentResult) => void;
+}) {
+  const addPayment = useAddPayment();
+
+  // Calculate default amount based on current loan state
+  const defaultAmount = React.useMemo(() => {
+    const monthlyPayment = Number(loan.monthlyPaymentCents);
+    const remainingBalance = Number(loan.balanceCents);
+    const prefillAmount = Math.min(monthlyPayment, remainingBalance);
+    return (prefillAmount / 100).toFixed(2);
+  }, [loan.monthlyPaymentCents, loan.balanceCents]);
+
+  // Validation schema with current balance
+  const validationSchema = React.useMemo(
+    () => createPaymentSchema(loan.balanceCents),
+    [loan.balanceCents]
+  );
+
+  const form = useForm({
+    defaultValues: {
+      amount: defaultAmount,
+      paidAt: new Date(),
+      isExtra: false,
+    },
+    onSubmit: async ({ value }) => {
+      const result = await addPayment.mutateAsync({
+        loanId: loan.id,
+        amount: value.amount,
+        paidAt: value.paidAt,
+        isExtra: value.isExtra,
+      });
+      onSubmitSuccess(result as PaymentResult);
+    },
+    validators: {
+      onSubmit: validationSchema,
+    },
+  });
+
+  return (
+    <>
+      <DialogHeader className="pb-4">
+        <DialogTitle>Log Payment - {loan.name}</DialogTitle>
+      </DialogHeader>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+        className="space-y-4"
+      >
+        {/* Amount input - controlled by form state */}
+        <form.Field name="amount">
+          {(field) => (
+            <div className="space-y-2">
+              <Label htmlFor={field.name}>Amount</Label>
+              <div className="relative">
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                  $
+                </span>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => {
+                    // Only allow numbers and one decimal point with max 2 decimals
+                    const val = e.target.value;
+                    if (val === "" || /^\d*\.?\d{0,2}$/.test(val)) {
+                      field.handleChange(val);
+                    }
+                  }}
+                  className="pl-6"
+                  autoFocus
+                />
+              </div>
+              {field.state.meta.errors.map((error) => (
+                <p key={error?.message} className="text-xs text-destructive">
+                  {error?.message}
+                </p>
+              ))}
+            </div>
+          )}
+        </form.Field>
+
+        {/* Date picker */}
+        <form.Field name="paidAt">
+          {(field) => (
+            <div className="space-y-2">
+              <Label>Date</Label>
+              <DatePicker
+                value={field.state.value}
+                onChange={(date) => field.handleChange(date ?? new Date())}
+                className="w-full"
+              />
+              {field.state.meta.errors.map((error) => (
+                <p key={error?.message} className="text-xs text-destructive">
+                  {error?.message}
+                </p>
+              ))}
+            </div>
+          )}
+        </form.Field>
+
+        {/* Is Extra Payment checkbox */}
+        <form.Field name="isExtra">
+          {(field) => (
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id={field.name}
+                checked={field.state.value}
+                onCheckedChange={(checked) =>
+                  field.handleChange(checked === true)
+                }
+              />
+              <Label
+                htmlFor={field.name}
+                className="text-sm font-normal cursor-pointer"
+              >
+                This is an extra payment
+              </Label>
+            </div>
+          )}
+        </form.Field>
+
+        <DialogFooter className="pt-4">
+          <DialogClose
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                disabled={addPayment.isPending}
+              >
+                Cancel
+              </Button>
+            }
+          />
+          <form.Subscribe>
+            {(state) => (
+              <Button
+                type="submit"
+                disabled={
+                  !state.canSubmit || state.isSubmitting || addPayment.isPending
+                }
+              >
+                {addPayment.isPending ? "Logging..." : "Log Payment"}
+              </Button>
+            )}
+          </form.Subscribe>
+        </DialogFooter>
+      </form>
+    </>
   );
 }
