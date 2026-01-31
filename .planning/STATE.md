@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Phase: 4 of 6 (Loans UI)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-01-31 - Completed Phase 3
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-01-31 - Completed 04-01-PLAN.md
 
-Progress: [██████████] 100% (10/10 plans through Phase 3)
+Progress: [███████████░░░] 73% (11/15 plans through Phase 4)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 6.5 min
-- Total execution time: 65 min
+- Total plans completed: 11
+- Average duration: 6.8 min
+- Total execution time: 73 min
 
 **By Phase:**
 
@@ -30,9 +30,10 @@ Progress: [██████████] 100% (10/10 plans through Phase 3)
 | 01-foundation | 2 | 10 min | 5 min |
 | 02-api-layer | 4 | 25 min | 6.3 min |
 | 03-tags-transactions-ui | 4 | 30 min | 7.5 min |
+| 04-loans-ui | 1 | 8 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-04 (3 min), 03-01 (5 min), 03-02 (5 min), 03-03 (8 min), 03-04 (12 min)
+- Last 5 plans: 03-01 (5 min), 03-02 (5 min), 03-03 (8 min), 03-04 (12 min), 04-01 (8 min)
 - Trend: Stable with variance based on complexity
 
 *Updated after each plan completion*
@@ -76,6 +77,9 @@ Recent decisions affecting current work:
 - [03-04]: Popover multi-select with checkboxes for tag selection
 - [03-04]: Page-level form state management with edit/create mode switching
 - [03-04]: Predicate-based tRPC query invalidation for mutations
+- [04-01]: loanType not persisted in DB; UI shows interestType (SIMPLE/COMPOUND) on cards
+- [04-01]: PMT formula auto-calculation in loan form with recalculatePayment helper
+- [04-01]: Balance sorting (highest first) per CONTEXT.md snowball-style view
 
 ### Pending Todos
 
@@ -85,8 +89,10 @@ None yet.
 
 RESOLVED: TypeScript ES2020 target issue fixed in 03-03. Both apps/web and packages/api now target ES2020.
 
+NOTE: loanType field defined in API input schema but not stored in database. Current UI works around this by displaying interestType instead. Consider adding loanType column to Loan model in future if loan categorization is needed.
+
 ## Session Continuity
 
 Last session: 2026-01-31
-Stopped at: Completed 03-04-PLAN.md (Phase 3 complete)
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
