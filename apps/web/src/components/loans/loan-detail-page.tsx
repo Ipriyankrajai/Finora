@@ -206,19 +206,23 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
           </CardContent>
         </Card>
 
-        {/* Interest Paid to Date */}
+        {/* Total Paid to Date */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Interest Paid to Date
+              Total Paid to Date
             </CardTitle>
           </CardHeader>
           <CardContent>
             <MoneyDisplay
-              cents={loan.totalInterestPaidCents}
+              cents={(loan.principalCents - loan.balanceCents) + loan.totalInterestPaidCents}
               showSign={false}
               className="text-2xl font-bold"
             />
+            <p className="text-xs text-muted-foreground mt-1">
+              Principal: <MoneyDisplay cents={loan.principalCents - loan.balanceCents} showSign={false} className="inline" /> •{" "}
+              Interest: <MoneyDisplay cents={loan.totalInterestPaidCents} showSign={false} className="inline" />
+            </p>
           </CardContent>
         </Card>
 
