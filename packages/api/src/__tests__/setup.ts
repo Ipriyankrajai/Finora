@@ -9,9 +9,9 @@ process.env.NODE_ENV = "test";
 
 // Mock @finora2/auth module
 vi.mock("@finora2/auth", () => ({
-  auth: {
-    api: {
-      getSession: vi.fn(),
-    },
-  },
+	auth: {
+		api: {
+			getSession: vi.fn(),
+		},
+	},
 }));

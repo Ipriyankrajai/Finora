@@ -9,11 +9,11 @@ const prisma = new PrismaClient({ adapter });
 export default prisma;
 
 // Re-export Prisma enums and types for use in other packages
-export { TransactionType, InterestType } from "../prisma/generated/enums";
+export { InterestType, TransactionType } from "../prisma/generated/enums";
 export type {
-  TransactionModel as Transaction,
-  TagModel as Tag,
-  TransactionTagModel as TransactionTag,
-  LoanModel as Loan,
-  LoanPaymentModel as LoanPayment,
+	LoanModel as Loan,
+	LoanPaymentModel as LoanPayment,
+	TagModel as Tag,
+	TransactionModel as Transaction,
+	TransactionTagModel as TransactionTag,
 } from "../prisma/generated/models";
