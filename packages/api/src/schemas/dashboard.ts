@@ -75,3 +75,15 @@ export const dashboardOutputSchema = z.object({
 });
 
 export type DashboardOutput = z.infer<typeof dashboardOutputSchema>;
+
+/**
+ * Amortization schedule input schema
+ * Takes a loan ID to fetch the schedule for
+ */
+export const amortizationScheduleInput = z.object({
+	loanId: z.string(),
+});
+
+export type AmortizationScheduleInput = z.infer<
+	typeof amortizationScheduleInput
+>;
