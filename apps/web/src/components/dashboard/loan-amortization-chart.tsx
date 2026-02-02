@@ -2,6 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { TrendingDown } from "lucide-react";
+import { memo } from "react";
 import {
 	Area,
 	AreaChart,
@@ -73,8 +75,9 @@ function formatYAxisTick(value: number): string {
  * Amortization chart showing loan balance over time.
  * Uses Recharts AreaChart with gradient fill.
  * Per RESEARCH.md: Convert BigInt to number at chart boundary, set explicit height
+ * Wrapped in memo to prevent re-renders when parent state changes (e.g., what-if slider)
  */
-export function LoanAmortizationChart({
+export const LoanAmortizationChart = memo(function LoanAmortizationChart({
 	loanId,
 	loanName,
 }: LoanAmortizationChartProps) {
@@ -86,8 +89,92 @@ export function LoanAmortizationChart({
 	if (isLoading) {
 		return (
 			<div className="space-y-4">
-				<Skeleton className="h-5 w-48" />
-				<Skeleton className="h-[250px] w-full" />
+				{/* Header skeleton matching final layout */}
+				<div className="flex items-center justify-between">
+					<Skeleton className="h-5 w-40 rounded-md" />
+					<Skeleton className="h-4 w-28 rounded-md" />
+				</div>
+
+				{/* Chart skeleton with decorative elements */}
+				<div className="relative h-[250px] overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-muted/30 via-background to-primary/[0.02]">
+					{/* Y-axis placeholder */}
+					<div className="absolute top-4 bottom-8 left-2 flex w-10 flex-col justify-between">
+						{[0, 1, 2, 3, 4].map((i) => (
+							<Skeleton
+								className="h-3 w-8 rounded"
+								key={i}
+								style={{ animationDelay: `${i * 100}ms` }}
+							/>
+						))}
+					</div>
+
+					{/* Decorative chart area placeholder */}
+					<div className="absolute inset-0 top-4 right-4 bottom-8 left-14">
+						<svg
+							aria-hidden="true"
+							className="h-full w-full"
+							preserveAspectRatio="none"
+							viewBox="0 0 100 100"
+						>
+							<defs>
+								<linearGradient
+									id="skeletonGradient"
+									x1="0"
+									x2="0"
+									y1="0"
+									y2="1"
+								>
+									<stop
+										offset="0%"
+										stopColor="hsl(var(--primary))"
+										stopOpacity={0.15}
+									/>
+									<stop
+										offset="100%"
+										stopColor="hsl(var(--primary))"
+										stopOpacity={0}
+									/>
+								</linearGradient>
+							</defs>
+							{/* Decorative downward curve representing loan payoff */}
+							<path
+								className="animate-pulse"
+								d="M0,20 Q25,25 50,50 T100,95"
+								fill="none"
+								stroke="hsl(var(--primary))"
+								strokeDasharray="4 4"
+								strokeOpacity={0.3}
+								strokeWidth="2"
+							/>
+							<path
+								className="animate-pulse"
+								d="M0,20 Q25,25 50,50 T100,95 L100,100 L0,100 Z"
+								fill="url(#skeletonGradient)"
+							/>
+						</svg>
+					</div>
+
+					{/* X-axis placeholder */}
+					<div className="absolute right-4 bottom-2 left-14 flex justify-between">
+						{[0, 1, 2, 3, 4].map((i) => (
+							<Skeleton
+								className="h-3 w-10 rounded"
+								key={i}
+								style={{ animationDelay: `${i * 75}ms` }}
+							/>
+						))}
+					</div>
+
+					{/* Center loading indicator */}
+					<div className="absolute inset-0 flex items-center justify-center">
+						<div className="flex items-center gap-2 rounded-full bg-background/80 px-4 py-2 shadow-sm backdrop-blur-sm">
+							<TrendingDown className="size-4 animate-pulse text-primary" />
+							<span className="text-muted-foreground text-xs">
+								Loading timeline...
+							</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -189,6 +276,7 @@ export function LoanAmortizationChart({
 							dataKey="value"
 							fill="url(#balanceGradient)"
 							fillOpacity={1}
+							isAnimationActive={false}
 							stroke="hsl(var(--primary))"
 							strokeWidth={2}
 							type="monotone"
@@ -198,4 +286,4 @@ export function LoanAmortizationChart({
 			</div>
 		</div>
 	);
-}
+});

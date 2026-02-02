@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { ChevronRight, CreditCard, Plus } from "lucide-react";
+import Link from "next/link";
+import { memo, useCallback, useState } from "react";
 
 import { MoneyDisplay } from "@/components/shared/money-display";
 import { TagChip } from "@/components/tags/tag-chip";
@@ -218,7 +220,57 @@ function TagTransactionsExpanded({
 }
 
 /**
- * Expanded loan view with what-if simulator and amortization chart
+ * Memoized amortization chart section.
+ * Extracted to prevent re-renders when WhatIfSimulator state changes.
+ * Per Vercel rule `rerender-memo`: Extract expensive work into memoized components.
+ */
+const AmortizationSection = memo(function AmortizationSection({
+	loanId,
+	loanName,
+}: {
+	loanId: string;
+	loanName: string;
+}) {
+	return (
+		<div className="overflow-hidden rounded-xl border bg-card">
+			<div className="border-b bg-muted/30 px-5 py-3">
+				<h4 className="font-semibold">Amortization Schedule</h4>
+				<p className="text-muted-foreground text-sm">
+					See how your balance decreases over time
+				</p>
+			</div>
+			<div className="p-5">
+				<LoanAmortizationChart loanId={loanId} loanName={loanName} />
+			</div>
+		</div>
+	);
+});
+
+/**
+ * Memoized close button to prevent recreation.
+ */
+const CloseDetailsButton = memo(function CloseDetailsButton({
+	onClose,
+}: {
+	onClose: () => void;
+}) {
+	return (
+		<div className="text-center">
+			<button
+				className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background px-4 py-2 text-muted-foreground text-sm transition-colors hover:border-primary/30 hover:text-foreground"
+				onClick={onClose}
+				type="button"
+			>
+				Collapse details
+			</button>
+		</div>
+	);
+});
+
+/**
+ * Expanded loan view with what-if simulator and amortization chart.
+ * Only shown for loans that are not paid off.
+ * Components are memoized to prevent re-renders when slider state changes.
  */
 function LoanExpanded({
 	loan,
@@ -227,6 +279,11 @@ function LoanExpanded({
 	loan: LoanOverview;
 	onClose: () => void;
 }) {
+	// Don't show what-if for paid off loans
+	if (loan.balanceCents === 0n) {
+		return null;
+	}
+
 	// We need additional loan data for the simulator
 	// Fetch the full loan details to get monthlyPaymentCents and annualRatePercent
 	const queryOptions = trpc.loan.getById.queryOptions({ id: loan.id });
@@ -234,21 +291,19 @@ function LoanExpanded({
 
 	if (isLoading) {
 		return (
-			<div className="mt-4 space-y-4">
-				<Skeleton className="h-48 w-full" />
-				<Skeleton className="h-64 w-full" />
+			<div className="mt-6 space-y-4">
+				<Skeleton className="h-[360px] w-full rounded-xl" />
+				<Skeleton className="h-[300px] w-full rounded-xl" />
 			</div>
 		);
 	}
 
 	if (!fullLoan) {
 		return (
-			<div className="mt-4 rounded-md border bg-muted/30 p-4">
-				<p className="text-center text-muted-foreground">
-					Could not load loan details
-				</p>
+			<div className="mt-6 rounded-xl border bg-muted/30 p-6 text-center">
+				<p className="text-muted-foreground">Could not load loan details</p>
 				<button
-					className="mt-2 text-center text-muted-foreground text-xs hover:text-foreground"
+					className="mt-3 text-primary text-sm hover:underline"
 					onClick={onClose}
 					type="button"
 				>
@@ -259,8 +314,8 @@ function LoanExpanded({
 	}
 
 	return (
-		<div className="mt-4 space-y-4">
-			{/* What-If Simulator */}
+		<div className="fade-in slide-in-from-top-4 mt-6 animate-in space-y-6 duration-300">
+			{/* What-If Simulator - has internal state, isolated re-renders */}
 			<WhatIfSimulator
 				annualRatePercent={fullLoan.annualRatePercent}
 				balanceCents={fullLoan.balanceCents}
@@ -268,21 +323,11 @@ function LoanExpanded({
 				name={fullLoan.name}
 			/>
 
-			{/* Amortization Chart */}
-			<div className="rounded-md border bg-muted/30 p-4">
-				<LoanAmortizationChart loanId={loan.id} loanName={loan.name} />
-			</div>
+			{/* Amortization Chart - memoized, won't re-render on slider change */}
+			<AmortizationSection loanId={loan.id} loanName={loan.name} />
 
-			{/* Close button */}
-			<div className="text-center">
-				<button
-					className="text-muted-foreground text-xs hover:text-foreground"
-					onClick={onClose}
-					type="button"
-				>
-					Close details
-				</button>
-			</div>
+			{/* Close button - memoized */}
+			<CloseDetailsButton onClose={onClose} />
 		</div>
 	);
 }
@@ -329,15 +374,22 @@ export function DashboardPageClient() {
 		setExpandedTag(null);
 	};
 
-	// Handle loan card click
+	// Handle loan card click - only allow toggle for active loans
 	const handleLoanToggle = (loanId: string) => {
+		const loan = loanOverview.find((l) => l.id === loanId);
+		// Don't expand paid off loans
+		if (loan && loan.balanceCents === 0n) {
+			return;
+		}
 		setExpandedLoanId(expandedLoanId === loanId ? null : loanId);
 	};
 
-	// Handle close loan
-	const handleCloseLoan = () => {
+	// Handle close loan - stable reference via useCallback
+	// Per Vercel rule `rerender-functional-setstate`: using functional form isn't needed here
+	// but `useCallback` ensures stable reference for memoized children
+	const handleCloseLoan = useCallback(() => {
 		setExpandedLoanId(null);
-	};
+	}, []);
 
 	if (error) {
 		return (
@@ -370,6 +422,10 @@ export function DashboardPageClient() {
 		? loanOverview.find((l) => l.id === expandedLoanId)
 		: null;
 
+	// Separate active loans from paid off loans
+	const activeLoans = loanOverview.filter((l) => l.balanceCents > 0n);
+	const paidOffLoans = loanOverview.filter((l) => l.balanceCents === 0n);
+
 	// Render loans section - extracted to avoid nested ternary
 	const renderLoansSection = () => {
 		if (isLoading) {
@@ -378,35 +434,77 @@ export function DashboardPageClient() {
 
 		if (loanOverview.length === 0) {
 			return (
-				<Card>
-					<CardContent className="py-8 text-center">
-						<p className="text-muted-foreground">
-							No loans yet. Add a loan to track your payoff progress.
-						</p>
-					</CardContent>
-				</Card>
+				<div className="rounded-xl border-2 border-primary/20 border-dashed bg-gradient-to-br from-primary/[0.02] to-transparent p-8 text-center">
+					<div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10">
+						<CreditCard className="size-6 text-primary" />
+					</div>
+					<h3 className="mb-2 font-semibold text-lg">No loans yet</h3>
+					<p className="mx-auto mb-4 max-w-sm text-muted-foreground text-sm">
+						Track your loans to see projected payoff dates and explore what-if
+						scenarios for faster debt freedom.
+					</p>
+					<Link
+						className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+						href="/dashboard/loans"
+					>
+						<Plus className="size-4" />
+						Add your first loan
+					</Link>
+				</div>
 			);
 		}
 
 		return (
-			<>
-				{/* Loan cards grid */}
-				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-					{loanOverview.map((loan) => (
-						<LoanOverviewCard
-							isExpanded={expandedLoanId === loan.id}
-							key={loan.id}
-							loan={loan}
-							onToggle={() => handleLoanToggle(loan.id)}
-						/>
-					))}
-				</div>
+			<div className="space-y-6">
+				{/* Active loans */}
+				{activeLoans.length > 0 && (
+					<div className="space-y-4">
+						{activeLoans.length > 0 && paidOffLoans.length > 0 && (
+							<h3 className="flex items-center gap-2 font-medium text-muted-foreground text-sm">
+								<span className="size-2 rounded-full bg-amber-500" />
+								Active ({activeLoans.length})
+							</h3>
+						)}
+						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+							{activeLoans.map((loan) => (
+								<LoanOverviewCard
+									isExpanded={expandedLoanId === loan.id}
+									key={loan.id}
+									loan={loan}
+									onToggle={() => handleLoanToggle(loan.id)}
+								/>
+							))}
+						</div>
+					</div>
+				)}
 
 				{/* Expanded loan details (what-if + chart) */}
-				{expandedLoan && (
+				{expandedLoan && expandedLoan.balanceCents > 0n && (
 					<LoanExpanded loan={expandedLoan} onClose={handleCloseLoan} />
 				)}
-			</>
+
+				{/* Paid off loans */}
+				{paidOffLoans.length > 0 && (
+					<div className="space-y-4">
+						{activeLoans.length > 0 && (
+							<h3 className="flex items-center gap-2 font-medium text-muted-foreground text-sm">
+								<span className="size-2 rounded-full bg-emerald-500" />
+								Completed ({paidOffLoans.length})
+							</h3>
+						)}
+						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+							{paidOffLoans.map((loan) => (
+								<LoanOverviewCard
+									isExpanded={false}
+									key={loan.id}
+									loan={loan}
+									onToggle={() => {}}
+								/>
+							))}
+						</div>
+					</div>
+				)}
+			</div>
 		);
 	};
 
@@ -454,7 +552,32 @@ export function DashboardPageClient() {
 
 			{/* Loans Section */}
 			<div className="space-y-4">
-				<h2 className="font-semibold text-lg">Your Loans</h2>
+				<div className="flex items-center justify-between">
+					<div className="flex items-center gap-3">
+						<div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+							<CreditCard className="size-4 text-primary" />
+						</div>
+						<div>
+							<h2 className="font-semibold text-lg">Your Loans</h2>
+							{!isLoading && loanOverview.length > 0 && (
+								<p className="text-muted-foreground text-xs">
+									{activeLoans.length} active
+									{paidOffLoans.length > 0 &&
+										` · ${paidOffLoans.length} completed`}
+								</p>
+							)}
+						</div>
+					</div>
+					{!isLoading && loanOverview.length > 0 && (
+						<Link
+							className="flex items-center gap-1.5 text-primary text-sm hover:underline"
+							href="/dashboard/loans"
+						>
+							View all
+							<ChevronRight className="size-4" />
+						</Link>
+					)}
+				</div>
 
 				{renderLoansSection()}
 			</div>
