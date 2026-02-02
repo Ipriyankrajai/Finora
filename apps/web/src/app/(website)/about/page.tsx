@@ -1,6 +1,7 @@
 import { ArrowRight, Heart, Lock, Sparkles, Target } from "lucide-react";
 import Link from "next/link";
 
+import { getAnimationDelay, getStatDelay } from "@/lib/animation-utils";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -81,13 +82,7 @@ export default function AboutPage() {
 					<div className="grid grid-cols-3 divide-x divide-border/50">
 						{stats.map((stat, index) => (
 							<div
-								className={`fade-in slide-in-from-bottom-4 animate-in fill-mode-both py-12 text-center duration-700 ${
-									index === 0
-										? "delay-300"
-										: index === 1
-											? "delay-500"
-											: "delay-700"
-								}`}
+								className={`fade-in slide-in-from-bottom-4 animate-in fill-mode-both py-12 text-center duration-700 ${getStatDelay(index)}`}
 								key={stat.label}
 							>
 								<div className="mb-2 font-bold text-3xl text-primary md:text-4xl">
@@ -158,15 +153,7 @@ export default function AboutPage() {
 					<div className="grid gap-6 sm:grid-cols-2">
 						{values.map((value, index) => (
 							<div
-								className={`group fade-in slide-in-from-bottom-4 animate-in border border-border/50 bg-background/50 fill-mode-both p-6 backdrop-blur-sm transition-all duration-700 duration-700 hover:border-primary/30 hover:bg-card ${
-									index === 0
-										? "delay-100"
-										: index === 1
-											? "delay-200"
-											: index === 2
-												? "delay-300"
-												: "delay-500"
-								}`}
+								className={`group fade-in slide-in-from-bottom-4 animate-in border border-border/50 bg-background/50 fill-mode-both p-6 backdrop-blur-sm transition-all duration-700 hover:border-primary/30 hover:bg-card ${getAnimationDelay(index)}`}
 								key={value.title}
 							>
 								<div className="mb-4 inline-flex border border-border/50 p-3 transition-all duration-300 group-hover:border-primary/30 group-hover:bg-primary/5">

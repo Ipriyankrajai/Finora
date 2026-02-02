@@ -267,24 +267,39 @@ export const loanRouter = router({
 			}
 
 			// Build update data, converting money fields if provided
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const updateData: any = {};
+			const updateData: {
+				name?: string;
+				interestType?: InterestType;
+				principalCents?: bigint;
+				annualRatePercent?: number;
+				termMonths?: number;
+				monthlyPaymentCents?: bigint;
+				startDate?: Date;
+			} = {};
 
-			if (updateFields.name !== undefined) updateData.name = updateFields.name;
-			if (updateFields.interestType !== undefined)
+			if (updateFields.name !== undefined) {
+				updateData.name = updateFields.name;
+			}
+			if (updateFields.interestType !== undefined) {
 				updateData.interestType = updateFields.interestType as InterestType;
-			if (updateFields.principal !== undefined)
+			}
+			if (updateFields.principal !== undefined) {
 				updateData.principalCents = displayToCents(updateFields.principal);
-			if (updateFields.annualRatePercent !== undefined)
+			}
+			if (updateFields.annualRatePercent !== undefined) {
 				updateData.annualRatePercent = updateFields.annualRatePercent;
-			if (updateFields.termMonths !== undefined)
+			}
+			if (updateFields.termMonths !== undefined) {
 				updateData.termMonths = updateFields.termMonths;
-			if (updateFields.monthlyPayment !== undefined)
+			}
+			if (updateFields.monthlyPayment !== undefined) {
 				updateData.monthlyPaymentCents = displayToCents(
 					updateFields.monthlyPayment
 				);
-			if (updateFields.startDate !== undefined)
+			}
+			if (updateFields.startDate !== undefined) {
 				updateData.startDate = updateFields.startDate;
+			}
 
 			const loan = await db.loan.update({
 				where: { id },

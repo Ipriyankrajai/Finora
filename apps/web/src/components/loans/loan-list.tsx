@@ -2,7 +2,7 @@
 
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,8 +43,9 @@ export function LoanList({
 	const deleteLoan = useDeleteLoan();
 
 	// Track loan to delete for confirmation dialog
-	const [deleteTarget, setDeleteTarget] =
-		React.useState<LoanWithBalance | null>(null);
+	const [deleteTarget, setDeleteTarget] = useState<LoanWithBalance | null>(
+		null
+	);
 
 	const handleDeleteClick = (loan: LoanWithBalance) => {
 		setDeleteTarget(loan);
@@ -52,7 +53,9 @@ export function LoanList({
 	};
 
 	const handleConfirmDelete = async () => {
-		if (!deleteTarget) return;
+		if (!deleteTarget) {
+			return;
+		}
 		await deleteLoan.mutateAsync({ id: deleteTarget.id });
 		setDeleteTarget(null);
 	};

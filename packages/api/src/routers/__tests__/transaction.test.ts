@@ -323,7 +323,7 @@ describe("transactionRouter", () => {
 							createMany: vi.fn().mockResolvedValue({ count: 0 }),
 						},
 					};
-					return callback(tx);
+					return await callback(tx);
 				}
 			);
 
@@ -352,7 +352,7 @@ describe("transactionRouter", () => {
 							createMany: vi.fn().mockResolvedValue({ count: 0 }),
 						},
 					};
-					return callback(tx);
+					return await callback(tx);
 				}
 			);
 
@@ -391,7 +391,7 @@ describe("transactionRouter", () => {
 							}),
 						},
 					};
-					return callback(tx);
+					return await callback(tx);
 				}
 			);
 
@@ -429,7 +429,7 @@ describe("transactionRouter", () => {
 							createMany: vi.fn().mockResolvedValue({ count: 0 }),
 						},
 					};
-					return callback(tx);
+					return await callback(tx);
 				}
 			);
 
@@ -489,7 +489,7 @@ describe("transactionRouter", () => {
 							createMany: vi.fn().mockResolvedValue({ count: 0 }),
 						},
 					};
-					return callback(tx);
+					return await callback(tx);
 				}
 			);
 
@@ -531,7 +531,7 @@ describe("transactionRouter", () => {
 							}),
 						},
 					};
-					return callback(tx);
+					return await callback(tx);
 				}
 			);
 

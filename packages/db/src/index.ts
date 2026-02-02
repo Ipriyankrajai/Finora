@@ -8,7 +8,7 @@ const prisma = new PrismaClient({ adapter });
 
 export default prisma;
 
-// Re-export Prisma enums and types for use in other packages
+// biome-ignore lint/performance/noBarrelFile: Intentional re-exports for db package API
 export { InterestType, TransactionType } from "../prisma/generated/enums";
 export type {
 	LoanModel as Loan,

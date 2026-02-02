@@ -3,6 +3,7 @@ import type { Route } from "next";
 import Link from "next/link";
 import { PageBackground } from "@/components/page-background";
 import { Button } from "@/components/ui/button";
+import { getBlogDelay } from "@/lib/animation-utils";
 import { type BlogPostMeta, getAllPosts } from "@/lib/blog";
 import { createMetadata } from "@/lib/metadata";
 
@@ -127,13 +128,7 @@ export default function BlogPage() {
 						)}
 						{otherPosts.map((post, index) => (
 							<BlogCard
-								className={
-									index === 0
-										? "delay-500"
-										: index === 1
-											? "delay-700"
-											: "delay-1000"
-								}
+								className={getBlogDelay(index)}
 								key={post.slug}
 								post={post}
 							/>

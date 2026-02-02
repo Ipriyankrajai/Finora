@@ -8,7 +8,8 @@ import {
 	Plus,
 	Trash2,
 } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -49,19 +50,21 @@ export function TagList() {
 	const deleteTag = useDeleteTag();
 
 	// Collapsible state with localStorage persistence
-	const [isCollapsed, setIsCollapsed] = React.useState(() => {
-		if (typeof window === "undefined") return false;
+	const [isCollapsed, setIsCollapsed] = useState(() => {
+		if (typeof window === "undefined") {
+			return false;
+		}
 		return localStorage.getItem(COLLAPSED_STORAGE_KEY) === "true";
 	});
 
 	// Form dialog state
-	const [formOpen, setFormOpen] = React.useState(false);
-	const [formMode, setFormMode] = React.useState<"create" | "edit">("create");
-	const [editingTag, setEditingTag] = React.useState<Tag | undefined>();
+	const [formOpen, setFormOpen] = useState(false);
+	const [formMode, setFormMode] = useState<"create" | "edit">("create");
+	const [editingTag, setEditingTag] = useState<Tag | undefined>();
 
 	// Delete confirmation dialog state
-	const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-	const [deletingTag, setDeletingTag] = React.useState<Tag | undefined>();
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [deletingTag, setDeletingTag] = useState<Tag | undefined>();
 
 	// Persist collapsed state
 	const toggleCollapsed = () => {
@@ -106,6 +109,7 @@ export function TagList() {
 				<button
 					className="flex items-center gap-1 font-medium text-muted-foreground text-xs transition-colors hover:text-foreground"
 					onClick={toggleCollapsed}
+					type="button"
 				>
 					{isCollapsed ? (
 						<ChevronRight className="size-3.5" />
@@ -159,6 +163,7 @@ export function TagList() {
 							<button
 								className="text-primary hover:underline"
 								onClick={handleAddTag}
+								type="button"
 							>
 								Create one
 							</button>

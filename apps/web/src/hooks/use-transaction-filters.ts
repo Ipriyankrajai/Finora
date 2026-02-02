@@ -125,11 +125,21 @@ export function useTransactionFilters() {
 	// Get active filter count for UI badge (excluding page)
 	const activeFilterCount = useMemo(() => {
 		let count = 0;
-		if (filters.datePreset) count++;
-		if (filters.dateFrom || filters.dateTo) count++;
-		if (filters.type) count++;
-		if (filters.tagId) count++;
-		if (filters.amountMin || filters.amountMax) count++;
+		if (filters.datePreset) {
+			count++;
+		}
+		if (filters.dateFrom || filters.dateTo) {
+			count++;
+		}
+		if (filters.type) {
+			count++;
+		}
+		if (filters.tagId) {
+			count++;
+		}
+		if (filters.amountMin || filters.amountMax) {
+			count++;
+		}
 		return count;
 	}, [filters]);
 

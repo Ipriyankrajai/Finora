@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronDown, Tag } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
+
 import { TagChip } from "@/components/tags/tag-chip";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -27,7 +28,7 @@ export function TagMultiSelect({
 	onChange,
 	className,
 }: TagMultiSelectProps) {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 	const { tags, isLoading } = useTags();
 
 	const handleToggle = (tagId: string) => {
@@ -70,11 +71,12 @@ export function TagMultiSelect({
 				<ChevronDown className="size-4 shrink-0 opacity-50" />
 			</PopoverTrigger>
 			<PopoverContent align="start" className="w-56 p-2">
-				{isLoading ? (
+				{isLoading && (
 					<div className="py-6 text-center text-muted-foreground text-sm">
 						Loading tags...
 					</div>
-				) : tags.length === 0 ? (
+				)}
+				{!isLoading && tags.length === 0 && (
 					<div className="py-6 text-center">
 						<Tag className="mx-auto mb-2 size-6 text-muted-foreground" />
 						<p className="text-muted-foreground text-sm">No tags yet</p>
@@ -82,7 +84,8 @@ export function TagMultiSelect({
 							Create tags in the sidebar
 						</p>
 					</div>
-				) : (
+				)}
+				{!isLoading && tags.length > 0 && (
 					<div className="space-y-1">
 						{tags.map((tag) => {
 							const isSelected = value.includes(tag.id);

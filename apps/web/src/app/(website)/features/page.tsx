@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { getAnimationDelay } from "@/lib/animation-utils";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -208,13 +209,11 @@ function CategorySection({
 					<div className={`space-y-4 ${isEven ? "" : "md:order-1"}`}>
 						{category.features.map((feature, featureIndex) => (
 							<FeatureCard
-								className={
-									featureIndex === 0
-										? "delay-100"
-										: featureIndex === 1
-											? "delay-200"
-											: "delay-300"
-								}
+								className={getAnimationDelay(featureIndex, [
+									"delay-100",
+									"delay-200",
+									"delay-300",
+								])}
 								description={feature.description}
 								icon={feature.icon}
 								key={feature.title}
@@ -298,15 +297,7 @@ export default function FeaturesPage() {
 					<div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
 						{additionalFeatures.map((feature, index) => (
 							<div
-								className={`group fade-in slide-in-from-bottom-4 animate-in border border-border/50 bg-background/50 fill-mode-both p-6 text-center backdrop-blur-sm transition-all duration-700 duration-700 hover:border-primary/30 ${
-									index === 0
-										? "delay-100"
-										: index === 1
-											? "delay-200"
-											: index === 2
-												? "delay-300"
-												: "delay-500"
-								}`}
+								className={`group fade-in slide-in-from-bottom-4 animate-in border border-border/50 bg-background/50 fill-mode-both p-6 text-center backdrop-blur-sm transition-all duration-700 hover:border-primary/30 ${getAnimationDelay(index)}`}
 								key={feature.title}
 							>
 								<div className="mb-4 inline-flex border border-border/50 p-3 transition-all duration-300 group-hover:border-primary/30 group-hover:bg-primary/5">
