@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import * as React from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,6 +21,10 @@ import { cn } from "@/lib/utils";
 
 import { PaymentSummary } from "./payment-summary";
 
+// Validation patterns
+const CURRENCY_PATTERN = /^\d+(\.\d{1,2})?$/;
+const DECIMAL_INPUT_PATTERN = /^\d*\.?\d{0,2}$/;
+
 /**
  * Create validation schema for payment form with payoff amount check.
  * Uses cents comparison to avoid floating point precision issues.
@@ -34,7 +38,7 @@ const createPaymentSchema = (payoffAmountCents: bigint) => {
 		amount: z
 			.string()
 			.min(1, "Amount is required")
-			.refine((val) => /^\d+(\.\d{1,2})?$/.test(val), "Enter a valid amount")
+			.refine((val) => CURRENCY_PATTERN.test(val), "Enter a valid amount")
 			.refine((val) => Number.parseFloat(val) > 0, "Amount must be positive")
 			.refine((val) => {
 				// Convert to cents (integer) to avoid floating point issues
@@ -73,17 +77,16 @@ export function PaymentForm({
 }: PaymentFormProps) {
 	// Track state for showing summary after successful payment
 	// Use a stable view state to prevent flicker during transitions
-	const [viewState, setViewState] = React.useState<
+	const [viewState, setViewState] = useState<
 		"form" | "transitioning" | "summary"
 	>("form");
-	const [paymentResult, setPaymentResult] =
-		React.useState<PaymentResult | null>(null);
-	const [previousBalance, setPreviousBalance] = React.useState<bigint | null>(
+	const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(
 		null
 	);
+	const [previousBalance, setPreviousBalance] = useState<bigint | null>(null);
 
 	// Key to force form remount when dialog opens - ensures fresh form state
-	const [formKey, setFormKey] = React.useState(0);
+	const [formKey, setFormKey] = useState(0);
 
 	// Handle dialog open/close
 	const handleOpenChange = (newOpen: boolean) => {
@@ -109,8 +112,10 @@ export function PaymentForm({
 	};
 
 	// Calculate new balance for summary (previousBalance - principalCents)
-	const newBalance = React.useMemo(() => {
-		if (!paymentResult || previousBalance === null) return BigInt(0);
+	const newBalance = useMemo(() => {
+		if (!paymentResult || previousBalance === null) {
+			return BigInt(0);
+		}
 		return previousBalance - paymentResult.principalCents;
 	}, [paymentResult, previousBalance]);
 
@@ -137,8 +142,10 @@ export function PaymentForm({
 								)}
 							>
 								<svg
+									aria-label="Success checkmark"
 									className="size-5"
 									fill="none"
+									role="img"
 									stroke="currentColor"
 									strokeLinecap="round"
 									strokeLinejoin="round"
@@ -206,7 +213,7 @@ function PaymentFormContent({
 
 	// Calculate default amount based on current loan state
 	// Use payoffAmountCents as the cap since that's the max you can pay
-	const defaultAmount = React.useMemo(() => {
+	const defaultAmount = useMemo(() => {
 		const monthlyPayment = Number(loan.monthlyPaymentCents);
 		const payoffAmount = Number(loan.payoffAmountCents);
 		const prefillAmount = Math.min(monthlyPayment, payoffAmount);
@@ -214,7 +221,7 @@ function PaymentFormContent({
 	}, [loan.monthlyPaymentCents, loan.payoffAmountCents]);
 
 	// Validation schema with payoff amount (principal + current period interest)
-	const validationSchema = React.useMemo(
+	const validationSchema = useMemo(
 		() => createPaymentSchema(loan.payoffAmountCents),
 		[loan.payoffAmountCents]
 	);
@@ -272,7 +279,7 @@ function PaymentFormContent({
 									onChange={(e) => {
 										// Only allow numbers and one decimal point with max 2 decimals
 										const val = e.target.value;
-										if (val === "" || /^\d*\.?\d{0,2}$/.test(val)) {
+										if (val === "" || DECIMAL_INPUT_PATTERN.test(val)) {
 											field.handleChange(val);
 										}
 									}}

@@ -100,10 +100,10 @@ describe("loan router", () => {
 			const result = await caller.loan.list();
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.balanceCents).toBe(
+			expect(result[0]?.balanceCents).toBe(
 				BigInt(1_000_000) - BigInt(10_000) - BigInt(15_000)
 			); // Principal - payments
-			expect(result[0]!.totalInterestPaidCents).toBe(
+			expect(result[0]?.totalInterestPaidCents).toBe(
 				BigInt(5000) + BigInt(4500)
 			);
 			// Should not include payments array in response
@@ -602,7 +602,7 @@ describe("loan router", () => {
 			let capturedData: any = null;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			(prisma.loanPayment.create as any).mockImplementation(
-				async ({ data }: any) => {
+				({ data }: { data: Record<string, unknown> }) => {
 					capturedData = data;
 					return {
 						id: MOCK_PAYMENT_ID,
@@ -630,8 +630,8 @@ describe("loan router", () => {
 			// $10,000 * (6% / 12) = $50 interest
 			// $1000 - $50 = $950 principal
 			expect(capturedData).not.toBeNull();
-			expect(capturedData!.interestCents).toBe(BigInt(5000)); // $50.00
-			expect(capturedData!.principalCents).toBe(BigInt(95_000)); // $950.00
+			expect(capturedData?.interestCents).toBe(BigInt(5000)); // $50.00
+			expect(capturedData?.principalCents).toBe(BigInt(95_000)); // $950.00
 		});
 	});
 

@@ -2,10 +2,10 @@
 // Check for GSD updates in background, write result to cache
 // Called by SessionStart hook - runs once per session
 
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
-const { spawn } = require("child_process");
+const fs = require("node:fs");
+const path = require("node:path");
+const os = require("node:os");
+const { spawn } = require("node:child_process");
 
 const homeDir = os.homedir();
 const cwd = process.cwd();

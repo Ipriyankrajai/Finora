@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { ArrowLeft, Pencil, Plus } from "lucide-react";
 import Link from "next/link";
-import * as React from "react";
+import { useState } from "react";
 
 import { MoneyDisplay } from "@/components/shared/money-display";
 import { Button } from "@/components/ui/button";
@@ -40,13 +40,15 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
 	const deletePayment = useDeletePayment();
 
 	// State for dialogs
-	const [isEditOpen, setIsEditOpen] = React.useState(false);
-	const [isPaymentOpen, setIsPaymentOpen] = React.useState(false);
-	const [deleteTarget, setDeleteTarget] = React.useState<string | null>(null);
+	const [isEditOpen, setIsEditOpen] = useState(false);
+	const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+	const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
 	// Handle delete confirmation
 	const handleDeleteConfirm = async () => {
-		if (!deleteTarget) return;
+		if (!deleteTarget) {
+			return;
+		}
 		await deletePayment.mutateAsync({ id: deleteTarget });
 		setDeleteTarget(null);
 	};
@@ -279,10 +281,11 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
 						) : (
 							<div>
 								<span className="font-bold text-2xl">
-									{format(
-										new Date(loanWithDetails.projection.projectedPayoffDate!),
-										"MMM yyyy"
-									)}
+									{loanWithDetails.projection.projectedPayoffDate &&
+										format(
+											new Date(loanWithDetails.projection.projectedPayoffDate),
+											"MMM yyyy"
+										)}
 								</span>
 								<p className="mt-1 text-muted-foreground text-xs">
 									{Math.round(loanWithDetails.projection.monthsRemaining)}{" "}

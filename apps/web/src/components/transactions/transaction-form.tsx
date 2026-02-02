@@ -22,6 +22,10 @@ import { cn } from "@/lib/utils";
 
 import { TagMultiSelect } from "./tag-multi-select";
 
+// Top-level regex patterns
+const AMOUNT_PATTERN = /^\d+(\.\d{1,2})?$/;
+const DECIMAL_INPUT_PATTERN = /^\d*\.?\d{0,2}$/;
+
 /**
  * Validation schema for transaction form
  */
@@ -30,7 +34,7 @@ const transactionSchema = z.object({
 	amount: z
 		.string()
 		.min(1, "Amount is required")
-		.refine((val) => /^\d+(\.\d{1,2})?$/.test(val), "Enter a valid amount")
+		.refine((val) => AMOUNT_PATTERN.test(val), "Enter a valid amount")
 		.refine((val) => Number.parseFloat(val) > 0, "Amount must be positive")
 		.refine(
 			(val) => Number.parseFloat(val) <= 999_999_999.99,
@@ -74,7 +78,9 @@ export function TransactionForm({
 
 	// Convert amountCents (BigInt) to display string
 	const getInitialAmount = () => {
-		if (!transaction) return "";
+		if (!transaction) {
+			return "";
+		}
 		// Convert cents to dollars with 2 decimal places
 		const cents = Number(transaction.amountCents);
 		return (cents / 100).toFixed(2);
@@ -202,7 +208,7 @@ export function TransactionForm({
 										onChange={(e) => {
 											// Only allow numbers and one decimal point
 											const val = e.target.value;
-											if (val === "" || /^\d*\.?\d{0,2}$/.test(val)) {
+											if (val === "" || DECIMAL_INPUT_PATTERN.test(val)) {
 												field.handleChange(val);
 											}
 										}}

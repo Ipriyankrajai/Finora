@@ -29,6 +29,11 @@ const SUMMARY_SKELETON_KEYS = ["income", "expenses", "net"];
 const TAG_SKELETON_KEYS = ["tag-1", "tag-2", "tag-3"];
 const LOAN_SKELETON_KEYS = ["loan-1", "loan-2"];
 
+/** No-op handler for disabled/static components */
+function noop() {
+	// Intentionally empty - used for static card displays
+}
+
 /**
  * Loading skeleton for dashboard summary
  */
@@ -279,15 +284,15 @@ function LoanExpanded({
 	loan: LoanOverview;
 	onClose: () => void;
 }) {
-	// Don't show what-if for paid off loans
-	if (loan.balanceCents === 0n) {
-		return null;
-	}
-
 	// We need additional loan data for the simulator
 	// Fetch the full loan details to get monthlyPaymentCents and annualRatePercent
 	const queryOptions = trpc.loan.getById.queryOptions({ id: loan.id });
 	const { data: fullLoan, isLoading } = useQuery(queryOptions);
+
+	// Don't show what-if for paid off loans
+	if (loan.balanceCents === 0n) {
+		return null;
+	}
 
 	if (isLoading) {
 		return (
@@ -498,7 +503,7 @@ export function DashboardPageClient() {
 									isExpanded={false}
 									key={loan.id}
 									loan={loan}
-									onToggle={() => {}}
+									onToggle={noop}
 								/>
 							))}
 						</div>

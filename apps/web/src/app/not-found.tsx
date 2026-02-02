@@ -238,6 +238,7 @@ export default function NotFound() {
 						<button
 							className="group inline-flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
 							onClick={() => window.history.back()}
+							type="button"
 						>
 							<RefreshCw className="size-4 transition-transform duration-500 group-hover:-rotate-180" />
 							Go back to previous page

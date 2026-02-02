@@ -3,6 +3,16 @@
 import { formatCents } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+function getTypeColor(type?: "INCOME" | "EXPENSE"): string {
+	if (type === "INCOME") {
+		return "text-green-600 dark:text-green-500";
+	}
+	if (type === "EXPENSE") {
+		return "text-red-600 dark:text-red-500";
+	}
+	return "";
+}
+
 interface MoneyDisplayProps {
 	cents: bigint | number;
 	type?: "INCOME" | "EXPENSE";
@@ -34,12 +44,7 @@ function MoneyDisplay({
 	}
 
 	// Determine color based on type
-	const colorClass =
-		type === "INCOME"
-			? "text-green-600 dark:text-green-500"
-			: type === "EXPENSE"
-				? "text-red-600 dark:text-red-500"
-				: "";
+	const colorClass = getTypeColor(type);
 
 	return (
 		<span

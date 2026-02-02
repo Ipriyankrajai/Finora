@@ -22,6 +22,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 
+// Password validation regex patterns
+const HAS_UPPERCASE = /[A-Z]/;
+const HAS_NUMBER = /[0-9]/;
+const HAS_SPECIAL = /[^A-Za-z0-9]/;
+
 function FloatingOrb({
 	className,
 	delay = "0s",
@@ -75,14 +80,34 @@ function FeatureItem({
 	);
 }
 
+function getStrengthTextColor(strength: number): string {
+	if (strength >= 4) {
+		return "text-emerald-600 dark:text-emerald-400";
+	}
+	if (strength >= 3) {
+		return "text-yellow-600 dark:text-yellow-400";
+	}
+	return "text-red-600 dark:text-red-400";
+}
+
 function PasswordStrength({ password }: { password: string }) {
 	const getStrength = () => {
 		let score = 0;
-		if (password.length >= 8) score++;
-		if (password.length >= 12) score++;
-		if (/[A-Z]/.test(password)) score++;
-		if (/[0-9]/.test(password)) score++;
-		if (/[^A-Za-z0-9]/.test(password)) score++;
+		if (password.length >= 8) {
+			score++;
+		}
+		if (password.length >= 12) {
+			score++;
+		}
+		if (HAS_UPPERCASE.test(password)) {
+			score++;
+		}
+		if (HAS_NUMBER.test(password)) {
+			score++;
+		}
+		if (HAS_SPECIAL.test(password)) {
+			score++;
+		}
 		return score;
 	};
 
@@ -96,23 +121,23 @@ function PasswordStrength({ password }: { password: string }) {
 		"bg-emerald-500",
 	];
 
-	if (!password) return null;
+	if (!password) {
+		return null;
+	}
 
 	return (
 		<div className="mt-3 space-y-2">
 			<div className="flex gap-1">
-				{[...Array(5)].map((_, i) => (
+				{[1, 2, 3, 4, 5].map((level) => (
 					<div
-						className={`h-1 flex-1 rounded-full transition-all duration-300 ${i < strength ? strengthColors[strength - 1] : "bg-foreground/10"}`}
-						key={i}
+						className={`h-1 flex-1 rounded-full transition-all duration-300 ${level <= strength ? strengthColors[strength - 1] : "bg-foreground/10"}`}
+						key={`strength-${level}`}
 					/>
 				))}
 			</div>
 			<p className="text-muted-foreground text-xs">
 				Password strength:{" "}
-				<span
-					className={`${strength >= 4 ? "text-emerald-600 dark:text-emerald-400" : strength >= 3 ? "text-yellow-600 dark:text-yellow-400" : "text-red-600 dark:text-red-400"}`}
-				>
+				<span className={getStrengthTextColor(strength)}>
 					{strengthLabels[strength - 1] || "Very weak"}
 				</span>
 			</p>
@@ -281,12 +306,12 @@ export default function SignUpPage() {
 					>
 						<div className="flex items-center gap-3">
 							<div className="flex -space-x-2">
-								{[...Array(4)].map((_, i) => (
+								{[0.15, 0.3, 0.45, 0.6].map((fadeAmount, idx) => (
 									<div
 										className="size-8 rounded-full border-2 border-background bg-linear-to-br from-emerald-400 to-cyan-500"
-										key={i}
+										key={`avatar-${idx + 1}`}
 										style={{
-											opacity: 1 - i * 0.15,
+											opacity: 1 - fadeAmount,
 										}}
 									/>
 								))}

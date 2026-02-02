@@ -20,6 +20,20 @@ interface LoanOverviewCardProps {
 	onToggle: () => void;
 }
 
+function getPayoffDisplay(
+	isPaidOff: boolean,
+	isPayoffInfinite: boolean,
+	projectedPayoffDate: Date
+): string {
+	if (isPayoffInfinite) {
+		return "N/A";
+	}
+	if (isPaidOff) {
+		return "Completed";
+	}
+	return formatDate(projectedPayoffDate);
+}
+
 /**
  * Loan overview card showing balance, payoff date, and progress.
  * Per CONTEXT.md: display loan name, current balance, payoff date, monthly payment
@@ -41,11 +55,11 @@ export function LoanOverviewCard({
 		!isPaidOff && projectedPayoffDate.getTime() === 8_640_000_000_000_000;
 
 	// Format payoff date or show N/A for infinite
-	const payoffDisplay = isPayoffInfinite
-		? "N/A"
-		: isPaidOff
-			? "Completed"
-			: formatDate(projectedPayoffDate);
+	const payoffDisplay = getPayoffDisplay(
+		isPaidOff,
+		isPayoffInfinite,
+		projectedPayoffDate
+	);
 
 	// Calculate if we can show what-if (only for active loans with balance)
 	const canShowWhatIf = !isPaidOff;

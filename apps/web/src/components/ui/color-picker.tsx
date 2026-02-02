@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ interface ColorPickerProps {
 }
 
 function ColorPicker({ value, onChange, className }: ColorPickerProps) {
-	const [showCustom, setShowCustom] = React.useState(false);
+	const [showCustom, setShowCustom] = useState(false);
 
 	return (
 		<div className={cn("space-y-3", className)}>

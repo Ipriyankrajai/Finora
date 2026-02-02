@@ -66,8 +66,13 @@ export const transactionRouter = router({
 			} = input;
 
 			// Build where clause dynamically
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const where: any = {
+			const where: {
+				userId: string;
+				date?: { gte?: Date; lte?: Date };
+				type?: "INCOME" | "EXPENSE";
+				tags?: { some: { tagId: string } };
+				amountCents?: { gte?: bigint; lte?: bigint };
+			} = {
 				userId,
 			};
 
@@ -80,8 +85,12 @@ export const transactionRouter = router({
 				};
 			} else if (dateFrom || dateTo) {
 				where.date = {};
-				if (dateFrom) where.date.gte = dateFrom;
-				if (dateTo) where.date.lte = dateTo;
+				if (dateFrom) {
+					where.date.gte = dateFrom;
+				}
+				if (dateTo) {
+					where.date.lte = dateTo;
+				}
 			}
 
 			// Type filter
@@ -101,8 +110,12 @@ export const transactionRouter = router({
 			// Amount range filter (values are in cents as BigInt)
 			if (amountMin || amountMax) {
 				where.amountCents = {};
-				if (amountMin) where.amountCents.gte = BigInt(amountMin);
-				if (amountMax) where.amountCents.lte = BigInt(amountMax);
+				if (amountMin) {
+					where.amountCents.gte = BigInt(amountMin);
+				}
+				if (amountMax) {
+					where.amountCents.lte = BigInt(amountMax);
+				}
 			}
 
 			// Cursor pagination
@@ -127,7 +140,7 @@ export const transactionRouter = router({
 			// Determine if there are more items
 			const hasMore = transactions.length > limit;
 			const items = hasMore ? transactions.slice(0, limit) : transactions;
-			const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
+			const nextCursor = hasMore ? items.at(-1)?.id : undefined;
 
 			return {
 				items,
@@ -251,12 +264,24 @@ export const transactionRouter = router({
 			}
 
 			// Build update data
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const updateData: any = {};
-			if (type !== undefined) updateData.type = type;
-			if (amount !== undefined) updateData.amountCents = displayToCents(amount);
-			if (date !== undefined) updateData.date = date;
-			if (description !== undefined) updateData.description = description;
+			const updateData: {
+				type?: "INCOME" | "EXPENSE";
+				amountCents?: bigint;
+				date?: Date;
+				description?: string | null;
+			} = {};
+			if (type !== undefined) {
+				updateData.type = type;
+			}
+			if (amount !== undefined) {
+				updateData.amountCents = displayToCents(amount);
+			}
+			if (date !== undefined) {
+				updateData.date = date;
+			}
+			if (description !== undefined) {
+				updateData.description = description;
+			}
 
 			// Use Prisma transaction for atomicity
 			const transaction = await db.$transaction(async (tx) => {
