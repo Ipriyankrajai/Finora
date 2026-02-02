@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { LoanWithBalance } from "@/hooks/use-loans";
@@ -15,14 +15,10 @@ import { PaymentForm } from "./payment-form";
  * Separated from server component to enable state management for dialogs.
  */
 export function LoansPageClient() {
-	const [isFormOpen, setIsFormOpen] = React.useState(false);
-	const [editingLoan, setEditingLoan] = React.useState<LoanWithBalance | null>(
-		null
-	);
-	const [paymentLoan, setPaymentLoan] = React.useState<LoanWithBalance | null>(
-		null
-	);
-	const [isPaymentFormOpen, setIsPaymentFormOpen] = React.useState(false);
+	const [isFormOpen, setIsFormOpen] = useState(false);
+	const [editingLoan, setEditingLoan] = useState<LoanWithBalance | null>(null);
+	const [paymentLoan, setPaymentLoan] = useState<LoanWithBalance | null>(null);
+	const [isPaymentFormOpen, setIsPaymentFormOpen] = useState(false);
 
 	const handleAddLoan = () => {
 		setEditingLoan(null);

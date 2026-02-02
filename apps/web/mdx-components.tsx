@@ -3,7 +3,9 @@ import type { Route } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-type PropsWithChildren = { children?: ReactNode };
+interface PropsWithChildren {
+	children?: ReactNode;
+}
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
@@ -122,10 +124,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			<td className="px-4 py-2 text-muted-foreground">{children}</td>
 		),
 
-		// Images
+		// Images - using native img for MDX content (external URLs, unknown dimensions)
 		img: ({ src, alt }: { src?: string; alt?: string }) => (
 			<figure className="my-6">
-				{/* eslint-disable-next-line @next/next/no-img-element */}
+				{/* biome-ignore lint/performance/noImgElement: MDX images may be external URLs */}
+				{/* biome-ignore lint/correctness/useImageSize: MDX images have unknown dimensions */}
 				<img
 					alt={alt || ""}
 					className="rounded-lg border border-border/50"

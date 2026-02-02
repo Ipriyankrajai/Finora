@@ -2,9 +2,9 @@
 // Claude Code Statusline - GSD Edition
 // Shows: model | current task | directory | context usage
 
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+const fs = require("node:fs");
+const path = require("node:path");
+const os = require("node:os");
 
 // Read JSON from stdin
 let input = "";
@@ -65,8 +65,10 @@ process.stdin.on("end", () => {
 						fs.readFileSync(path.join(todosDir, files[0].name), "utf8")
 					);
 					const inProgress = todos.find((t) => t.status === "in_progress");
-					if (inProgress) task = inProgress.activeForm || "";
-				} catch (e) {}
+					if (inProgress) {
+						task = inProgress.activeForm || "";
+					}
+				} catch (_e) {}
 			}
 		}
 
@@ -84,7 +86,7 @@ process.stdin.on("end", () => {
 				if (cache.update_available) {
 					gsdUpdate = "\x1b[33m⬆ /gsd:update\x1b[0m │ ";
 				}
-			} catch (e) {}
+			} catch (_e) {}
 		}
 
 		// Output
@@ -98,7 +100,7 @@ process.stdin.on("end", () => {
 				`${gsdUpdate}\x1b[2m${model}\x1b[0m │ \x1b[2m${dirname}\x1b[0m${ctx}`
 			);
 		}
-	} catch (e) {
+	} catch (_e) {
 		// Silent fail - don't break statusline on parse errors
 	}
 });

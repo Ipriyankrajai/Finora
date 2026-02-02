@@ -1,10 +1,15 @@
 "use client";
 
-import type * as React from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-function Label({ className, ...props }: React.ComponentProps<"label">) {
+interface LabelProps extends ComponentProps<"label"> {
+	htmlFor?: string;
+	children?: ReactNode;
+}
+
+function Label({ className, htmlFor, children, ...props }: LabelProps) {
 	return (
 		<label
 			className={cn(
@@ -12,8 +17,11 @@ function Label({ className, ...props }: React.ComponentProps<"label">) {
 				className
 			)}
 			data-slot="label"
+			htmlFor={htmlFor}
 			{...props}
-		/>
+		>
+			{children}
+		</label>
 	);
 }
 

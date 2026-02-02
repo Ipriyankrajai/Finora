@@ -37,44 +37,47 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 	const pathname = usePathname();
 
 	return (
-		<aside className="hidden w-64 flex-col border-border/50 border-r bg-card/50 md:flex">
+		<aside className="sticky top-0 hidden h-svh w-64 flex-col border-border/50 border-r bg-card/50 md:flex">
 			{/* Logo */}
-			<div className="flex h-16 items-center border-border/50 border-b px-6">
+			<div className="flex h-16 shrink-0 items-center border-border/50 border-b px-6">
 				<Logo size="sm" />
 			</div>
 
-			{/* Navigation */}
-			<nav className="flex-1 space-y-1 p-4">
-				{navItems.map((item) => {
-					const isActive =
-						pathname === item.href ||
-						(item.href !== "/dashboard" && pathname.startsWith(item.href));
+			{/* Scrollable content area */}
+			<div className="flex flex-1 flex-col overflow-hidden">
+				{/* Navigation */}
+				<nav className="flex-1 space-y-1 overflow-y-auto p-4">
+					{navItems.map((item) => {
+						const isActive =
+							pathname === item.href ||
+							(item.href !== "/dashboard" && pathname.startsWith(item.href));
 
-					return (
-						<Link
-							className={cn(
-								"flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium text-sm transition-colors",
-								isActive
-									? "bg-primary/10 text-primary"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							)}
-							href={item.href as Route}
-							key={item.href}
-						>
-							<item.icon className="size-4" />
-							{item.label}
-						</Link>
-					);
-				})}
-			</nav>
+						return (
+							<Link
+								className={cn(
+									"flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium text-sm transition-colors",
+									isActive
+										? "bg-primary/10 text-primary"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								)}
+								href={item.href as Route}
+								key={item.href}
+							>
+								<item.icon className="size-4" />
+								{item.label}
+							</Link>
+						);
+					})}
+				</nav>
 
-			{/* Tags section */}
-			<div className="border-border/50 border-t">
-				<TagList />
+				{/* Tags section */}
+				<div className="shrink-0 border-border/50 border-t">
+					<TagList />
+				</div>
 			</div>
 
 			{/* User info */}
-			<div className="border-border/50 border-t p-4">
+			<div className="shrink-0 border-border/50 border-t p-4">
 				<div className="flex items-center gap-3 px-3 py-2">
 					<div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
 						<span className="font-medium text-primary text-sm">

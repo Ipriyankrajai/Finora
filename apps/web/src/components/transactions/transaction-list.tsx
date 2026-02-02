@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,10 +39,10 @@ export function TransactionList({ onEditTransaction }: TransactionListProps) {
 	const deleteTransaction = useDeleteTransaction();
 
 	// State for delete confirmation dialog
-	const [deletingTransactionId, setDeletingTransactionId] = React.useState<
+	const [deletingTransactionId, setDeletingTransactionId] = useState<
 		string | null
 	>(null);
-	const deletingTransaction = deletingTransactionId
+	const _deletingTransaction = deletingTransactionId
 		? items.find((t) => t.id === deletingTransactionId)
 		: null;
 
@@ -126,8 +126,10 @@ export function TransactionList({ onEditTransaction }: TransactionListProps) {
 			<div className="flex flex-col items-center justify-center py-12 text-center">
 				<div className="mb-4 rounded-full bg-muted/50 p-6">
 					<svg
+						aria-label="Empty clipboard"
 						className="size-12 text-muted-foreground"
 						fill="none"
+						role="img"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
 					>

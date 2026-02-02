@@ -21,6 +21,7 @@
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "currency.js": "^2.0.4",
+    "date-fns": "^4.1.0",
     "dotenv": "catalog:",
     "next": "catalog:",
     "superjson": "^2.2.6",

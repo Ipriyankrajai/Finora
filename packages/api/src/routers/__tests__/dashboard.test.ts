@@ -143,8 +143,8 @@ describe("dashboard router", () => {
 
 			// Should return top 5 tags
 			expect(result.topTags).toHaveLength(5);
-			expect(result.topTags[0]!.tagName).toBe("Food");
-			expect(result.topTags[4]!.tagName).toBe("Shopping");
+			expect(result.topTags[0]?.tagName).toBe("Food");
+			expect(result.topTags[4]?.tagName).toBe("Shopping");
 
 			// otherTagsTotal should be sum of remaining 2 tags: 10000 + 5000 = 15000
 			expect(result.otherTagsTotal).toBe(BigInt(15_000));
@@ -198,18 +198,18 @@ describe("dashboard router", () => {
 			expect(result.loanOverview).toHaveLength(2);
 
 			// First loan: balance = 1000000 - 15000 - 15500 = 969500
-			expect(result.loanOverview[0]!.name).toBe("Car Loan");
-			expect(result.loanOverview[0]!.balanceCents).toBe(BigInt(969_500));
-			expect(result.loanOverview[0]!.interestPaidCents).toBe(BigInt(9500));
-			expect(result.loanOverview[0]!.projectedPayoffDate).toBeInstanceOf(Date);
+			expect(result.loanOverview[0]?.name).toBe("Car Loan");
+			expect(result.loanOverview[0]?.balanceCents).toBe(BigInt(969_500));
+			expect(result.loanOverview[0]?.interestPaidCents).toBe(BigInt(9500));
+			expect(result.loanOverview[0]?.projectedPayoffDate).toBeInstanceOf(Date);
 			expect(
-				result.loanOverview[0]!.totalInterestRemainingCents
+				result.loanOverview[0]?.totalInterestRemainingCents
 			).toBeGreaterThanOrEqual(0n);
 
 			// Second loan: balance = 500000 (no payments)
-			expect(result.loanOverview[1]!.name).toBe("Personal Loan");
-			expect(result.loanOverview[1]!.balanceCents).toBe(BigInt(500_000));
-			expect(result.loanOverview[1]!.interestPaidCents).toBe(BigInt(0));
+			expect(result.loanOverview[1]?.name).toBe("Personal Loan");
+			expect(result.loanOverview[1]?.balanceCents).toBe(BigInt(500_000));
+			expect(result.loanOverview[1]?.interestPaidCents).toBe(BigInt(0));
 		});
 
 		it("handles empty state gracefully", async () => {
@@ -251,7 +251,7 @@ describe("dashboard router", () => {
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const call = vi.mocked(prisma.transaction.findMany).mock
-				.calls[0]![0] as any;
+				.calls[0]?.[0] as any;
 			const dateFilter = call.where.date;
 
 			// Verify it's filtering for the current month
@@ -300,11 +300,11 @@ describe("dashboard router", () => {
 			const result = await caller.dashboard.summary();
 
 			// Balance should be 1000000 - 100000 = 900000 ($9,000)
-			expect(result.loanOverview[0]!.balanceCents).toBe(BigInt(900_000));
+			expect(result.loanOverview[0]?.balanceCents).toBe(BigInt(900_000));
 			// projectPayoff should have been called with the reduced balance
 			// Verify projections exist
-			expect(result.loanOverview[0]!.projectedPayoffDate).toBeDefined();
-			expect(result.loanOverview[0]!.totalInterestRemainingCents).toBeDefined();
+			expect(result.loanOverview[0]?.projectedPayoffDate).toBeDefined();
+			expect(result.loanOverview[0]?.totalInterestRemainingCents).toBeDefined();
 		});
 
 		it("handles loan with zero balance", async () => {
@@ -336,9 +336,9 @@ describe("dashboard router", () => {
 			const result = await caller.dashboard.summary();
 
 			// Balance should be 0
-			expect(result.loanOverview[0]!.balanceCents).toBe(BigInt(0));
+			expect(result.loanOverview[0]?.balanceCents).toBe(BigInt(0));
 			// Projection should show 0 months remaining
-			expect(result.loanOverview[0]!.totalInterestRemainingCents).toBe(
+			expect(result.loanOverview[0]?.totalInterestRemainingCents).toBe(
 				BigInt(0)
 			);
 		});

@@ -102,8 +102,12 @@ export function PageBackground({
 	return (
 		<>
 			<GridPattern />
-			{orbs.map((orb, index) => (
-				<FloatingOrb className={orb.className} delay={orb.delay} key={index} />
+			{orbs.map((orb) => (
+				<FloatingOrb
+					className={orb.className}
+					delay={orb.delay}
+					key={orb.delay}
+				/>
 			))}
 			<GradientMesh />
 		</>

@@ -29,8 +29,7 @@ export interface LoanWithBalance {
 /**
  * Cache data type helper for loan list queries
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type LoanListCache = any[];
+type LoanListCache = LoanWithBalance[];
 
 /**
  * Hook to fetch all loans for the current user with calculated balances.
@@ -105,24 +104,28 @@ export function useCreateLoan() {
 			// Create optimistic loan
 			const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 			const now = new Date();
-			const optimisticLoan = {
+			const principalCents = BigInt(
+				Math.round(Number.parseFloat(newLoan.principal) * 100)
+			);
+			const startDate =
+				newLoan.startDate instanceof Date
+					? newLoan.startDate
+					: new Date(newLoan.startDate as string);
+			const optimisticLoan: LoanWithBalance = {
 				id: tempId,
 				name: newLoan.name,
 				interestType: newLoan.interestType ?? "COMPOUND",
-				principalCents: BigInt(
-					Math.round(Number.parseFloat(newLoan.principal) * 100)
-				),
-				balanceCents: BigInt(
-					Math.round(Number.parseFloat(newLoan.principal) * 100)
-				),
+				principalCents,
+				balanceCents: principalCents,
 				totalInterestPaidCents: BigInt(0),
+				payoffAmountCents: principalCents, // Initial payoff = principal
+				currentPeriodInterestCents: BigInt(0), // No interest accrued yet
 				annualRatePercent: newLoan.annualRatePercent,
 				termMonths: newLoan.termMonths,
 				monthlyPaymentCents: BigInt(
 					Math.round(Number.parseFloat(newLoan.monthlyPayment) * 100)
 				),
-				startDate: newLoan.startDate,
-				userId: "temp",
+				startDate,
 				createdAt: now,
 				updatedAt: now,
 			};
@@ -130,7 +133,9 @@ export function useCreateLoan() {
 			// Optimistically add to all matching caches
 			for (const [queryKey] of previousQueries) {
 				queryClient.setQueryData<LoanListCache>(queryKey, (old) => {
-					if (!old) return [optimisticLoan];
+					if (!old) {
+						return [optimisticLoan];
+					}
 					return [optimisticLoan, ...old];
 				});
 			}
@@ -159,6 +164,64 @@ export function useCreateLoan() {
 			});
 		},
 	});
+}
+
+/**
+ * Normalize date from unknown tRPC input type
+ */
+function normalizeLoanDate(date: unknown): Date | undefined {
+	if (!date) {
+		return undefined;
+	}
+	if (date instanceof Date) {
+		return date;
+	}
+	return new Date(date as string);
+}
+
+/**
+ * Helper to apply optimistic loan update.
+ * Extracted to reduce cognitive complexity.
+ */
+function applyOptimisticLoanUpdate(
+	loan: LoanWithBalance,
+	update: {
+		id: string;
+		name?: string;
+		interestType?: "SIMPLE" | "COMPOUND";
+		principal?: string;
+		annualRatePercent?: number;
+		termMonths?: number;
+		monthlyPayment?: string;
+		startDate?: unknown;
+	},
+	now: Date
+): LoanWithBalance {
+	if (loan.id !== update.id) {
+		return loan;
+	}
+
+	const updatedPrincipalCents = update.principal
+		? BigInt(Math.round(Number.parseFloat(update.principal) * 100))
+		: loan.principalCents;
+
+	const updatedMonthlyPaymentCents = update.monthlyPayment
+		? BigInt(Math.round(Number.parseFloat(update.monthlyPayment) * 100))
+		: loan.monthlyPaymentCents;
+
+	const normalizedStartDate = normalizeLoanDate(update.startDate);
+
+	return {
+		...loan,
+		name: update.name ?? loan.name,
+		interestType: update.interestType ?? loan.interestType,
+		principalCents: updatedPrincipalCents,
+		annualRatePercent: update.annualRatePercent ?? loan.annualRatePercent,
+		termMonths: update.termMonths ?? loan.termMonths,
+		monthlyPaymentCents: updatedMonthlyPaymentCents,
+		startDate: normalizedStartDate ?? loan.startDate,
+		updatedAt: now,
+	};
 }
 
 /**
@@ -191,32 +254,12 @@ export function useUpdateLoan() {
 			// Optimistically update in all matching caches
 			for (const [queryKey] of previousQueries) {
 				queryClient.setQueryData<LoanListCache>(queryKey, (old) => {
-					if (!old) return old;
-					return old.map((loan) => {
-						if (loan.id !== updatedLoan.id) return loan;
-						return {
-							...loan,
-							name: updatedLoan.name ?? loan.name,
-							interestType: updatedLoan.interestType ?? loan.interestType,
-							principalCents: updatedLoan.principal
-								? BigInt(
-										Math.round(Number.parseFloat(updatedLoan.principal) * 100)
-									)
-								: loan.principalCents,
-							annualRatePercent:
-								updatedLoan.annualRatePercent ?? loan.annualRatePercent,
-							termMonths: updatedLoan.termMonths ?? loan.termMonths,
-							monthlyPaymentCents: updatedLoan.monthlyPayment
-								? BigInt(
-										Math.round(
-											Number.parseFloat(updatedLoan.monthlyPayment) * 100
-										)
-									)
-								: loan.monthlyPaymentCents,
-							startDate: updatedLoan.startDate ?? loan.startDate,
-							updatedAt: now,
-						};
-					});
+					if (!old) {
+						return old;
+					}
+					return old.map((loan) =>
+						applyOptimisticLoanUpdate(loan, updatedLoan, now)
+					);
 				});
 			}
 
@@ -272,7 +315,9 @@ export function useDeleteLoan() {
 			// Optimistically remove from all matching caches
 			for (const [queryKey] of previousQueries) {
 				queryClient.setQueryData<LoanListCache>(queryKey, (old) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					return old.filter((loan) => loan.id !== deleteInput.id);
 				});
 			}
@@ -304,7 +349,7 @@ export function useDeleteLoan() {
 /**
  * Payment result type returned from addPayment mutation
  */
-export type PaymentResult = {
+export interface PaymentResult {
 	id: string;
 	loanId: string;
 	amountCents: bigint;
@@ -312,7 +357,7 @@ export type PaymentResult = {
 	interestCents: bigint;
 	isExtra: boolean;
 	paidAt: Date;
-};
+}
 
 /**
  * Hook to add a payment to a loan with optimistic cache invalidation.

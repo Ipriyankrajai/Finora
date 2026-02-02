@@ -1,9 +1,10 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
-import path from "path";
 import readingTime from "reading-time";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
+const MDX_EXTENSION = /\.mdx$/;
 
 export interface BlogPost {
 	slug: string;
@@ -56,7 +57,7 @@ export function getAllPosts(): BlogPostMeta[] {
 	const posts = files
 		.filter((file) => file.endsWith(".mdx"))
 		.map((file) => {
-			const slug = file.replace(/\.mdx$/, "");
+			const slug = file.replace(MDX_EXTENSION, "");
 			const filePath = path.join(BLOG_DIR, file);
 			const fileContent = fs.readFileSync(filePath, "utf-8");
 			const post = parseFrontmatter(fileContent, slug);
@@ -99,5 +100,5 @@ export function getAllSlugs(): string[] {
 	return fs
 		.readdirSync(BLOG_DIR)
 		.filter((file) => file.endsWith(".mdx"))
-		.map((file) => file.replace(/\.mdx$/, ""));
+		.map((file) => file.replace(MDX_EXTENSION, ""));
 }

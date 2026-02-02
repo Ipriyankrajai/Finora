@@ -57,6 +57,7 @@ export function LoanCard({
 							<button
 								className="flex size-8 items-center justify-center rounded-sm hover:bg-muted"
 								onClick={(e) => e.stopPropagation()}
+								type="button"
 							>
 								<MoreHorizontal className="size-4" />
 								<span className="sr-only">Open menu</span>

@@ -25,6 +25,11 @@ import {
 import type { LoanWithBalance } from "@/hooks/use-loans";
 import { useCreateLoan, useUpdateLoan } from "@/hooks/use-loans";
 
+// Validation regex patterns
+const AMOUNT_PATTERN = /^\d+(\.\d{1,2})?$/;
+const RATE_PATTERN = /^\d*\.?\d{0,2}$/;
+const WHOLE_NUMBER_PATTERN = /^\d+$/;
+
 /**
  * Validation schema for loan form
  */
@@ -34,15 +39,12 @@ const loanSchema = z.object({
 	principal: z
 		.string()
 		.min(1, "Principal is required")
-		.refine((val) => /^\d+(\.\d{1,2})?$/.test(val), "Enter valid amount")
+		.refine((val) => AMOUNT_PATTERN.test(val), "Enter valid amount")
 		.refine((val) => Number.parseFloat(val) > 0, "Must be positive"),
 	annualRatePercent: z
 		.string()
 		.min(1, "Rate is required")
-		.refine(
-			(val) => /^\d*\.?\d{0,2}$/.test(val) && val !== "",
-			"Enter valid rate"
-		)
+		.refine((val) => RATE_PATTERN.test(val) && val !== "", "Enter valid rate")
 		.refine(
 			(val) => Number.parseFloat(val) >= 0 && Number.parseFloat(val) <= 100,
 			"Rate must be 0-100%"
@@ -50,9 +52,9 @@ const loanSchema = z.object({
 	termMonths: z
 		.string()
 		.min(1, "Term is required")
-		.refine((val) => /^\d+$/.test(val), "Enter whole number")
+		.refine((val) => WHOLE_NUMBER_PATTERN.test(val), "Enter whole number")
 		.refine(
-			(val) => Number.parseInt(val) >= 1 && Number.parseInt(val) <= 600,
+			(val) => Number.parseInt(val, 10) >= 1 && Number.parseInt(val, 10) <= 600,
 			"Term must be 1-600 months"
 		),
 	monthlyPayment: z.string(), // Calculated, always valid
@@ -76,9 +78,13 @@ function calculateMonthlyPayment(
 	annualRate: number,
 	termMonths: number
 ): number {
-	if (principal <= 0 || termMonths <= 0) return 0;
+	if (principal <= 0 || termMonths <= 0) {
+		return 0;
+	}
 	const monthlyRate = annualRate / 100 / 12;
-	if (monthlyRate === 0) return principal / termMonths;
+	if (monthlyRate === 0) {
+		return principal / termMonths;
+	}
 	const x = (1 + monthlyRate) ** termMonths;
 	return (principal * x * monthlyRate) / (x - 1);
 }
@@ -104,13 +110,17 @@ export function LoanForm({
 
 	// Convert cents to display string
 	const getInitialPrincipal = () => {
-		if (!loan) return "";
+		if (!loan) {
+			return "";
+		}
 		const cents = Number(loan.principalCents);
 		return (cents / 100).toFixed(2);
 	};
 
 	const getInitialPayment = () => {
-		if (!loan) return "";
+		if (!loan) {
+			return "";
+		}
 		const cents = Number(loan.monthlyPaymentCents);
 		return (cents / 100).toFixed(2);
 	};
@@ -136,7 +146,7 @@ export function LoanForm({
 					interestType: value.interestType,
 					principal: value.principal,
 					annualRatePercent: Number.parseFloat(value.annualRatePercent),
-					termMonths: Number.parseInt(value.termMonths),
+					termMonths: Number.parseInt(value.termMonths, 10),
 					monthlyPayment: paymentToUse,
 					startDate: value.startDate,
 				});
@@ -147,7 +157,7 @@ export function LoanForm({
 					interestType: value.interestType,
 					principal: value.principal,
 					annualRatePercent: Number.parseFloat(value.annualRatePercent),
-					termMonths: Number.parseInt(value.termMonths),
+					termMonths: Number.parseInt(value.termMonths, 10),
 					monthlyPayment: paymentToUse,
 					startDate: value.startDate,
 				});
@@ -168,7 +178,7 @@ export function LoanForm({
 	) => {
 		const principal = Number.parseFloat(principalStr || "0");
 		const rate = Number.parseFloat(rateStr || "0");
-		const term = Number.parseInt(termStr || "0");
+		const term = Number.parseInt(termStr || "0", 10);
 
 		if (principal > 0 && term > 0) {
 			const payment = calculateMonthlyPayment(principal, rate, term);
@@ -289,7 +299,7 @@ export function LoanForm({
 										onBlur={field.handleBlur}
 										onChange={(e) => {
 											const val = e.target.value;
-											if (val === "" || /^\d*\.?\d{0,2}$/.test(val)) {
+											if (val === "" || RATE_PATTERN.test(val)) {
 												field.handleChange(val);
 												// Recalculate payment
 												recalculatePayment(
@@ -327,7 +337,7 @@ export function LoanForm({
 										onBlur={field.handleBlur}
 										onChange={(e) => {
 											const val = e.target.value;
-											if (val === "" || /^\d*\.?\d{0,2}$/.test(val)) {
+											if (val === "" || RATE_PATTERN.test(val)) {
 												field.handleChange(val);
 												// Recalculate payment
 												recalculatePayment(
@@ -367,7 +377,7 @@ export function LoanForm({
 										onBlur={field.handleBlur}
 										onChange={(e) => {
 											const val = e.target.value;
-											if (val === "" || /^\d+$/.test(val)) {
+											if (val === "" || WHOLE_NUMBER_PATTERN.test(val)) {
 												field.handleChange(val);
 												// Recalculate payment
 												recalculatePayment(

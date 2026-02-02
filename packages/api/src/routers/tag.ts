@@ -6,7 +6,7 @@ import { createTagInput, deleteTagInput, updateTagInput } from "../schemas/tag";
 
 export const tagRouter = router({
 	list: protectedProcedure.query(async ({ ctx }) => {
-		return prisma.tag.findMany({
+		return await prisma.tag.findMany({
 			where: {
 				userId: ctx.session.user.id,
 				isActive: true,
@@ -18,7 +18,7 @@ export const tagRouter = router({
 	create: protectedProcedure
 		.input(createTagInput)
 		.mutation(async ({ ctx, input }) => {
-			return prisma.tag.create({
+			return await prisma.tag.create({
 				data: {
 					userId: ctx.session.user.id,
 					name: input.name,

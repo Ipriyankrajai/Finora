@@ -1,6 +1,29 @@
 import { z } from "zod";
 
 /**
+ * Spending trend input schema
+ * Controls granularity and time range for trend data
+ */
+export const spendingTrendInput = z.object({
+	granularity: z.enum(["weekly", "daily"]),
+	months: z.number().int().min(1).max(12).default(3),
+});
+
+export type SpendingTrendInput = z.infer<typeof spendingTrendInput>;
+
+/**
+ * Spending trend data point schema
+ * Represents income and expense totals for a time period
+ */
+export const spendingTrendDataPoint = z.object({
+	date: z.date(),
+	incomeCents: z.bigint(),
+	expenseCents: z.bigint(),
+});
+
+export type SpendingTrendDataPoint = z.infer<typeof spendingTrendDataPoint>;
+
+/**
  * Monthly summary schema for dashboard
  * Shows income, expenses, and net for the current month
  */
@@ -52,3 +75,15 @@ export const dashboardOutputSchema = z.object({
 });
 
 export type DashboardOutput = z.infer<typeof dashboardOutputSchema>;
+
+/**
+ * Amortization schedule input schema
+ * Takes a loan ID to fetch the schedule for
+ */
+export const amortizationScheduleInput = z.object({
+	loanId: z.string(),
+});
+
+export type AmortizationScheduleInput = z.infer<
+	typeof amortizationScheduleInput
+>;

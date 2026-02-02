@@ -18,11 +18,21 @@ export interface TransactionWithTags {
 	amountCents: bigint;
 	date: Date;
 	description: string | null;
+	userId?: string;
+	createdAt?: Date;
+	updatedAt?: Date;
 	tags: Array<{
+		transactionId?: string;
+		tagId?: string;
+		assignedAt?: Date;
 		tag: {
 			id: string;
 			name: string;
 			color: string;
+			userId?: string;
+			isActive?: boolean;
+			createdAt?: Date;
+			updatedAt?: Date;
 		};
 	}>;
 }
@@ -52,7 +62,7 @@ function groupTransactionsByDate(
 		if (!groups.has(key)) {
 			groups.set(key, []);
 		}
-		groups.get(key)!.push(transaction);
+		groups.get(key)?.push(transaction);
 	}
 
 	// Convert map to array of groups, maintaining sort order (most recent first)
@@ -94,13 +104,27 @@ export function useTransactions() {
 			amountMax?: string;
 		} = { limit };
 
-		if (filters.datePreset) input.datePreset = filters.datePreset;
-		if (filters.dateFrom) input.dateFrom = new Date(filters.dateFrom);
-		if (filters.dateTo) input.dateTo = new Date(filters.dateTo);
-		if (filters.type) input.type = filters.type;
-		if (filters.tagId) input.tagId = filters.tagId;
-		if (filters.amountMin) input.amountMin = filters.amountMin;
-		if (filters.amountMax) input.amountMax = filters.amountMax;
+		if (filters.datePreset) {
+			input.datePreset = filters.datePreset;
+		}
+		if (filters.dateFrom) {
+			input.dateFrom = new Date(filters.dateFrom);
+		}
+		if (filters.dateTo) {
+			input.dateTo = new Date(filters.dateTo);
+		}
+		if (filters.type) {
+			input.type = filters.type;
+		}
+		if (filters.tagId) {
+			input.tagId = filters.tagId;
+		}
+		if (filters.amountMin) {
+			input.amountMin = filters.amountMin;
+		}
+		if (filters.amountMax) {
+			input.amountMax = filters.amountMax;
+		}
 
 		return input;
 	}, [filters]);
@@ -161,8 +185,10 @@ export function useTags() {
 /**
  * Cache data type helper for transaction list queries
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TransactionListCache = { items: any[]; nextCursor?: string };
+interface TransactionListCache {
+	items: TransactionWithTags[];
+	nextCursor?: string;
+}
 
 /**
  * Hook to create a new transaction with optimistic update.
@@ -195,14 +221,18 @@ export function useCreateTransaction() {
 			// Create optimistic transaction
 			const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 			const now = new Date();
-			const optimisticTransaction = {
+			const transactionDate =
+				newTransaction.date instanceof Date
+					? newTransaction.date
+					: new Date(newTransaction.date as string);
+			const optimisticTransaction: TransactionWithTags = {
 				id: tempId,
 				type: newTransaction.type,
 				// Convert display amount to cents for optimistic display
 				amountCents: BigInt(
 					Math.round(Number.parseFloat(newTransaction.amount) * 100)
 				),
-				date: newTransaction.date,
+				date: transactionDate,
 				description: newTransaction.description ?? null,
 				userId: "temp",
 				createdAt: now,
@@ -226,8 +256,9 @@ export function useCreateTransaction() {
 			// Optimistically add to all matching caches
 			for (const [queryKey] of previousQueries) {
 				queryClient.setQueryData<TransactionListCache>(queryKey, (old) => {
-					if (!old)
+					if (!old) {
 						return { items: [optimisticTransaction], nextCursor: undefined };
+					}
 					// Insert at beginning (most recent first)
 					return {
 						...old,
@@ -263,6 +294,60 @@ export function useCreateTransaction() {
 }
 
 /**
+ * Helper to update a single transaction item optimistically.
+ * Extracted to reduce cognitive complexity.
+ */
+function applyOptimisticUpdate(
+	item: TransactionWithTags,
+	update: {
+		id: string;
+		type?: "INCOME" | "EXPENSE";
+		amount?: string;
+		date?: Date;
+		description?: string | null;
+		tagIds?: string[];
+	},
+	now: Date
+): TransactionWithTags {
+	if (item.id !== update.id) {
+		return item;
+	}
+
+	const updatedAmountCents = update.amount
+		? BigInt(Math.round(Number.parseFloat(update.amount) * 100))
+		: item.amountCents;
+
+	const updatedTags =
+		update.tagIds !== undefined
+			? update.tagIds.map((tagId) => ({
+					transactionId: item.id,
+					tagId,
+					assignedAt: now,
+					tag: {
+						id: tagId,
+						name: "",
+						color: "#888888",
+						userId: "temp",
+						isActive: true,
+						createdAt: now,
+						updatedAt: now,
+					},
+				}))
+			: item.tags;
+
+	return {
+		...item,
+		type: update.type ?? item.type,
+		amountCents: updatedAmountCents,
+		date: update.date ?? item.date,
+		description:
+			update.description !== undefined ? update.description : item.description,
+		updatedAt: now,
+		tags: updatedTags,
+	};
+}
+
+/**
  * Hook to update an existing transaction with optimistic update.
  * Input: { id, type?, amount?, date?, description?, tagIds? }
  */
@@ -289,49 +374,32 @@ export function useUpdateTransaction() {
 
 			const now = new Date();
 
+			// Normalize date to ensure it's a Date object
+			function normalizeDate(date: unknown): Date | undefined {
+				if (!date) {
+					return undefined;
+				}
+				if (date instanceof Date) {
+					return date;
+				}
+				return new Date(date as string);
+			}
+			const normalizedUpdate = {
+				...updatedTransaction,
+				date: normalizeDate(updatedTransaction.date),
+			};
+
 			// Optimistically update in all matching caches
 			for (const [queryKey] of previousQueries) {
 				queryClient.setQueryData<TransactionListCache>(queryKey, (old) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					return {
 						...old,
-						items: old.items.map((item) => {
-							if (item.id !== updatedTransaction.id) return item;
-							return {
-								...item,
-								type: updatedTransaction.type ?? item.type,
-								amountCents: updatedTransaction.amount
-									? BigInt(
-											Math.round(
-												Number.parseFloat(updatedTransaction.amount) * 100
-											)
-										)
-									: item.amountCents,
-								date: updatedTransaction.date ?? item.date,
-								description:
-									updatedTransaction.description !== undefined
-										? updatedTransaction.description
-										: item.description,
-								updatedAt: now,
-								tags:
-									updatedTransaction.tagIds !== undefined
-										? updatedTransaction.tagIds.map((tagId: string) => ({
-												transactionId: item.id,
-												tagId,
-												assignedAt: now,
-												tag: {
-													id: tagId,
-													name: "",
-													color: "#888888",
-													userId: "temp",
-													isActive: true,
-													createdAt: now,
-													updatedAt: now,
-												},
-											}))
-										: item.tags,
-							};
-						}),
+						items: old.items.map((item) =>
+							applyOptimisticUpdate(item, normalizedUpdate, now)
+						),
 					};
 				});
 			}
@@ -389,7 +457,9 @@ export function useDeleteTransaction() {
 			// Optimistically remove from all matching caches
 			for (const [queryKey] of previousQueries) {
 				queryClient.setQueryData<TransactionListCache>(queryKey, (old) => {
-					if (!old) return old;
+					if (!old) {
+						return old;
+					}
 					return {
 						...old,
 						items: old.items.filter((item) => item.id !== deleteInput.id),

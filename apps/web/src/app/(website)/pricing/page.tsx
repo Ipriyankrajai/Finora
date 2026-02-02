@@ -2,6 +2,7 @@ import { ArrowRight, Check, Sparkles } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 
+import { getAnimationDelay, getStatDelay } from "@/lib/animation-utils";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -136,7 +137,7 @@ export default function PricingPage() {
 									plan.highlighted
 										? "border-primary/50 bg-primary/[0.02]"
 										: "border-border/50 bg-card/50"
-								} ${index === 0 ? "delay-300" : index === 1 ? "delay-500" : "delay-700"}`}
+								} ${getStatDelay(index)}`}
 								key={plan.name}
 							>
 								{plan.badge && (
@@ -214,15 +215,7 @@ export default function PricingPage() {
 					<div className="space-y-6">
 						{faqs.map((faq, index) => (
 							<div
-								className={`fade-in slide-in-from-bottom-4 animate-in border border-border/50 bg-background/50 fill-mode-both p-6 backdrop-blur-sm duration-700 ${
-									index === 0
-										? "delay-100"
-										: index === 1
-											? "delay-200"
-											: index === 2
-												? "delay-300"
-												: "delay-500"
-								}`}
+								className={`fade-in slide-in-from-bottom-4 animate-in border border-border/50 bg-background/50 fill-mode-both p-6 backdrop-blur-sm duration-700 ${getAnimationDelay(index)}`}
 								key={faq.question}
 							>
 								<h3 className="mb-2 font-semibold">{faq.question}</h3>

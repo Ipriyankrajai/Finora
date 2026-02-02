@@ -2,7 +2,7 @@
 
 import { startOfMonth, startOfWeek, subDays, subMonths } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,7 +42,7 @@ function DatePicker({
 	placeholder = "Pick a date",
 	className,
 }: DatePickerProps) {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 
 	const handleSelect = (date: Date | undefined) => {
 		onChange(date);

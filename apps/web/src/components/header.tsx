@@ -67,6 +67,7 @@ function MobileMenu({
 				aria-label="Close menu"
 				className="absolute top-4 right-4 p-2 text-muted-foreground transition-colors hover:text-foreground"
 				onClick={onClose}
+				type="button"
 			>
 				<X className="size-6" />
 			</button>
@@ -171,7 +172,7 @@ export default function Header() {
 	// Close mobile menu on route change
 	useEffect(() => {
 		setMobileMenuOpen(false);
-	}, [pathname]);
+	}, []);
 
 	// Prevent body scroll when mobile menu is open
 	useEffect(() => {
@@ -185,7 +186,7 @@ export default function Header() {
 		};
 	}, [mobileMenuOpen]);
 
-	const isLandingPage = pathname === "/";
+	const _isLandingPage = pathname === "/";
 
 	return (
 		<>
@@ -246,6 +247,7 @@ export default function Header() {
 								aria-label="Open menu"
 								className="p-2 text-muted-foreground transition-colors hover:text-foreground"
 								onClick={() => setMobileMenuOpen(true)}
+								type="button"
 							>
 								<Menu className="size-5" />
 							</button>

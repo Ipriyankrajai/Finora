@@ -1,7 +1,7 @@
 "use client";
 
 import { SlidersHorizontal } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { FilterChip } from "@/components/ui/filter-chip";
@@ -38,23 +38,31 @@ export function TransactionFilters() {
 	const { tags, isLoading: tagsLoading } = useTags();
 
 	// Amount filter popover state
-	const [amountOpen, setAmountOpen] = React.useState(false);
-	const [amountMin, setAmountMin] = React.useState(filters.amountMin ?? "");
-	const [amountMax, setAmountMax] = React.useState(filters.amountMax ?? "");
+	const [amountOpen, setAmountOpen] = useState(false);
+	const [amountMin, setAmountMin] = useState(filters.amountMin ?? "");
+	const [amountMax, setAmountMax] = useState(filters.amountMax ?? "");
 
 	// Convert cents to dollars for display
 	const centsToDisplayDollars = (cents: string | undefined): string => {
-		if (!cents) return "";
+		if (!cents) {
+			return "";
+		}
 		const num = Number.parseInt(cents, 10);
-		if (isNaN(num)) return "";
+		if (Number.isNaN(num)) {
+			return "";
+		}
 		return (num / 100).toFixed(2);
 	};
 
 	// Convert dollars to cents for storage
 	const dollarsToCents = (dollars: string): string | undefined => {
-		if (!dollars) return undefined;
+		if (!dollars) {
+			return undefined;
+		}
 		const num = Number.parseFloat(dollars);
-		if (isNaN(num)) return undefined;
+		if (Number.isNaN(num)) {
+			return undefined;
+		}
 		return Math.round(num * 100).toString();
 	};
 
@@ -83,7 +91,9 @@ export function TransactionFilters() {
 
 	// Get tag name by id
 	const getTagName = (tagId: string | undefined) => {
-		if (!tagId) return "";
+		if (!tagId) {
+			return "";
+		}
 		return tags.find((t) => t.id === tagId)?.name ?? "Unknown";
 	};
 
@@ -91,9 +101,15 @@ export function TransactionFilters() {
 	const formatAmountRange = () => {
 		const min = centsToDisplayDollars(filters.amountMin);
 		const max = centsToDisplayDollars(filters.amountMax);
-		if (min && max) return `$${min} - $${max}`;
-		if (min) return `Min $${min}`;
-		if (max) return `Max $${max}`;
+		if (min && max) {
+			return `$${min} - $${max}`;
+		}
+		if (min) {
+			return `Min $${min}`;
+		}
+		if (max) {
+			return `Max $${max}`;
+		}
 		return "";
 	};
 

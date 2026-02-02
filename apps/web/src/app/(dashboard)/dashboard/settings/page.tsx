@@ -51,15 +51,15 @@ export default function SettingsPage() {
 				<CardContent className="space-y-4">
 					<div className="grid gap-4 sm:grid-cols-2">
 						<div>
-							<label className="font-medium text-muted-foreground text-sm">
+							<span className="font-medium text-muted-foreground text-sm">
 								Name
-							</label>
+							</span>
 							<p className="text-foreground">{session?.user?.name || "—"}</p>
 						</div>
 						<div>
-							<label className="font-medium text-muted-foreground text-sm">
+							<span className="font-medium text-muted-foreground text-sm">
 								Email
-							</label>
+							</span>
 							<p className="text-foreground">{session?.user?.email || "—"}</p>
 						</div>
 					</div>
