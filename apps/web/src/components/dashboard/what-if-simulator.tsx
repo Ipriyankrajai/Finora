@@ -1,11 +1,9 @@
 "use client";
 
 import {
-	ArrowRight,
 	Calculator,
 	Calendar,
 	PiggyBank,
-	Sparkles,
 	Timer,
 	TrendingDown,
 } from "lucide-react";
@@ -116,9 +114,9 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 	const sliderMax = Math.min(1000, Math.max(500, monthlyPaymentDollars * 2));
 
 	return (
-		<div className="overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.02] via-background to-emerald-500/[0.02]">
+		<div className="overflow-hidden border border-primary/20 bg-linear-to-br from-primary/2 via-background to-emerald-500/2">
 			{/* Header */}
-			<div className="border-primary/10 border-b bg-gradient-to-r from-primary/5 to-transparent px-5 py-4">
+			<div className="border-primary/10 border-b bg-linear-to-r from-primary/5 to-transparent px-5 py-4">
 				<div className="flex items-center gap-3">
 					<div className="flex size-10 items-center justify-center rounded-full bg-primary/10">
 						<Calculator className="size-5 text-primary" />
@@ -170,7 +168,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 					)}
 				>
 					{/* Current (baseline) */}
-					<div className="rounded-lg border bg-muted/30 p-4">
+					<div className="border bg-muted/30 p-4">
 						<h5 className="mb-3 flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider">
 							<span className="size-2 rounded-full bg-muted-foreground/50" />
 							Current Plan
@@ -219,9 +217,9 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 					{/* With extra payment */}
 					<div
 						className={cn(
-							"rounded-lg border p-4 transition-all duration-300",
+							"border p-4 transition-all duration-300",
 							extraPaymentDollars > 0
-								? "border-primary/30 bg-primary/[0.03]"
+								? "border-primary/30 bg-primary/3"
 								: "bg-muted/30"
 						)}
 					>
@@ -274,30 +272,28 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 					</div>
 				</div>
 
-				{/* Savings summary - celebration style */}
+				{/* Savings summary */}
 				{hasSavings && extraPaymentDollars > 0 && (
-					<div className="relative overflow-hidden rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-50/50 p-4 dark:border-emerald-800/50 dark:from-emerald-950/40 dark:to-emerald-950/20">
-						{/* Decorative sparkle */}
-						<Sparkles className="absolute top-3 right-3 size-5 text-emerald-400/50" />
-
-						<div className="flex items-start gap-3">
-							<div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-								<PiggyBank className="size-5 text-emerald-600 dark:text-emerald-400" />
-							</div>
-							<div className="flex-1">
-								<p className="font-semibold text-emerald-800 dark:text-emerald-300">
-									Your potential savings
+					<div className="border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-800/50 dark:bg-emerald-950/30">
+						<p className="mb-3 font-medium text-emerald-800 text-sm dark:text-emerald-300">
+							Your potential savings
+						</p>
+						<div className="grid grid-cols-2 gap-4">
+							<div className="bg-emerald-100/50 p-3 dark:bg-emerald-900/30">
+								<p className="text-emerald-600 text-xs dark:text-emerald-400">
+									Time Saved
 								</p>
-								<div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-									<span className="flex items-center gap-1.5 font-medium text-emerald-700 text-sm dark:text-emerald-400">
-										<ArrowRight className="size-3" />
-										{monthsSavedDisplay} faster
-									</span>
-									<span className="flex items-center gap-1.5 font-medium text-emerald-700 text-sm dark:text-emerald-400">
-										<ArrowRight className="size-3" />
-										{interestSavedDisplay} saved
-									</span>
-								</div>
+								<p className="font-semibold text-emerald-800 text-lg dark:text-emerald-300">
+									{monthsSavedDisplay}
+								</p>
+							</div>
+							<div className="bg-emerald-100/50 p-3 dark:bg-emerald-900/30">
+								<p className="text-emerald-600 text-xs dark:text-emerald-400">
+									Interest Saved
+								</p>
+								<p className="font-semibold text-emerald-800 text-lg dark:text-emerald-300">
+									{interestSavedDisplay}
+								</p>
 							</div>
 						</div>
 					</div>
@@ -305,7 +301,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 
 				{/* Warning for insufficient payment */}
 				{isBaselineInfinite && (
-					<div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800/50 dark:bg-amber-950/30">
+					<div className="border border-amber-200 bg-amber-50 p-4 dark:border-amber-800/50 dark:bg-amber-950/30">
 						<p className="font-medium text-amber-800 dark:text-amber-300">
 							⚠️ Payment is below interest accrual
 						</p>
@@ -317,16 +313,18 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 				)}
 
 				{/* Pending indicator - fixed height to prevent layout shift */}
-				<div
-					aria-hidden={!isPending}
-					className={cn(
-						"flex h-8 items-center justify-center gap-2 text-muted-foreground text-sm transition-opacity duration-150",
-						isPending ? "opacity-100" : "opacity-0"
-					)}
-				>
-					<div className="size-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
-					<span>Calculating...</span>
-				</div>
+				{isPending && (
+					<div
+						aria-hidden={!isPending}
+						className={cn(
+							"flex h-8 items-center justify-center gap-2 text-muted-foreground text-sm transition-opacity duration-150",
+							isPending ? "opacity-100" : "opacity-0"
+						)}
+					>
+						<div className="size-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+						<span>Calculating...</span>
+					</div>
+				)}
 			</div>
 		</div>
 	);

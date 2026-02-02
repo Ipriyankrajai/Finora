@@ -237,7 +237,7 @@ const AmortizationSection = memo(function AmortizationSection({
 	loanName: string;
 }) {
 	return (
-		<div className="overflow-hidden rounded-xl border bg-card">
+		<div className="overflow-hidden border bg-card">
 			<div className="border-b bg-muted/30 px-5 py-3">
 				<h4 className="font-semibold">Amortization Schedule</h4>
 				<p className="text-muted-foreground text-sm">
