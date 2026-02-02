@@ -73,7 +73,7 @@ result: pass
 total: 14
 passed: 14
 issues: 0
-pending: 0
+pending: 0/
 skipped: 0
 
 ## Gaps
