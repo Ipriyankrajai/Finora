@@ -14,12 +14,12 @@ import { type LoanOverview, useDashboard } from "@/hooks/use-dashboard";
 import { useTags } from "@/hooks/use-tags";
 import { formatRelativeDate, formatTime } from "@/lib/format";
 import { trpc } from "@/utils/trpc";
-
 import { LoanAmortizationChart } from "./loan-amortization-chart";
 import { LoanOverviewCard } from "./loan-overview-card";
 import { MonthlySummary } from "./monthly-summary";
 import { QuickAddFAB } from "./quick-add-fab";
 import { RecentTransactions } from "./recent-transactions";
+import { RecurringBanner } from "./recurring-banner";
 import { SpendingPieChart } from "./spending-pie-chart";
 import { SpendingTimeline } from "./spending-timeline";
 import { WhatIfSimulator } from "./what-if-simulator";
@@ -543,6 +543,9 @@ export function DashboardPageClient() {
 		<div className="space-y-6">
 			{/* Monthly Summary - prominently at top */}
 			{renderMonthlySummary()}
+
+			{/* Recurring transactions banner */}
+			<RecurringBanner />
 
 			{/* Two-column grid on desktop: pie chart left, recent transactions right */}
 			<div className="grid gap-6 lg:grid-cols-2">
