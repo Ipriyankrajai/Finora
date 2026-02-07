@@ -68,16 +68,6 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 }
 
 /**
- * Format Y-axis tick values as currency (in thousands)
- */
-function formatYAxisTick(value: number): string {
-	if (value >= 1000) {
-		return `$${Math.round(value / 1000)}k`;
-	}
-	return `$${value}`;
-}
-
-/**
  * Amortization chart showing loan balance over time.
  * Uses Recharts AreaChart with gradient fill.
  * Per RESEARCH.md: Convert BigInt to number at chart boundary, set explicit height
@@ -87,10 +77,19 @@ export const LoanAmortizationChart = memo(function LoanAmortizationChart({
 	loanId,
 	loanName,
 }: LoanAmortizationChartProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const queryOptions = trpc.dashboard.getAmortizationSchedule.queryOptions({
 		loanId,
 	});
 	const { data, isLoading, error } = useQuery(queryOptions);
+
+	const formatYAxisTick = (value: number): string => {
+		if (value >= 1000) {
+			return `${currencySymbol}${Math.round(value / 1000)}k`;
+		}
+		return `${currencySymbol}${value}`;
+	};
 
 	if (isLoading) {
 		return (

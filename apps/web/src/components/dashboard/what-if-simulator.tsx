@@ -149,11 +149,12 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 							Extra Monthly Payment
 						</label>
 						<span className="rounded-full bg-primary/10 px-3 py-1 font-bold text-primary text-sm tabular-nums">
-							${extraPaymentDollars}
+							{currencySymbol}
+							{extraPaymentDollars}
 						</span>
 					</div>
 					<Slider
-						formatValue={(v) => `$${v}`}
+						formatValue={(v) => `${currencySymbol}${v}`}
 						id="extra-payment-slider"
 						max={sliderMax}
 						min={0}
@@ -162,8 +163,11 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 						value={extraPaymentDollars}
 					/>
 					<div className="flex justify-between text-muted-foreground text-xs">
-						<span>$0</span>
-						<span>${sliderMax}</span>
+						<span>{currencySymbol}0</span>
+						<span>
+							{currencySymbol}
+							{sliderMax}
+						</span>
 					</div>
 				</div>
 
@@ -232,7 +236,8 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 					>
 						<h5 className="mb-3 flex items-center gap-2 font-semibold text-primary text-xs uppercase tracking-wider">
 							<span className="size-2 rounded-full bg-primary" />
-							With +${extraPaymentDollars}/mo
+							With +{currencySymbol}
+							{extraPaymentDollars}/mo
 						</h5>
 
 						<div className="space-y-3">

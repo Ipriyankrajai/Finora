@@ -146,16 +146,6 @@ function GranularityToggle({
 }
 
 /**
- * Dollar formatter for Y-axis
- */
-function formatYAxis(value: number): string {
-	if (value >= 1000) {
-		return `$${(value / 1000).toFixed(0)}k`;
-	}
-	return `$${value}`;
-}
-
-/**
  * Spending trend timeline chart with weekly bars or daily area views.
  * Per CONTEXT.md: "weekly bars and daily line views"
  * Per RESEARCH.md: Convert BigInt at chart boundary, use preserveStartEnd for XAxis
@@ -164,10 +154,19 @@ export function SpendingTimeline({
 	initialGranularity = "weekly",
 	months = 3,
 }: SpendingTimelineProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const [granularity, setGranularity] = useState<"weekly" | "daily">(
 		initialGranularity
 	);
 	const { data, isLoading, error } = useSpendingTrend(granularity, months);
+
+	const formatYAxis = (value: number): string => {
+		if (value >= 1000) {
+			return `${currencySymbol}${(value / 1000).toFixed(0)}k`;
+		}
+		return `${currencySymbol}${value}`;
+	};
 
 	// Transform API data for Recharts (convert BigInt to number)
 	const chartData: ChartData[] = data.map((point: SpendingTrendDataPoint) => {
