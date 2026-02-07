@@ -29,16 +29,36 @@ export function formatRelativeDate(date: Date): string {
 }
 
 /**
- * Format cents (bigint or number) as currency string
- * e.g., 123456n -> "$1,234.56"
+ * Format cents (bigint or number) as currency string with custom symbol.
+ * e.g., formatCents(123456n) -> "$1,234.56"
+ * e.g., formatCents(123456n, "€") -> "€1,234.56"
+ * e.g., formatCents(-50000n, "£") -> "-£500.00"
  */
-export function formatCents(cents: bigint | number): string {
+export function formatCents(cents: bigint | number, symbol = "$"): string {
 	const numericCents = typeof cents === "bigint" ? Number(cents) : cents;
-	const dollars = numericCents / 100;
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
+	const isNegative = numericCents < 0;
+	const absoluteDollars = Math.abs(numericCents) / 100;
+	const formatted = new Intl.NumberFormat("en-US", {
+		style: "decimal",
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2,
-	}).format(dollars);
+	}).format(absoluteDollars);
+	return `${isNegative ? "-" : ""}${symbol}${formatted}`;
 }
+
+/**
+ * Available currency symbols for user preference.
+ * Display preference only — does not affect stored amounts.
+ */
+export const CURRENCY_SYMBOLS = [
+	{ value: "$", label: "$ - US Dollar" },
+	{ value: "\u00A3", label: "\u00A3 - British Pound" },
+	{ value: "\u20AC", label: "\u20AC - Euro" },
+	{ value: "\u00A5", label: "\u00A5 - Japanese Yen" },
+	{ value: "\u20B9", label: "\u20B9 - Indian Rupee" },
+	{ value: "A$", label: "A$ - Australian Dollar" },
+	{ value: "C$", label: "C$ - Canadian Dollar" },
+	{ value: "CHF", label: "CHF - Swiss Franc" },
+	{ value: "R$", label: "R$ - Brazilian Real" },
+	{ value: "\u20A9", label: "\u20A9 - South Korean Won" },
+] as const;
