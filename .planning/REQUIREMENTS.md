@@ -1,11 +1,9 @@
 # Requirements: Finora
 
 **Defined:** 2026-01-29
-**Core Value:** Users can see exactly where their money goes and when their loans will be paid off
+**Core Value:** Users can see exactly where their money goes, stay on budget, track progress toward financial goals, and optimize their debt payoff strategy
 
-## v1 Requirements
-
-Requirements for initial release. Each maps to roadmap phases.
+## v1 Requirements (Complete)
 
 ### Authentication
 
@@ -69,35 +67,73 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ## v2 Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+Requirements for v2.0 Smart Finance milestone. Each maps to roadmap phases 7-12.
 
 ### Recurring Transactions
 
-- **RECUR-01**: User can mark a transaction as recurring (daily, weekly, monthly)
-- **RECUR-02**: System auto-generates recurring transactions on schedule
-- **RECUR-03**: User can skip or modify individual occurrences
+- [ ] **RECUR-01**: User can create a recurring transaction with frequency (daily/weekly/biweekly/monthly/yearly)
+- [ ] **RECUR-02**: System auto-generates transactions on schedule from recurring rules
+- [ ] **RECUR-03**: User can skip a single upcoming occurrence without breaking the series
+- [ ] **RECUR-04**: User can modify a single occurrence independently from the series
+- [ ] **RECUR-05**: User can set an optional end date or occurrence count on a recurring rule
+- [ ] **RECUR-06**: User can pause and resume a recurring transaction series
+- [ ] **RECUR-07**: User can view and manage all recurring transaction rules
 
 ### Budgets
 
-- **BUDG-01**: User can set monthly budget limit per tag
-- **BUDG-02**: User can see budget progress (spent vs limit)
-- **BUDG-03**: User receives warning when approaching budget limit
+- [ ] **BUDG-01**: User can set a monthly spending limit for a specific tag
+- [ ] **BUDG-02**: User can see budget progress (spent vs limit) with visual progress bar
+- [ ] **BUDG-03**: User receives visual warning when reaching 75%, 90%, and 100% of budget
+- [ ] **BUDG-04**: User can enable rollover so unspent budget carries to next month
+- [ ] **BUDG-05**: User can view budget overview page showing all budgets with status
+- [ ] **BUDG-06**: User can edit or delete a budget
+
+### Goals
+
+- [ ] **GOAL-01**: User can create a savings goal with target amount and optional deadline
+- [ ] **GOAL-02**: User can create an income target with monthly amount that resets each period
+- [ ] **GOAL-03**: User can link tags to a goal for automatic progress tracking from transactions
+- [ ] **GOAL-04**: User can manually log contributions to a savings goal
+- [ ] **GOAL-05**: User can see goal progress with visual indicator and projected completion date
+- [ ] **GOAL-06**: User can view goal progress chart over time
+- [ ] **GOAL-07**: User can edit or delete a goal
 
 ### Debt Strategies
 
-- **DEBT-01**: User can select debt payoff strategy (snowball vs avalanche)
-- **DEBT-02**: User can see recommended payment allocation across multiple loans
-- **DEBT-03**: User can see debt-free countdown date
+- [ ] **DEBT-01**: User can select a debt payoff strategy (snowball or avalanche)
+- [ ] **DEBT-02**: User can see recommended payment allocation across all loans
+- [ ] **DEBT-03**: User can see debt-free countdown date under chosen strategy
+- [ ] **DEBT-04**: User can compare snowball vs avalanche side-by-side (total interest, payoff date)
+
+### Analytics
+
+- [ ] **ANLYT-01**: User can select time range for analytics (3/6/12 months, custom)
+- [ ] **ANLYT-02**: User can see spending by tag over time (trend across months)
+- [ ] **ANLYT-03**: User can see income vs expenses trend with savings rate
+- [ ] **ANLYT-04**: User can see budget vs actual performance across months
 
 ### Export
 
-- **EXP-01**: User can export transactions to CSV
-- **EXP-02**: User can export loan amortization schedule to PDF
+- [ ] **EXP-01**: User can export transactions to CSV (respects current filters)
+- [ ] **EXP-02**: User can export budget summary to CSV
+
+## Future Requirements
+
+Deferred beyond v2. Tracked but not in current roadmap.
 
 ### Attachments
 
 - **ATTACH-01**: User can attach receipt image to transaction
 - **ATTACH-02**: User can view attached receipts in transaction detail
+
+### PDF Export
+
+- **EXP-03**: User can export loan amortization schedule to PDF
+
+### Smart Insights
+
+- **INSIGHT-01**: User receives spending anomaly alerts
+- **INSIGHT-02**: User sees AI-generated spending summaries
 
 ## Out of Scope
 
@@ -105,20 +141,23 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Bank account syncing (Plaid) | High complexity, security concerns, not core to MVP value |
-| Automatic transaction categorization | Requires bank sync or OCR; manual tagging is sufficient |
-| Google OAuth / magic link auth | Email/password sufficient for MVP |
-| Multi-currency conversion | Display-only currency symbol for MVP |
-| Shared/family accounts | Single-user MVP, permissions add complexity |
+| Bank account syncing (Plaid) | High complexity, security concerns, not core value |
+| Automatic transaction categorization | Requires bank sync or OCR; manual tagging sufficient |
+| Google OAuth / magic link auth | Email/password sufficient |
+| Multi-currency conversion | Display-only currency symbol |
+| Shared/family accounts | Single-user focus, permissions add complexity |
 | Credit score integration | Different product category |
 | Investment tracking | Different domain, different user needs |
 | Net worth tracking | Requires asset/liability modeling beyond loans |
-| Bill reminders and notifications | Users have other tools; out of scope |
+| Bill reminders and notifications | v3+ feature |
 | Receipt scanning/OCR | Scope creep, notes field sufficient |
+| Zero-based budgeting | Conflicts with tracker-with-budgets approach |
 
 ## Traceability
 
 Which phases cover which requirements. Updated during roadmap creation.
+
+### v1 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
@@ -159,19 +198,46 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SETT-01 | Phase 6 | Complete |
 | SETT-02 | Phase 6 | Complete |
 
-**Coverage:**
-- v1 requirements: 28 total (3 existing + 25 new)
-- Mapped to phases: 28/28
-- Unmapped: 0
+### v2 (Pending — populated by roadmapper)
 
-**Phase Mapping Summary:**
-- Phase 1 (Foundation): Infrastructure enabling all features
-- Phase 2 (API Layer): TAG-01-03, TXN-01-09, LOAN-01-08, DASH-01-03 (API support)
-- Phase 3 (Tags & Transactions UI): TAG-01-03, TXN-01-09 (UI implementation)
-- Phase 4 (Loans UI): LOAN-01-08 (UI implementation)
-- Phase 5 (Visualizations & Dashboard): TAG-04, VIZ-01-04, DASH-01-04 (UI implementation)
-- Phase 6 (Onboarding & Polish): ONBD-01-02, SETT-01-02
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| RECUR-01 | — | Pending |
+| RECUR-02 | — | Pending |
+| RECUR-03 | — | Pending |
+| RECUR-04 | — | Pending |
+| RECUR-05 | — | Pending |
+| RECUR-06 | — | Pending |
+| RECUR-07 | — | Pending |
+| BUDG-01 | — | Pending |
+| BUDG-02 | — | Pending |
+| BUDG-03 | — | Pending |
+| BUDG-04 | — | Pending |
+| BUDG-05 | — | Pending |
+| BUDG-06 | — | Pending |
+| GOAL-01 | — | Pending |
+| GOAL-02 | — | Pending |
+| GOAL-03 | — | Pending |
+| GOAL-04 | — | Pending |
+| GOAL-05 | — | Pending |
+| GOAL-06 | — | Pending |
+| GOAL-07 | — | Pending |
+| DEBT-01 | — | Pending |
+| DEBT-02 | — | Pending |
+| DEBT-03 | — | Pending |
+| DEBT-04 | — | Pending |
+| ANLYT-01 | — | Pending |
+| ANLYT-02 | — | Pending |
+| ANLYT-03 | — | Pending |
+| ANLYT-04 | — | Pending |
+| EXP-01 | — | Pending |
+| EXP-02 | — | Pending |
+
+**Coverage:**
+- v1 requirements: 28 total (3 existing + 25 built) — all complete
+- v2 requirements: 30 total — pending
+- Mapped to phases: 0/30 (awaiting roadmap)
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-02-07 after Phase 6 completion (all v1 requirements complete)*
+*Last updated: 2026-02-07 after v2.0 milestone requirements definition*
