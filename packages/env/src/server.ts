@@ -11,6 +11,8 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(["development", "production", "test"])
 			.default("development"),
+		// Optional: only needed for triggering tasks from tRPC routes
+		TRIGGER_SECRET_KEY: z.string().min(1).optional(),
 	},
 	runtimeEnv: process.env,
 	emptyStringAsUndefined: true,
