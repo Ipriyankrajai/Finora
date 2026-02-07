@@ -29,7 +29,7 @@ export default async function OnboardingLayout({
 	}
 
 	return (
-		<div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-background">
+		<div className="relative flex min-h-svh items-start justify-center overflow-hidden bg-background pt-[12vh] sm:pt-[14vh]">
 			{/* Ambient background — floating orbs */}
 			<div
 				className="pointer-events-none absolute -top-32 -left-32 h-[500px] w-[500px] rounded-full bg-emerald-500 opacity-[0.06] blur-[140px] dark:opacity-[0.1]"

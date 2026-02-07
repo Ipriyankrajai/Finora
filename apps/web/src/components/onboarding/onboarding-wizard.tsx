@@ -162,9 +162,9 @@ export function OnboardingWizard() {
 				</div>
 			</div>
 
-			{/* Step content with transitions */}
+			{/* Step content with transitions — min-h prevents header jump between steps */}
 			<div
-				className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${getTransitionClasses()}`}
+				className={`min-h-[480px] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${getTransitionClasses()}`}
 			>
 				{renderStep()}
 			</div>
