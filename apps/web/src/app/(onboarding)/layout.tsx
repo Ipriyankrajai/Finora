@@ -44,12 +44,12 @@ export default async function OnboardingLayout({
 					animationDelay: "5s",
 				}}
 			/>
-			<div
+			{/* <div
 				className="pointer-events-none absolute top-1/2 left-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400 opacity-[0.03] blur-[100px] dark:opacity-[0.06]"
 				style={{
 					animation: "onboarding-pulse 8s ease-in-out infinite",
 				}}
-			/>
+			/> */}
 
 			{/* Grid overlay */}
 			<div
