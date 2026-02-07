@@ -21,6 +21,7 @@ import {
 	type SpendingTrendDataPoint,
 	useSpendingTrend,
 } from "@/hooks/use-dashboard";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 
 interface SpendingTimelineProps {
@@ -54,6 +55,9 @@ interface CustomTooltipProps {
  * Shows date, income, and expenses with formatting.
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+
 	if (!(active && payload?.length)) {
 		return null;
 	}
@@ -65,8 +69,12 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	return (
 		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="mb-1 font-medium">{data.date}</p>
-			<p className="text-green-600">Income: {formatCents(data.incomeCents)}</p>
-			<p className="text-red-600">Expenses: {formatCents(data.expenseCents)}</p>
+			<p className="text-green-600">
+				Income: {formatCents(data.incomeCents, currencySymbol)}
+			</p>
+			<p className="text-red-600">
+				Expenses: {formatCents(data.expenseCents, currencySymbol)}
+			</p>
 		</div>
 	);
 }

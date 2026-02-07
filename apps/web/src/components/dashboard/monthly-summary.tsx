@@ -3,6 +3,7 @@
 import { ArrowDownRight, ArrowUpRight, Scale, TrendingUp } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +28,9 @@ function SummaryCard({
 	type: "income" | "expense" | "net";
 	icon: React.ComponentType<{ className?: string }>;
 }) {
-	const formatted = formatCents(cents);
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+	const formatted = formatCents(cents, currencySymbol);
 	const numericCents = Number(cents);
 
 	// Determine styling based on type

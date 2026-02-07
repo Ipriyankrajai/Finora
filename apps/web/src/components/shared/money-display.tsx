@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ interface MoneyDisplayProps {
 	type?: "INCOME" | "EXPENSE";
 	className?: string;
 	showSign?: boolean;
+	currencySymbol?: string;
 }
 
 function MoneyDisplay({
@@ -25,11 +27,14 @@ function MoneyDisplay({
 	type,
 	className,
 	showSign = true,
+	currencySymbol,
 }: MoneyDisplayProps) {
+	const { data: settings } = useUserSettings();
+	const resolvedSymbol = currencySymbol ?? settings?.currencySymbol ?? "$";
 	const numericCents = typeof cents === "bigint" ? Number(cents) : cents;
 	const isNegative = numericCents < 0;
 	const absoluteCents = Math.abs(numericCents);
-	const formatted = formatCents(absoluteCents);
+	const formatted = formatCents(absoluteCents, resolvedSymbol);
 
 	// Determine sign prefix
 	let prefix = "";

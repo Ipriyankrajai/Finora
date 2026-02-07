@@ -14,6 +14,7 @@ import {
 } from "recharts";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 import { trpc } from "@/utils/trpc";
 
@@ -45,6 +46,9 @@ interface CustomTooltipProps {
  * Shows month and balance amount.
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+
 	if (!(active && payload?.length)) {
 		return null;
 	}
@@ -56,7 +60,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	return (
 		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="font-medium">{data.label}</p>
-			<p className="text-muted-foreground">{formatCents(data.balanceCents)}</p>
+			<p className="text-muted-foreground">
+				{formatCents(data.balanceCents, currencySymbol)}
+			</p>
 		</div>
 	);
 }

@@ -11,6 +11,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { LoanOverview } from "@/hooks/use-dashboard";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents, formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +46,8 @@ export function LoanOverviewCard({
 	isExpanded,
 	onToggle,
 }: LoanOverviewCardProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const { name, balanceCents, projectedPayoffDate, interestPaidCents } = loan;
 
 	// Check if loan is paid off
@@ -123,7 +126,7 @@ export function LoanOverviewCard({
 								isPaidOff && "text-emerald-600 dark:text-emerald-400"
 							)}
 						>
-							{formatCents(balanceCents)}
+							{formatCents(balanceCents, currencySymbol)}
 						</p>
 					</div>
 					{interestPaidCents > 0n && (
@@ -132,7 +135,7 @@ export function LoanOverviewCard({
 								Interest Paid
 							</p>
 							<p className="font-medium text-muted-foreground text-sm tabular-nums">
-								{formatCents(interestPaidCents)}
+								{formatCents(interestPaidCents, currencySymbol)}
 							</p>
 						</div>
 					)}

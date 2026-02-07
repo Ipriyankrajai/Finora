@@ -10,6 +10,7 @@ import {
 import { memo, useDeferredValue, useMemo, useState } from "react";
 
 import { Slider } from "@/components/ui/slider";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 import { projectPayoffWithExtra } from "@/lib/loan-calculations";
 import { cn } from "@/lib/utils";
@@ -62,6 +63,9 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 	monthlyPaymentCents,
 	name,
 }: WhatIfSimulatorProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+
 	// Extra payment amount in dollars (user input)
 	const [extraPaymentDollars, setExtraPaymentDollars] = useState(0);
 
@@ -101,7 +105,10 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 	const baselinePayoffDate = formatPayoffDate(baseline.payoffDate);
 	const newPayoffDate = formatPayoffDate(projection.payoffDate);
 	const monthsSavedDisplay = formatMonthsAsYearsMonths(projection.monthsSaved);
-	const interestSavedDisplay = formatCents(projection.interestSavedCents);
+	const interestSavedDisplay = formatCents(
+		projection.interestSavedCents,
+		currencySymbol
+	);
 
 	// Check for infinite scenarios
 	const isBaselineInfinite = !Number.isFinite(baseline.monthsRemaining);
@@ -207,7 +214,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 										Total Interest
 									</p>
 									<p className="font-medium tabular-nums">
-										{formatCents(baseline.totalInterestCents)}
+										{formatCents(baseline.totalInterestCents, currencySymbol)}
 									</p>
 								</div>
 							</div>
@@ -264,7 +271,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 										Total Interest
 									</p>
 									<p className="font-medium tabular-nums">
-										{formatCents(projection.totalInterestCents)}
+										{formatCents(projection.totalInterestCents, currencySymbol)}
 									</p>
 								</div>
 							</div>
