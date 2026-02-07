@@ -365,14 +365,14 @@ export function DashboardPageClient() {
 	const [expandedLoanId, setExpandedLoanId] = useState<string | null>(null);
 
 	// Determine if dashboard is empty (new user with no data)
-	const hasNoTransactions =
+	// Show checklist until all 3 items done OR user skips
+	const hasTransactions =
 		!isLoading &&
 		monthlySummary &&
-		monthlySummary.incomeCents === 0n &&
-		monthlySummary.expenseCents === 0n;
-	const hasNoLoans = !isLoading && loanOverview.length === 0;
-	const hasNoTags = tags.length === 0;
-	const isDashboardEmpty = hasNoTransactions && hasNoLoans && hasNoTags;
+		(monthlySummary.incomeCents > 0n || monthlySummary.expenseCents > 0n);
+	const hasTags = tags.length > 0;
+	const checklistComplete = hasTransactions && hasTags;
+	const isDashboardEmpty = !(isLoading || checklistComplete);
 
 	// Handle pie chart click
 	const handleTagClick = (tagId: string | "other") => {
@@ -418,14 +418,13 @@ export function DashboardPageClient() {
 		);
 	}
 
-	// Show guided checklist when dashboard has no data (new user)
+	// Show guided checklist until all items completed or skipped
 	if (isDashboardEmpty) {
 		return (
 			<div className="space-y-6">
 				<DashboardEmpty
-					loanCount={loanOverview.length}
 					tagCount={tags.length}
-					transactionCount={0}
+					transactionCount={hasTransactions ? 1 : 0}
 				/>
 				<QuickAddFAB />
 			</div>

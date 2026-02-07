@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 interface DashboardEmptyProps {
 	tagCount: number;
 	transactionCount: number;
-	loanCount: number;
 }
 
 type DialogKey = "tag" | "transaction" | "loan";
@@ -27,7 +26,6 @@ type DialogKey = "tag" | "transaction" | "loan";
 export function DashboardEmpty({
 	tagCount,
 	transactionCount,
-	loanCount,
 }: DashboardEmptyProps) {
 	const queryClient = useQueryClient();
 	const [openDialog, setOpenDialog] = useState<DialogKey | null>(null);
@@ -43,11 +41,8 @@ export function DashboardEmpty({
 	function handleSuccess(message: string) {
 		toast.success(message);
 		closeForm();
-		queryClient.invalidateQueries({
-			predicate: (query) =>
-				Array.isArray(query.queryKey[0]) &&
-				query.queryKey[0].includes("dashboard"),
-		});
+		// Invalidate all queries so checklist counts refresh
+		queryClient.invalidateQueries();
 	}
 
 	const items: Array<{
@@ -55,6 +50,7 @@ export function DashboardEmpty({
 		label: string;
 		description: string;
 		done: boolean;
+		optional?: boolean;
 	}> = [
 		{
 			key: "tag",
@@ -67,12 +63,6 @@ export function DashboardEmpty({
 			label: "Record a transaction",
 			description: "Log your first income or expense",
 			done: transactionCount > 0,
-		},
-		{
-			key: "loan",
-			label: "Track a loan",
-			description: "Add a loan to see payoff projections",
-			done: loanCount > 0,
 		},
 	];
 
@@ -144,6 +134,11 @@ export function DashboardEmpty({
 										)}
 									>
 										{item.label}
+										{item.optional && !item.done && (
+											<span className="ml-1.5 text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+												Optional
+											</span>
+										)}
 									</span>
 									<span className="block text-[10px] text-muted-foreground leading-relaxed">
 										{item.description}
