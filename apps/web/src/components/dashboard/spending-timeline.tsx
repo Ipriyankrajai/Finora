@@ -67,7 +67,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	}
 
 	return (
-		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
+		<div className="border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="mb-1 font-medium">{data.date}</p>
 			<p className="text-green-600">
 				Income: {formatCents(data.incomeCents, currencySymbol)}
@@ -118,9 +118,9 @@ function GranularityToggle({
 	onChange: (value: "weekly" | "daily") => void;
 }) {
 	return (
-		<div className="flex gap-1 rounded-md border bg-muted p-1">
+		<div className="flex gap-1 border bg-muted p-1">
 			<button
-				className={`rounded px-3 py-1 text-sm transition-colors ${
+				className={`px-3 py-1 text-sm transition-colors ${
 					granularity === "weekly"
 						? "bg-background font-medium shadow-sm"
 						: "text-muted-foreground hover:text-foreground"
@@ -131,7 +131,7 @@ function GranularityToggle({
 				Weekly
 			</button>
 			<button
-				className={`rounded px-3 py-1 text-sm transition-colors ${
+				className={`px-3 py-1 text-sm transition-colors ${
 					granularity === "daily"
 						? "bg-background font-medium shadow-sm"
 						: "text-muted-foreground hover:text-foreground"
