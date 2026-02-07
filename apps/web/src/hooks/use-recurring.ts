@@ -175,6 +175,95 @@ export function useDeleteRecurringRule() {
 }
 
 /**
+ * Hook to pause an active recurring rule.
+ * On success: toast notification, invalidate list queries.
+ */
+export function usePauseRecurringRule() {
+	const queryClient = useQueryClient();
+	const mutationOptions = trpc.recurring.pause.mutationOptions();
+
+	return useMutation({
+		...mutationOptions,
+		onError: () => {
+			toast.error("Failed to pause recurring rule");
+		},
+		onSuccess: () => {
+			toast.success("Rule paused");
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				predicate: (query) => isRecurringListQuery(query.queryKey),
+			});
+		},
+	});
+}
+
+/**
+ * Hook to resume a paused recurring rule.
+ * On success: toast notification, invalidate list queries.
+ */
+export function useResumeRecurringRule() {
+	const queryClient = useQueryClient();
+	const mutationOptions = trpc.recurring.resume.mutationOptions();
+
+	return useMutation({
+		...mutationOptions,
+		onError: () => {
+			toast.error("Failed to resume recurring rule");
+		},
+		onSuccess: () => {
+			toast.success("Rule resumed");
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				predicate: (query) => isRecurringListQuery(query.queryKey),
+			});
+		},
+	});
+}
+
+/**
+ * Hook to skip a single upcoming occurrence.
+ * On success: toast notification, invalidate list and getById queries.
+ */
+export function useSkipOccurrence() {
+	const queryClient = useQueryClient();
+	const mutationOptions = trpc.recurring.skipOccurrence.mutationOptions();
+
+	return useMutation({
+		...mutationOptions,
+		onError: () => {
+			toast.error("Failed to skip occurrence");
+		},
+		onSuccess: () => {
+			toast.success("Occurrence skipped");
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				predicate: (query) => isRecurringQuery(query.queryKey),
+			});
+		},
+	});
+}
+
+/**
+ * Hook to fetch upcoming occurrence dates for a rule.
+ * Returns computed future dates with skip status.
+ */
+export function useUpcomingOccurrences(ruleId: string) {
+	const queryOptions = trpc.recurring.upcomingOccurrences.queryOptions(
+		{ ruleId },
+		{ enabled: !!ruleId }
+	);
+	const query = useQuery(queryOptions);
+
+	return {
+		occurrences: query.data ?? [],
+		isLoading: query.isLoading,
+	};
+}
+
+/**
  * Hook to fetch today's generated recurring occurrence count.
  * Used by the dashboard banner to show auto-generated transaction count.
  */
