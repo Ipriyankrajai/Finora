@@ -90,13 +90,13 @@ v2 extends the working v1 foundation with six interconnected features. Build ord
   2. User can skip or modify a single upcoming occurrence without affecting future occurrences in the series
   3. User can pause and resume a recurring series, and set an optional end date or occurrence count
   4. User can view a management page listing all recurring rules with their status, frequency, and next occurrence date
-**Plans**: 4 plans (estimated)
+**Plans**: 4 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Schema migration (all v2 models) and recurring transaction tRPC router
-- [ ] 07-02-PLAN.md — Recurring generation engine (lazy on page load + idempotency)
-- [ ] 07-03-PLAN.md — Recurring transactions management UI (list, form, cards)
-- [ ] 07-04-PLAN.md — Skip, modify, pause/resume occurrence controls
+- [ ] 07-01-PLAN.md — Prisma schema (RecurringRule, RecurringOccurrence models), Zod schemas, date computation utility, and tRPC recurring CRUD router
+- [ ] 07-02-PLAN.md — Trigger.dev generation engine (hourly cron + idempotent transaction creation)
+- [ ] 07-03-PLAN.md — Recurring management UI (page, table list, create/edit form, sidebar nav, dashboard banner)
+- [ ] 07-04-PLAN.md — Occurrence controls (skip, pause/resume, delete dialog, recurring transaction indicator)
 
 ### Phase 8: Budgets
 **Goal**: Users can set monthly spending limits per category and see real-time progress toward those limits
@@ -189,7 +189,7 @@ Note: Phase 10 (Debt Strategies) has no dependency on Phases 7-9 and could execu
 | 4. Loans UI | v1.0 | 3/3 | Complete | 2026-01-31 |
 | 5. Visualizations & Dashboard | v1.0 | 3/3 | Complete | 2026-01-31 |
 | 6. Onboarding & Polish | v1.0 | 3/3 | Complete | 2026-02-07 |
-| 7. Recurring Transactions | v2.0 | 0/4 | Not started | - |
+| 7. Recurring Transactions | v2.0 | 0/4 | Planning complete | - |
 | 8. Budgets | v2.0 | 0/3 | Not started | - |
 | 9. Goals | v2.0 | 0/3 | Not started | - |
 | 10. Debt Strategies | v2.0 | 0/2 | Not started | - |
@@ -200,3 +200,4 @@ Note: Phase 10 (Debt Strategies) has no dependency on Phases 7-9 and could execu
 *Roadmap created: 2026-01-29*
 *v1.0 completed: 2026-02-07*
 *v2.0 roadmap added: 2026-02-07*
+*Phase 7 planned: 2026-02-07*
