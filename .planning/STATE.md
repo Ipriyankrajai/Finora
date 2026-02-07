@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-07)
 
 **Core value:** Users can see exactly where their money goes, stay on budget, track progress toward financial goals, and optimize their debt payoff strategy
-**Current focus:** Milestone v2.0 Smart Finance — Phase 7 (Recurring Transactions)
+**Current focus:** Milestone v2.0 Smart Finance -- Phase 7 complete, ready for Phase 8
 
 ## Current Position
 
-Phase: 7 of 12 (Recurring Transactions)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-02-07 — Completed 07-03-PLAN.md (Recurring Management UI)
+Phase: 7 of 12 (Recurring Transactions) -- COMPLETE
+Plan: 4 of 4 in current phase
+Status: Phase complete
+Last activity: 2026-02-07 -- Completed 07-04-PLAN.md (Occurrence Controls)
 
-Progress: [███████████████████████░░░░░░░░░░░░░░░░░░░] 23/36 plans (64%)
+Progress: [████████████████████████░░░░░░░░░░░░░░░░░░] 24/36 plans (67%)
 
 ## Performance Metrics
 
@@ -24,10 +24,11 @@ Progress: [███████████████████████
 - Total execution time: 155 min
 
 **v2 Velocity:**
-- Plans completed: 3
+- Plans completed: 4
 - 07-01: ~4 min
 - 07-02: ~6 min
 - 07-03: ~8.5 min
+- 07-04: ~5 min
 
 ## Accumulated Context
 
@@ -63,6 +64,10 @@ v2 implementation decisions (Phase 7):
 - Use `as Route` cast for /dashboard/recurring in client components (Next.js typed routes pattern)
 - z.union([z.date(), z.undefined()]) over z.date().optional() for TanStack Form schema compat
 - Desktop table + mobile card hybrid layout for recurring list
+- Reuse computeInitialNextOccurrence for resume date calculation (handles all frequency types)
+- Extract verifyRuleOwnership helper to reduce duplication across procedures
+- Inline Resume button on paused rule rows for prominent visual feedback
+- Two-choice delete dialog: Delete Rule Only vs Delete Rule & Transactions
 
 ### Pending Todos
 
@@ -72,10 +77,10 @@ None yet.
 
 NOTE: loanType field defined in API input schema but not stored in database. Current UI works around this by displaying interestType instead.
 
-NOTE: RecurringBanner component created but not yet integrated into dashboard page. Plan 07-04 or manual integration needed.
+NOTE: RecurringBanner component created but not yet integrated into dashboard page. Manual integration needed.
 
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 07-03-PLAN.md (Recurring Management UI)
+Stopped at: Completed 07-04-PLAN.md (Occurrence Controls) -- Phase 7 complete
 Resume file: None
