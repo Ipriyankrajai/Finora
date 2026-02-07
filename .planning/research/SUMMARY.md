@@ -1,322 +1,316 @@
 # Project Research Summary
 
-**Project:** Finora - Personal Finance App
-**Domain:** Personal finance (expense tracking + loan management)
-**Researched:** 2026-01-29
+**Project:** Finora v2.0 - Smart Finance Milestone
+**Domain:** Personal finance tracker (subsequent milestone - v1 complete)
+**Researched:** 2026-02-07
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Finora is a personal finance application combining expense tracking with dedicated loan payoff management and "what-if" simulation capabilities. The research reveals a strong architectural foundation using Next.js, tRPC, and Prisma, with clear needs for charting (Recharts), money handling (currency.js), and date manipulation (date-fns). The product occupies a relatively uncrowded niche between pure expense trackers (Monefy, Goodbudget) and debt-focused calculators (Undebt.it), offering both without requiring bank account linking.
+Finora v2.0 extends a working personal finance app with six interconnected features: recurring transactions, budgets, debt strategies, goals, analytics, and export. The existing architecture (Next.js App Router, tRPC v11, Prisma v7, BigInt cents, PostgreSQL Timestamptz) is robust and the v2 features integrate naturally without requiring infrastructure changes. Only two new dependencies are needed: jsPDF + jspdf-autotable for PDF generation (~280KB combined).
 
-The recommended approach follows a data-first architecture where financial calculations execute server-side for auditability, while "what-if" simulations run client-side using shared utilities for instant feedback. Money must be stored as integer cents to avoid floating-point precision errors, and charts should render pre-aggregated data for performance. The build order follows strict dependencies: schema → API → UI → charts, with calculation utilities established early and reused across server and client contexts.
+The recommended approach prioritizes features by dependency order and user impact. Build recurring transactions first (foundation for budget/goal auto-tracking), then budgets (high user value, self-contained), then goals (tag-linked mechanism), debt strategies (pure calculation), analytics (benefits from earlier features), and export last (consumes all data). This ordering avoids critical integration pitfalls: idempotent recurring generation, consistent month-boundary logic across features, and real-time data consistency.
 
-Critical risks center on floating-point currency handling (use integer cents), amortization formula accuracy (validate against bank calculators), and chart performance with growing datasets (aggregate on backend). Additional concerns include security hardening beyond basic authentication, pie chart usability with many categories, and effective onboarding to demonstrate value immediately. These risks are mitigable with proper patterns established in the foundation phase and validation checkpoints at each stage.
+Key risks center on temporal logic (month boundaries, timezone handling, end-of-month scheduling) and cross-feature consistency (recurring transactions must immediately affect budgets). Prevention requires extracting shared utilities for month calculation, using database-level uniqueness for idempotency, and designing budgets/goals as real-time queries rather than cached aggregations. All risks are well-documented with proven mitigation patterns from the existing codebase and industry standards.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack (Next.js 16, tRPC 11, Prisma 7, Better Auth) provides a solid foundation. Three strategic additions complete the technical requirements for financial features.
+The existing stack covers nearly all v2 requirements. Research focused on identifying gaps, not wholesale changes.
 
-**Core additions:**
-- **Recharts 3.7.0**: Financial visualizations — Native React components with official shadcn/ui integration, handles pie/line/area charts needed for expense breakdown and loan projections. Latest stable release with improved TypeScript support and performance optimizations.
-- **currency.js 2.0.3**: Decimal-safe money calculations — Tiny footprint (1.14KB) library working with integer cents internally, provides formatting and safe arithmetic. Avoids Prisma Decimal conversion overhead while ensuring precision.
-- **date-fns 4.1.0**: Date manipulation and formatting — Tree-shakeable, immutable operations, works with native Date objects. Critical for month boundaries, loan payoff projections, and chart labels.
+**New dependencies (only 2):**
+- **jsPDF + jspdf-autotable**: PDF generation for amortization schedules and transaction reports. Chosen over alternatives (react-pdf has App Router issues, pdfmake is 3x larger). Active maintenance, TypeScript-native, works client and server-side. ~280KB combined.
+- **Custom CSV generation**: Zero dependencies. Built-in APIs handle all CSV needs (20 lines of code vs 46KB papaparse overhead). Supports edge cases (commas, quotes, newlines).
 
-**Implementation approach:**
-- Store all monetary values as integer cents in Prisma (Int type, not Decimal or Money)
-- Implement custom amortization functions rather than using unmaintained libraries
-- Use Recharts with shadcn/ui chart components for consistent design system integration
-- Aggregate data server-side before sending to charts to maintain performance
+**Platform features (zero dependencies):**
+- **Vercel Cron Jobs**: Recurring transaction generation via daily cron + lazy generation on page load. Serverless-native (node-cron won't work). 2 free cron jobs sufficient.
+- **Recharts 3.7.0**: Already installed. Supports all analytics chart types (stacked bars, grouped bars, area, line, composed, reference lines, brush). No new charting library needed.
 
-**What to avoid:**
-- PostgreSQL @db.Money type (locale issues, no currency metadata)
-- Prisma.Decimal for amounts (returns object requiring conversion, adds complexity)
-- Floating-point numbers for storage (0.1 + 0.2 !== 0.3)
-- Dinero.js (overkill for single-currency app, larger bundle)
-- Chart.js or D3 directly (less integration with existing stack)
+**Deferred/rejected:**
+- nuqs for URL state: Start with existing useSearchParams pattern, add only if complexity warrants it
+- External scheduling services: Vercel Cron + lazy generation covers use case
+- Snowball/avalanche libraries: None exist; custom implementation using existing calculations.ts patterns
+- papaparse/fast-csv: Generation-only needs don't justify parsing libraries
+
+**Integration with existing stack:**
+All v2 features build on established patterns: BigInt cents + formatCents/displayToCents, tRPC entity routers, React Query hooks, raw SQL for aggregations, cursor-based pagination, Zod schemas, TanStack Form, optimistic updates.
 
 ### Expected Features
 
+Research cross-verified across 6+ apps (YNAB, Monarch, Goodbudget, PocketGuard, Undebt.it) and multiple market analyses. v2 features fall into clear tiers.
+
 **Must have (table stakes):**
-- Transaction CRUD with income/expense distinction, date, amount, notes — users expect basic recording capabilities
-- Tag/category management with multi-tag assignment — more flexible than single-category systems
-- Transaction filtering by date range, type, tag, amount — finding specific transactions is essential
-- Monthly summary showing income total, expense total, net — fundamental financial snapshot
-- Spending breakdown by category as pie chart — core value of expense tracking
-- Loan CRUD with type, principal, rate, term, minimum payment — basic debt tracking
-- Payment tracking with extra payment support — enables payoff calculation
-- Payoff date and total interest calculations — answers "when am I done?" question
+- Recurring transactions with auto-generation, frequency selection (daily/weekly/biweekly/monthly/yearly), start/end dates
+- Monthly budget limits per tag with progress bars, over-budget indicators
+- Snowball and avalanche debt strategies with comparison view
+- Savings goals with progress tracking, optional deadlines
+- Analytics time range selector, spending by category, income vs expenses trends
+- CSV transaction export, PDF amortization export
 
-**Should have (competitive differentiators):**
-- Interactive "what-if" payoff simulator with slider UI — Finora's primary value proposition, lets users experiment with extra payments and see instant impact
-- Visual payoff comparison chart — side-by-side baseline vs accelerated payoff scenarios
-- Interest saved calculator — motivational display showing dollar savings from extra payments
-- Amortization chart showing balance over time — visual loan progress
-- Spending trend timeline — line chart revealing patterns over weeks/months, not just current snapshot
-- Delightful chart visualizations — animations and polish making data "a joy to look at"
-- Guided onboarding flow — introduces value props early, sets up first transaction and loan
+**Should have (differentiators):**
+- Recurring transaction skip/modify individual occurrence
+- Budget rollover (configurable per budget - defer to v2.1)
+- Tag-linked auto-tracking for goals (unique: transactions auto-count toward goals)
+- Hybrid debt strategy + custom priority ordering
+- Month-over-month analytics comparison, budget vs actual overlay
+- Explicit income targets (most apps only do savings goals)
 
-**Defer (v2+):**
-- Debt payoff strategy selection (snowball/avalanche) — complex prioritization logic, users can manually decide initially
-- Recurring transaction automation — edge case handling complexity not justified for MVP
-- Budget limits and spending alerts — different product category (budgeting vs tracking), adds scope
-- Spending anomaly detection — requires historical pattern analysis
-- Receipt attachments or OCR — nice-to-have but not core value
-- Bank account syncing (Plaid) — high complexity, privacy concerns, many users prefer manual entry
-- Multi-currency, shared accounts, investment tracking — explicit scope decisions to stay focused
+**Defer (v3+ or avoid):**
+- AI-based recurring detection from patterns (v3+, needs large dataset)
+- Zero-based budgeting (YNAB-style, too opinionated)
+- More than 4 debt strategies (diminishing returns past snowball/avalanche/hybrid/custom)
+- Predictive spending forecasts (ML scope creep, often wrong)
+- Net worth tracking (requires asset modeling beyond transaction data)
+
+**Finora's differentiation:** Combined expense tracking + loan management + debt strategies in one app (competitors specialize). Tag-linked auto-tracking for goals. Manual-entry-first with no bank sync requirement. Configurable per-budget rollover.
 
 ### Architecture Approach
 
-Finora's architecture builds on a well-structured monorepo with clear separation between presentation (apps/web), API layer (packages/api via tRPC), and data layer (packages/db via Prisma). Financial calculations live primarily on the server for auditability and precision, with shared calculation utilities exposed to the client for instant "what-if" simulation feedback. Charts render client-side using server-aggregated data to balance performance with interactivity.
+v2 extends existing architecture with new Prisma models, tRPC routers, and UI components following established patterns. Zero infrastructure changes.
 
-**Major components:**
-1. **tRPC Routers** — Entity-based organization (transaction, tag, loan, dashboard) providing CRUD operations and data aggregation. Dashboard router pre-computes summaries rather than returning raw data.
-2. **Calculation Utilities** — Shared functions for amortization schedules, payoff projections, monthly payments. Used both server-side (authoritative) and client-side (interactive previews).
-3. **Prisma Schema Extensions** — Finance entities (Transaction, Tag, TransactionTag, Loan, LoanPayment) with composite indexes for date-range queries. Money stored as integer cents, interest rates as Decimal.
-4. **Chart Components** — Thin wrappers around Recharts receiving pre-aggregated, chart-ready data from API. Includes SpendingPieChart, SpendingTrendChart, LoanAmortizationChart, PayoffComparisonChart.
+**Major data models:**
+1. **RecurringTransaction + RecurringTransactionTag**: Template model with nextOccurrence field for efficient querying. Links to generated transactions via optional FK. Mirrors existing Tag soft-delete pattern.
+2. **Budget**: One row per user+tag with limitCents. Spent amount is real-time SUM query, not stored. No month column - budgets are always "current month" to avoid snapshot complexity.
+3. **Goal + GoalTag + GoalContribution**: Hybrid tracking (auto from tagged transactions + manual contributions). Denormalized currentCents with audit trail via GoalContribution records.
+4. **Debt strategies**: NO new model. Pure calculation over existing Loan data, extending calculations.ts with snowball/avalanche algorithms.
 
-**Data flow patterns:**
-- Transaction creation: form validation → tRPC mutation → convert to cents → Prisma create → React Query cache invalidation → dashboard refetch
-- Dashboard aggregation: tRPC query with date range → server aggregates via Prisma (SUM, GROUP BY) → return pre-aggregated data → Recharts renders
-- Loan "what-if" simulation: slider adjustment → client-side calculation utility → instant chart update (no server round-trip) → optional save scenario
+**Major routers:**
+- recurring: list, create, update, pause, skip, generateDue (called on dashboard load + optional cron)
+- budget: list (with spent calculation), upsert, delete, getProgress
+- goal: list, create, update, addContribution, getContributions
+- debt: getStrategy, getComparison (stateless calculation endpoints)
+- analytics: getSpendingByCategory, getMonthlyComparison, getCategoryTrends (raw SQL)
+- export: Next.js Route Handlers (not tRPC) for CSV/PDF file downloads
 
-**Build order:**
-1. Phase 1 (Data Foundation): Prisma schema, migrations, calculation utilities
-2. Phase 2 (API Layer): Tag router → Transaction router → Loan router → Dashboard router (respects dependencies)
-3. Phase 3 (Core UI): Tag management → Transaction list/forms → Loan list/forms → Payment logging
-4. Phase 4 (Visualizations): Dashboard layout → Spending pie chart → Spending trend → Loan amortization → What-if simulator
-5. Phase 5 (Polish): Onboarding flow, settings, mobile responsiveness
+**Key patterns maintained:**
+- Money as BigInt cents throughout
+- Entity-based routers, not page-based
+- Dashboard aggregation via raw SQL (db.$queryRaw)
+- Cursor-based pagination with limit+1
+- Custom hooks wrapping trpc.*.queryOptions()
+- Optimistic updates with onMutate/onError/onSettled
+- Client/Server split: Server Component pages, *-page-client.tsx for interactivity
+
+**Integration flows:**
+- Transaction creation triggers budget warning check + goal auto-contribution (both within Prisma $transaction block)
+- Recurring generation creates Transactions + copies tags + triggers budget/goal flows atomically
+- Budget/analytics share month-boundary utility extracted from existing dashboard.ts
 
 ### Critical Pitfalls
 
-1. **Floating-point currency calculations** — Storing money as JavaScript Number causes precision errors (0.1 + 0.2 = 0.30000000000000004) that compound over thousands of transactions, leading to drift in totals and loss of user trust. Prevention: Store as integer cents in database, use currency.js for calculations, only convert to dollars for display. Address in Foundation phase.
+Top 5 risks with highest impact if not addressed from day one:
 
-2. **Amortization formula implementation errors** — Incorrect formulas, wrong compounding periods, or rounding at intermediate steps produce schedules that don't match bank statements, destroying trust in the app's core value proposition. Prevention: Use standard PMT formula, validate against CFPB/Bankrate calculators, comprehensive test suite with edge cases (0% interest, extra payment exceeding balance). Address in Loan Management phase.
+1. **Recurring duplicate generation on restart/retry** - Without idempotency, cron overlap or server restart doubles transactions. Prevention: nextOccurrence field + composite unique constraint (recurringTransactionId, generatedForDate) + Prisma $transaction with atomic updates. Database-level enforcement, not just application logic.
 
-3. **Security theater instead of security** — Basic email/password feels "done" but leaves financial data vulnerable to breaches, session hijacking, and credential stuffing. Prevention: Rate limiting on auth endpoints, audit logging for data access, proper session expiration, input validation on all endpoints, never log sensitive amounts. Address in Foundation phase (basics) and pre-launch security hardening phase.
+2. **End-of-month scheduling (31st) produces wrong-day transactions** - February 31st rolls to March 3rd via JavaScript Date overflow. Prevention: Store semantic dayOfMonth value, clamp with Math.min(day, daysInMonth), test all months including Feb leap years. Offer "last day of month" option explicitly.
 
-4. **Chart performance degradation** — Recharts struggles with large datasets as SVG renders every point as DOM element. After a year of daily transactions (365+ points) or detailed amortization schedules (360 months), charts become sluggish. Prevention: Aggregate data on backend (weekly/monthly for >30 days), disable animations for large datasets, lazy load off-screen charts. Address in Chart Implementation phase from the start.
+3. **Month boundary disagreement between dashboard/budgets/analytics** - Three features compute "January" differently (JS Date constructors vs date-fns vs SQL date_trunc). Prevention: Extract single getMonthBoundaries() utility from existing dashboard.ts, use everywhere. Be explicit about timezone in SQL: date_trunc('month', date AT TIME ZONE $tz).
 
-5. **Pie chart misuse** — Spending breakdown with 10+ tags becomes unreadable with invisible small slices and overlapping labels. Prevention: Limit to 5 categories max with "Other" grouping for remainder, provide drill-down for hidden categories, consider bar charts for many categories. Address in Dashboard/Charts phase during design.
+4. **Debt strategy rounding errors accumulate across multiple loans** - Independent rounding of 5 loans loses/doubles cents, drifting payoff dates by months. Prevention: Use "largest remainder" distribution method, cap payment at remaining balance with cascade to next loan, assert sum(allPayments) === totalAvailable at each step.
+
+5. **Budget spent calculation lags behind recurring transaction generation** - If budgets cache totals, generated transactions bypass the cache. Prevention: Design budgets as real-time SUM queries (simplest), or ensure recurring generator invalidates cache within same Prisma transaction. Test: create recurring, trigger generation, verify budget updates immediately.
+
+Additional moderate risks: timezone-unaware date_trunc in analytics SQL, BigInt serialization breaks JSON/CSV export (needs explicit Number() conversion), export memory exhaustion without streaming (use cursor-based batching).
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure follows strict data dependencies and builds complexity progressively:
+Based on dependency analysis and risk mitigation priorities, recommended 6-phase structure for v2:
 
-### Phase 1: Foundation & Data Model
-**Rationale:** Everything depends on the data model. Financial calculations require absolute precision, so storage patterns must be correct from day one. Schema changes after data exists are risky in finance apps.
+### Phase 7: Schema Migration + Recurring Transactions
+**Rationale:** Schema migration must come first (all v2 models in one atomic migration). Recurring transactions are the most foundational v2 feature - they produce Transaction records that feed into budgets, goals, and analytics. Building it first provides richer test data for downstream features and establishes the idempotency/month-boundary patterns other features will reuse.
 
-**Delivers:**
-- Prisma schema with Transaction, Tag, TransactionTag, Loan, LoanPayment models
-- Database migrations establishing tables and indexes
-- Calculation utilities module (amortization, payoff, monthly payment functions)
-- Money handling patterns (integer cents) established across codebase
+**Delivers:** All new Prisma models (RecurringTransaction, RecurringTransactionTag, Budget, Goal, GoalTag, GoalContribution, Transaction.recurringTransactionId addition). Recurring transaction CRUD (list, create, update, pause, skip). Generation engine (lazy on page load + optional Vercel Cron). UI: recurring list, form, cards with upcoming preview.
 
-**Addresses:**
-- Table stakes: Data persistence, secure authentication foundation
-- Pitfall #1: Floating-point currency (use integer cents in schema)
-- Pitfall #3: Security basics (rate limiting, session expiration, input validation)
+**Addresses:** Recurring transaction table stakes from FEATURES.md (auto-generation, frequency, start/end dates). Establishes nextOccurrence pattern.
 
-**Critical decisions:**
-- Store all amounts as Int (cents), not Decimal or Float
-- Composite indexes on [userId, date] and [userId, type] for transaction queries
-- Index junction table [transactionId, tagId] for tag filtering performance
-- Interest rates as Decimal for precise calculation
+**Avoids:** Pitfalls #1 (duplicate generation), #2 (end-of-month), #5 (budget integration - designed but not yet integrated).
 
-### Phase 2: API Layer (tRPC Routers)
-**Rationale:** With schema defined, build the type-safe API layer before UI. Entity-based router organization (not feature-based) promotes reusability. Tag router must exist before Transaction router due to foreign key dependency.
+**Research flags:** Standard patterns (no additional research needed). Well-documented scheduling logic, existing similar implementations in YNAB/Goodbudget.
 
-**Delivers:**
-- Tag router: CRUD operations, user-scoped queries
-- Transaction router: CRUD with tag assignment, filtering, date-range queries
-- Loan router: CRUD, payment tracking, current balance calculation
-- Dashboard router: Pre-aggregated data for charts (monthly summary, spending by tag, trend data)
+### Phase 8: Budgets
+**Rationale:** Budgets depend only on Tags + Transactions (both exist in v1). Self-contained feature with high user value. Real-time spent calculation pattern established here becomes the template for goals and analytics. Budget warnings integrate into transaction creation as minimal cross-cutting addition.
 
-**Uses:**
-- tRPC 11.7.2 for type-safe endpoints
-- Zod 4.1.13 for input validation (pitfall #3 prevention)
-- Calculation utilities from Phase 1
+**Delivers:** Budget router with dynamic spent calculation (raw SQL following dashboard.ts pattern). Budget UI (cards with progress bars, form, warning thresholds). Budget warning integration in transaction.create mutation (returns budgetWarnings array in response). Extraction of shared month-boundary utility from dashboard.ts.
 
-**Implements:**
-- Server-side aggregation pattern (prevents pitfall #4)
-- Money conversion layer (cents to display, display to cents)
-- Authorization checks on all routes (Better Auth session context)
+**Uses:** Existing Tag model, Transaction aggregation patterns from dashboard.
 
-**Avoids:**
-- N+1 query pitfalls with proper Prisma includes
-- Client-side aggregation (data transfer overhead)
-- Floating-point calculations in business logic
+**Implements:** Real-time query architecture (no caching), per-tag budget limits without month snapshots.
 
-### Phase 3: Core Expense Tracking UI
-**Rationale:** Build foundational features before differentiators. Tags enable categorization, transactions depend on tags, filtering requires both. This phase establishes the basic expense tracking value before adding loan features.
+**Avoids:** Pitfalls #3 (month boundary consistency), #7 (rollover complexity - deferred), #8 (tag lifecycle - designed for soft-delete).
 
-**Delivers:**
-- Tag management: CRUD UI with color picker
-- Transaction list: sortable, filterable table with pagination
-- Transaction forms: add/edit with date picker, amount input, multi-tag selector
-- Monthly summary display: income/expense totals with net
+**Research flags:** Standard patterns (no additional research). Budget progress bars and limit tracking are universal in personal finance apps.
 
-**Addresses:**
-- Table stakes: Manual transaction entry, category assignment, transaction list, basic filtering
-- Feature dependency: Tag Assignment → Spending Breakdown (enables Phase 4)
+### Phase 9: Goals
+**Rationale:** Goals depend on Tags + Transactions (exist) and benefit from recurring transactions already generating data. More complex than budgets (two types - SAVINGS/INCOME, hybrid tracking with auto-contributions, manual adds, audit trail). Tag-linked auto-tracking mechanism parallels budget-tag connection, reusing patterns.
 
-**Uses:**
-- TanStack Form 1.27.3 for form handling (already in stack)
-- shadcn/ui components for consistent design
-- Optimistic updates pattern (fast perceived performance)
+**Delivers:** Goal router with contribution tracking (list, create, update, addContribution, getContributions). Goal UI (cards with progress rings, form, contribution history, deadline handling). Auto-contribution integration in transaction.create (similar to budget warnings but modifies Goal.currentCents). Income target tracking with monthly aggregation.
 
-**Quality gates:**
-- Date handling tests (month boundaries, timezone consistency)
-- Currency display formatting consistency
-- Filter accuracy validation
+**Uses:** Tag-linked tracking pattern established, Transaction model, GoalContribution audit trail.
 
-### Phase 4: Loan Tracking & Management UI
-**Rationale:** With expense tracking functional, add the second core feature. Loan CRUD must exist before payment tracking, payments enable balance calculation, balance enables projections. Linear dependency chain.
+**Implements:** Hybrid tracking (auto from tagged transactions + manual contributions), denormalized currentCents with recalculable integrity.
 
-**Delivers:**
-- Loan management: CRUD UI with type selector, term input, rate input
-- Payment logging: form capturing date, amount, extra payment flag
-- Loan detail page: current balance, payoff date, total interest
-- Payment history view: chronological list with principal/interest breakdown
+**Avoids:** Pitfalls #9 (progress consistency - real-time query), #16 (deadline anxiety - nullable deadlines, positive messaging).
 
-**Addresses:**
-- Table stakes: Loan details input, multiple loan support, payment tracking, payoff date calculation
-- Feature dependency: Loan → Payment → Balance → Payoff Projection (enables Phase 5)
-- Pitfall #2: Amortization formula accuracy (validate against bank calculators)
+**Research flags:** Standard patterns with one unique element (tag-linked auto-tracking). Test hybrid tracking edge cases during implementation.
 
-**Uses:**
-- Calculation utilities from Phase 1 (shared server/client)
-- date-fns for payoff date projections
+### Phase 10: Debt Strategies
+**Rationale:** Pure calculation over existing Loan data. No new models (stateless). Can be built independently. More niche than budgets/goals (affects users with multiple loans only), so deprioritized despite self-contained scope. TDD-friendly (complex algorithm, pure functions).
 
-**Validation checklist:**
-- Monthly payment matches known calculators within $1
-- Final amortization balance within $1 of zero
-- Extra payment recalculates correctly
-- Edge cases: 0% interest, single payment remaining
+**Delivers:** Snowball/avalanche calculation utilities in calculations.ts (extends existing projectPayoff pattern). Debt router (getStrategy, getComparison - stateless endpoints). Debt strategy UI section on loans page (comparison table, allocation view, debt-free countdown). Optional: hybrid strategy and custom priority ordering.
 
-### Phase 5: Visualizations & Dashboard
-**Rationale:** Charts require data to visualize, so CRUD features must exist first. Dashboard aggregates data from both expense and loan domains. This phase delivers the "delightful" visualization differentiator.
+**Uses:** Existing Loan model, calculations.ts foundation (calculateMonthlyPayment, projectPayoff, calculateCompoundInterest).
 
-**Delivers:**
-- Dashboard layout: unified view of financial status
-- Spending pie chart: breakdown by tag with colors, donut variant, "Other" grouping
-- Spending trend chart: weekly/monthly line chart showing patterns
-- Loan amortization chart: area chart of balance over time with principal/interest split
-- Interactive "what-if" simulator: slider for extra payment with real-time comparison
+**Implements:** Multi-loan payment allocation with priority-based distribution, cascade logic when loans pay off mid-month.
 
-**Addresses:**
-- Differentiators: Spending trend timeline, amortization chart, visual payoff comparison, interactive simulator, delightful visualizations
-- Pitfall #4: Chart performance (server aggregation, data sampling)
-- Pitfall #5: Pie chart misuse (5 category limit, "Other" grouping)
+**Avoids:** Pitfalls #4 (rounding errors - largest remainder method), #13 (cascade logic - freed payments redistribute within same month).
 
-**Uses:**
-- Recharts 3.7.0 with shadcn/ui chart components
-- Client-side calculation utilities for instant simulator feedback
-- Dashboard router's pre-aggregated data
+**Research flags:** Algorithm logic is well-documented (Ramsey Solutions, Fidelity). Test edge cases (0% loans, minimum exceeds budget, multi-loan payoff in one month).
 
-**Quality gates:**
-- Renders in <500ms with 1 year of data
-- Accessible: data tables alongside charts, WCAG color contrast
-- Handles edge cases: zero data points, single category, many categories
-- What-if simulation: instant updates (<16ms for 60fps)
+### Phase 11: Analytics
+**Rationale:** Read-only aggregation over Transaction + Tag data. Benefits from budgets existing (can overlay budget limits on charts). Replaces placeholder page with full feature. Heavier queries (multi-month GROUP BY) than dashboard, so raw SQL is mandatory for performance.
 
-### Phase 6: Onboarding & Polish
-**Rationale:** With core features functional, add the experience layer that ensures users understand value and start using the product. Research shows high drop-off after registration when users see empty dashboard.
+**Delivers:** Analytics router with raw SQL queries (getSpendingByCategory, getMonthlyComparison, getCategoryTrends, getIncomeVsExpenses). Full analytics page UI (4+ chart types: stacked bars, grouped bars, area, line). Time range selector (3mo/6mo/1yr/custom). Budget vs actual overlay. Spending trend indicators (up/down arrows, percentage change).
 
-**Delivers:**
-- Guided onboarding: walkthrough adding first transaction, first tag, first loan
-- Empty states: explanatory messages when no data exists
-- Progress indicators: "Setup 2/4 steps complete"
-- Settings page: user preferences (name, currency symbol display)
-- Mobile responsiveness: touch-optimized inputs and layouts
+**Uses:** Recharts 3.7.0 (already installed), raw SQL pattern from dashboard.ts, shared month-boundary utility from budgets phase.
 
-**Addresses:**
-- Differentiator: Guided onboarding
-- Pitfall #10: Empty state abandonment
-- Table stakes: Mobile-responsive design, user preferences
+**Implements:** Multi-month aggregation with GROUP BY month/tag, timezone-aware date_trunc, composite indexes for performance.
 
-**Quality gates:**
-- Onboarding completion rate >60%
-- Mobile usability testing on iOS/Android
-- Settings persistence validation
+**Avoids:** Pitfalls #6 (slow queries - raw SQL + indexes), #12 (timezone-unaware date_trunc), #17 (re-fetch on granularity toggle - fetch once, aggregate client-side).
+
+**Research flags:** Standard charting patterns. Verify composite index performance with EXPLAIN ANALYZE during implementation.
+
+### Phase 12: Export + Dashboard Integration + Polish
+**Rationale:** Export depends on all data being in place (transactions, loans, budgets, goals, debt strategies). Dashboard integration pulls v2 widgets together. Final polish phase for edge cases, loading states, and user flow refinement.
+
+**Delivers:** CSV export route handler (transactions, budgets, goals). PDF export route handler (amortization schedules). Dashboard widgets (budget summary, goal progress, recurring status). Filter-aware export (respect current transaction filters). Loading/empty states for all v2 features. UTF-8 BOM for Excel compatibility.
+
+**Uses:** jsPDF + jspdf-autotable (new dependencies installed this phase), custom CSV generation, Next.js Route Handlers for file downloads.
+
+**Implements:** Streaming export with cursor-based pagination for large datasets, BigInt-to-Number serialization for JSON/CSV.
+
+**Avoids:** Pitfalls #10 (BigInt serialization), #11 (memory exhaustion - streaming), #14 (CSV encoding - UTF-8 BOM).
+
+**Research flags:** PDF generation library API (jsPDF) - verify specifics during implementation. Streaming pattern is standard.
 
 ### Phase Ordering Rationale
 
-- **Data before API, API before UI:** Strict dependency chain prevents rework. Changing schema after API exists is painful; changing API after UI exists is worse.
-- **Foundation phase is non-negotiable:** Money handling patterns (integer cents) must be correct from day one. Retrofitting is nearly impossible once data exists.
-- **Tags before Transactions:** Foreign key dependency and feature dependency (can't categorize without categories).
-- **CRUD before visualizations:** Charts need data to render. Building charts first leads to mocking, which hides real performance issues.
-- **Core features before polish:** Validates value proposition before investing in onboarding flow. If simulator doesn't resonate, onboarding won't save it.
-- **Security hardening spans multiple phases:** Basics in Foundation (authentication, validation), continuous through API (authorization, rate limiting), pre-launch audit (comprehensive review).
+- **Schema first, recurring foundation:** Single migration avoids schema fragmentation. Recurring transactions generate data for all downstream features to consume.
+- **Budgets before goals:** Simpler feature (one entity vs three), establishes real-time query pattern. Higher immediate user value (budget tracking is more universal than goal setting).
+- **Debt after budgets/goals:** More niche feature (affects subset of users). Self-contained, can be built in parallel if desired.
+- **Analytics after budgets:** Gains budget overlay capability. Heavy aggregation logic separated from dashboard lightweight queries.
+- **Export last:** Maximum value when all features exist. Most dependent feature.
+
+**Parallel opportunities:** Phases 8 (Budgets) and 10 (Debt Strategies) have zero dependencies on each other - can be built simultaneously. Phase 11 (Analytics) could start after Phase 7 since it only reads existing transaction data.
+
+**Integration sequence prevents pitfalls:** Phase 7 establishes idempotency pattern. Phase 8 extracts shared month-boundary utility. Phases 9-12 reuse both patterns, avoiding duplicate bugs.
 
 ### Research Flags
 
-**Phases needing deeper research during planning:**
-- **Phase 2 (API Layer):** Dashboard aggregation queries with Prisma — verify performance with realistic data volumes, may need query optimization research for grouping operations.
-- **Phase 5 (Visualizations):** Recharts performance tuning — if 360-month amortization schedules cause issues, may need research into data sampling algorithms (LTTB) or Web Worker implementation.
+**Phases with standard patterns (skip /gsd:research-phase):**
+- **Phase 7 (Recurring):** Scheduling logic, cron patterns, and idempotency are well-documented across YNAB, Goodbudget, industry articles. Straight implementation.
+- **Phase 8 (Budgets):** Budget progress tracking and limit logic are universal. Existing aggregation patterns apply.
+- **Phase 9 (Goals):** Progress tracking mirrors budgets. Contribution audit trail is standard CRUD.
+- **Phase 11 (Analytics):** Charting and aggregation patterns are well-established. Existing raw SQL approach scales.
 
-**Phases with standard patterns (skip research-phase):**
-- **Phase 1 (Foundation):** Prisma schema design is well-documented with clear patterns for financial data modeling.
-- **Phase 3 (Expense Tracking UI):** CRUD forms with TanStack Form + shadcn/ui are established patterns in existing stack.
-- **Phase 4 (Loan Management UI):** Extends patterns from Phase 3 with same form handling approach.
-- **Phase 6 (Onboarding):** UX patterns for empty states and progress indicators are well-documented, no novel technical challenges.
+**Phases needing implementation-time verification (no additional research-phase, but test edge cases):**
+- **Phase 10 (Debt Strategies):** Algorithm logic is documented, but cascade behavior and rounding need TDD. Write algorithm tests first, verify against known amortization schedules.
+- **Phase 12 (Export):** jsPDF API specifics should be verified during implementation. Streaming patterns are standard but test with realistic data volumes (5K+ transactions).
+
+**No research-phase calls needed for v2.** All features are well-documented in the domain. Implementation-time testing and validation covers remaining uncertainties.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Recharts, currency.js, date-fns are well-maintained with official docs and active communities. Version 3.7.0 of Recharts released Jan 2025. Existing stack (Next.js, tRPC, Prisma) is proven. |
-| Features | MEDIUM | Feature expectations cross-verified across 10+ sources (NerdWallet, CNBC, app reviews). Competitive landscape analysis identifies Finora's niche clearly. Some inference on MVP prioritization based on dependencies rather than user validation. |
-| Architecture | HIGH | Architecture builds on existing validated codebase structure. Money-as-cents pattern is industry standard with extensive documentation. Server-side aggregation and client-side simulation patterns are proven in finance apps. |
-| Pitfalls | MEDIUM-HIGH | Critical pitfalls (floating-point, amortization errors, security) verified across multiple industry sources. Performance thresholds (Recharts with 365+ points) based on GitHub issues and documented limitations. Some mitigation strategies are informed recommendations rather than battle-tested. |
+| Stack | HIGH | Minimal new dependencies (2). Existing stack proven in v1. jsPDF is actively maintained with TypeScript support (v4.1.0, Jan 2026). Vercel Cron is official platform feature. Custom CSV avoids library overhead. |
+| Features | MEDIUM-HIGH | Cross-verified across 6+ apps and market analyses. Table stakes are universal. Differentiators (tag-linked goals, explicit income targets) are validated patterns but uniquely combined in Finora. Confidence docked slightly for rollover complexity (deferred). |
+| Architecture | HIGH | All patterns extend existing v1 architecture. Direct codebase analysis of every router, model, and component. Prisma v7 multi-file schema already in use. tRPC v11 patterns established. Raw SQL aggregation proven in dashboard. BigInt cents handling comprehensive. |
+| Pitfalls | HIGH | Top 5 critical pitfalls are well-documented with proven mitigations (idempotency, month boundaries, timezone handling, rounding distribution, real-time queries). Moderate pitfalls have clear prevention strategies. Phase-specific risks mapped to specific phases. |
 
 **Overall confidence:** HIGH
 
-The research benefits from an existing, functioning codebase with clear architectural patterns. Stack additions are minimal and well-justified. The primary uncertainties are around feature prioritization (solved through MVP scoping in PRD) and real-world performance at scale (addressed through Phase 5 validation checklist).
+v2 is a natural extension of v1 with minimal infrastructure risk. The existing architecture handles all requirements. Critical risks have database-level or pattern-level solutions. Feature expectations are validated across competitors. Only uncertainty is rollover complexity (deferred to post-v2.0).
 
 ### Gaps to Address
 
-**Onboarding flow specifics:** Research identifies onboarding as critical (pitfall #10) but doesn't specify optimal flow. During Phase 6 planning, validate whether to use product tour library (Shepherd.js, Intro.js) or custom implementation, and determine minimum viable onboarding (just tooltips vs full walkthrough).
+**During Phase 7 (Recurring):**
+- Finalize lazy generation vs cron-only strategy: Recommend lazy (on page load) as primary with cron as backup. Lazy provides user feedback, cron handles edge cases if user doesn't visit.
+- Timezone handling for nextOccurrence: If user timezone is added to User model, recurring generation must respect it. If not, default to UTC with clear documentation. Extracted month-boundary utility from Phase 8 will establish pattern.
 
-**Dashboard aggregation performance:** Research recommends server-side aggregation but doesn't validate Prisma query performance with large datasets. During Phase 2, benchmark aggregation queries with 1000+ transactions to confirm response times. If >500ms, research Redis caching or materialized views.
+**During Phase 8 (Budgets):**
+- Rollover decision: Ship without rollover initially (avoid Pitfall #7 complexity). Add as v2.1 enhancement after observing user feedback on base budgets. If added, use snapshot approach (store rollover at month-end, don't retroactively recalculate).
 
-**Multi-tag pie chart visualization:** Research suggests limiting to 5 categories with "Other" grouping, but doesn't specify how to handle transactions with multiple tags (count once per tag vs split value). During Phase 5 planning, define UX for multi-tag breakdown (separate chart showing tag overlap, or proportional splitting).
+**During Phase 10 (Debt Strategies):**
+- Hybrid strategy formula: If implemented, validate scoring formula (balance weight + rate weight) against real loan datasets. Start with simple 50/50 weighting, allow user adjustment in v2.1+ if desired.
 
-**Accessibility testing approach:** Research identifies accessibility as requirement (pitfall #8) but doesn't specify testing strategy. During Phase 5, determine whether to use automated tools (axe-core, pa11y) only, or include manual screen reader testing. Budget testing time accordingly.
+**During Phase 12 (Export):**
+- PDF generation server-side limits: Verify jsPDF memory usage with 60+ month amortization schedules. May need pagination for very long-term loans (30-year mortgages). Test with realistic loan sizes during implementation.
 
-**Extra payment UI pattern:** "What-if" simulator is core differentiator but research doesn't specify optimal slider configuration (range, step size, display format). During Phase 5 planning, prototype slider interaction to determine whether linear slider ($0-$500) or percentage-based works better for varied loan sizes.
+**Cross-phase:**
+- User timezone storage: Currently not in v1 User model. Month-boundary logic in Phase 8 should add optional timezone field. Affects recurring (Phase 7 retroactively), budgets (Phase 8), analytics (Phase 11). Default to UTC if null for backward compatibility. Consider adding timezone selector in settings during Phase 8.
+
+All gaps are implementation decisions, not research gaps. No additional research-phase needed.
 
 ## Sources
 
-### Primary (HIGH confidence)
-- Recharts GitHub releases — v3.7.0 verification, feature documentation
-- shadcn/ui Charts documentation — component integration patterns
-- currency.js official documentation — API reference, precision handling
-- date-fns official documentation — date manipulation patterns
-- Prisma documentation — Decimal vs Money type recommendations
-- tRPC documentation — Next.js App Router integration
-- CFPB amortize module — reference amortization implementation
-- Better Auth documentation — session management patterns
+### PRIMARY (HIGH confidence)
 
-### Secondary (MEDIUM confidence)
-- NerdWallet Best Expense Tracker Apps — feature expectations verification
-- CNBC Select Best Expense Tracker Apps 2026 — competitive landscape
-- YNAB Loan Planner documentation — "what-if" feature reference
-- LendEDU Best Debt Payoff Apps — debt feature comparison
-- Honeybadger currency calculations guide — floating-point pitfall documentation
-- Robin Wieruch rounding errors article — JavaScript precision issues
-- Netguru finance app mistakes article — security and UX pitfalls
-- A11Y Collective accessible charts checklist — accessibility standards
-- Data-to-viz pie chart issues — visualization best practices
-- Recharts performance guide — large dataset handling
+**Codebase analysis (v1):**
+- All existing routers: `packages/api/src/routers/*.ts` (dashboard, transaction, loan, tag, user)
+- All Prisma models: `packages/db/prisma/schema/*.prisma` (auth, finance)
+- Calculation utilities: `packages/api/src/lib/calculations.ts`, `packages/api/src/lib/money.ts`
+- UI patterns: `apps/web/src/components/*`, `apps/web/src/hooks/use-*.ts`
+- Dashboard aggregation pattern: `dashboard.ts:85-109` (raw SQL with $queryRaw)
 
-### Tertiary (LOW confidence)
-- Recharts GitHub issue #1146 — performance thresholds (365+ points), single-issue source
-- Web Worker suggestion for heavy calculations — inference, not tested in financial app context
-- Specific onboarding completion rate targets — generalized UX metrics, not finance-app specific
+**Official documentation:**
+- [jsPDF npm](https://www.npmjs.com/package/jspdf) - v4.1.0, published Jan 2026
+- [jsPDF-AutoTable npm](https://www.npmjs.com/package/jspdf-autotable) - v5.0.7
+- [Vercel Cron Jobs documentation](https://vercel.com/docs/cron-jobs)
+- [Vercel Cron pricing/limits](https://vercel.com/docs/cron-jobs/usage-and-pricing)
+- [Recharts API](https://recharts.github.io/en-US/api/)
+- [PostgreSQL Date/Time Functions](https://www.postgresql.org/docs/current/functions-datetime.html)
+
+**Competitor feature analysis:**
+- [YNAB Scheduled Transactions](https://support.ynab.com/en_us/scheduled-transactions-a-guide-BygrAIFA9)
+- [Monarch Money Budgeting](https://www.monarch.com/features/budgeting)
+- [PocketGuard Rollover Budget](https://help.pocketguard.com/hc/en-us/articles/16287882423836-Rollover-budget-feature)
+- [Undebt.it 7 Payoff Plans](https://undebt.it/blog/undebt-it-payoff-plans/)
+- [Goodbudget Scheduled Fills](https://goodbudget.com/help/budgeting-with-goodbudget/how-to-schedule/)
+- [Beyond Budget CSV/PDF Export](https://www.beyondbudgetapp.com/transactions/csv-pdf-export)
+
+### SECONDARY (MEDIUM confidence)
+
+**Implementation patterns:**
+- [Traveling Coderman - Idempotent Cron Jobs](https://traveling-coderman.net/code/node-architecture/idempotent-cron-job/)
+- [Mercari Engineering - Race Conditions in DB Transactions](https://engineering.mercari.com/en/blog/entry/20241206-the-race-condition-in-multiple-db-transactions-and-the-solutions/)
+- [Firefly III - Recurring at End of Month Issue](https://github.com/firefly-iii/firefly-iii/issues/5830)
+- [Green Dot - Recurring Transfer Scheduling](https://www.greendot.com/helpcenter/add-money/bank-transfer/)
+- [Actual Budget - How Budgeting Works](https://actualbudget.org/docs/budgeting/)
+- [DEV Community - Processing 1M SQL Rows to CSV](https://dev.to/danielevilela/processing-1-million-sql-rows-to-csv-using-nodejs-streams-3in2)
+- [Medium - Timezone with date_trunc in PostgreSQL](https://medium.com/@ajaymaurya73130/how-to-handle-time-zones-with-date-trunc-in-postgresql-34d4298458b6)
+
+**Market analysis:**
+- [Bountisphere 2025 Personal Finance App Review](https://bountisphere.com/blog/personal-finance-apps-2025-review)
+- [NerdWallet Best Budget Apps 2026](https://www.nerdwallet.com/finance/learn/best-budget-apps)
+- [CNBC Best Tools for 2026 Financial Goals](https://www.cnbc.com/select/best-money-tips-to-help-reach-2026-financial-goals/)
+- [WildNetEdge - Personal Finance Apps User Expectations 2025](https://www.wildnetedge.com/blogs/personal-finance-apps-what-users-expect-in-2025)
+
+**Financial algorithms:**
+- [Ramsey Solutions - Debt Snowball vs Avalanche](https://www.ramseysolutions.com/debt/debt-snowball-vs-debt-avalanche)
+- [Fidelity - Avalanche Snowball Debt](https://www.fidelity.com/learning-center/personal-finance/avalanche-snowball-debt)
+- [National Debt Relief - Best Snowball Apps 2025](https://www.nationaldebtrelief.com/blog/financial-wellness/budgeting/top-5-best-apps-for-debt-snowball-method-in-2025/)
+
+### TERTIARY (LOW confidence, needs validation)
+
+**Library comparisons (used for elimination only):**
+- [npm-compare: PDF libraries](https://npm-compare.com/@react-pdf/renderer,jspdf,pdfmake,react-pdf)
+- [LeanLabs - JS CSV Parsers Benchmarks](https://leanylabs.com/blog/js-csv-parsers-benchmarks/)
+- [@react-pdf/renderer App Router issues](https://github.com/diegomura/react-pdf/issues/2460)
+- [Prisma Issue #11130 - findMany vs queryRaw Performance](https://github.com/prisma/prisma/issues/11130)
 
 ---
-*Research completed: 2026-01-29*
-*Ready for roadmap: yes*
+**Research completed:** 2026-02-07
+**Ready for roadmap:** YES
+
+**Next step:** Load SUMMARY.md during roadmap creation. Phase suggestions above become starting point for ROADMAP.md structure. All critical pitfalls have phase assignments for mitigation planning.
