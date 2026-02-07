@@ -176,7 +176,7 @@ export default function SignUpPage() {
 				},
 				{
 					onSuccess: () => {
-						router.push("/dashboard");
+						router.push("/onboarding");
 						toast.success("Welcome to Finora!");
 					},
 					onError: (error) => {

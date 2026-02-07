@@ -21,12 +21,12 @@ export const auth = betterAuth({
 	databaseHooks: {
 		user: {
 			create: {
-				before: async (user) => ({
-					data: {
-						...user,
-						hasCompletedOnboarding: false,
-					},
-				}),
+				after: async (user) => {
+					await prisma.user.update({
+						where: { id: user.id },
+						data: { hasCompletedOnboarding: false },
+					});
+				},
 			},
 		},
 	},
