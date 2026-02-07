@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-07)
 ## Current Position
 
 Phase: 7 of 12 (Recurring Transactions)
-Plan: 0 of 4 in current phase
-Status: Ready to plan
-Last activity: 2026-02-07 — v2.0 roadmap created (6 phases, 16 plans estimated)
+Plan: 1 of 4 in current phase
+Status: In progress
+Last activity: 2026-02-07 — Completed 07-01-PLAN.md (Schema and API)
 
-Progress: [████████████████████░░░░░░░░░░░░░░░░░░░░] 20/36 plans (56%)
+Progress: [█████████████████████░░░░░░░░░░░░░░░░░░░░] 21/36 plans (58%)
 
 ## Performance Metrics
 
@@ -23,9 +23,9 @@ Progress: [████████████████████░░░
 - Average duration: 7.8 min
 - Total execution time: 155 min
 
-**v2 Estimates:**
-- Total plans: 16 (estimated)
-- Phases: 6 (Phases 7-12)
+**v2 Velocity:**
+- Plans completed: 1
+- 07-01: ~4 min
 
 ## Accumulated Context
 
@@ -50,6 +50,11 @@ v2 research decisions:
 - PDF export deferred to Future (EXP-03)
 - Extract shared month-boundary utility during Phase 8
 
+v2 implementation decisions (Phase 7):
+- Exhaustive switch with `never` default for frequency computation (Biome lint compliance)
+- Auto-derive dayOfMonth from startDate for MONTHLY rules (user convenience)
+- Nullable endDate/maxOccurrences in update schema (allows clearing values)
+
 ### Pending Todos
 
 None yet.
@@ -61,5 +66,5 @@ NOTE: loanType field defined in API input schema but not stored in database. Cur
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: v2.0 roadmap created, ready to plan Phase 7
+Stopped at: Completed 07-01-PLAN.md (Schema and API)
 Resume file: None
