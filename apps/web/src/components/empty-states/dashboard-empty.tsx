@@ -1,8 +1,14 @@
 "use client";
 
-import { Check, Circle } from "lucide-react";
-import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
+import { ArrowRight, Check, Circle } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
+import { LoanForm } from "@/components/loans/loan-form";
+import { TagForm } from "@/components/tags/tag-form";
+import { TransactionForm } from "@/components/transactions/transaction-form";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface DashboardEmptyProps {
@@ -11,15 +17,11 @@ interface DashboardEmptyProps {
 	loanCount: number;
 }
 
-interface ChecklistItem {
-	label: string;
-	done: boolean;
-	href: string;
-}
+type DialogKey = "tag" | "transaction" | "loan";
 
 /**
- * Dashboard-specific guided checklist empty state.
- * Shows setup progress with links to each action.
+ * Dashboard post-onboarding empty state.
+ * Action-oriented checklist with inline modals for each action.
  * Displayed when the user has no data (new user post-onboarding).
  */
 export function DashboardEmpty({
@@ -27,26 +29,50 @@ export function DashboardEmpty({
 	transactionCount,
 	loanCount,
 }: DashboardEmptyProps) {
-	const items: ChecklistItem[] = [
+	const queryClient = useQueryClient();
+	const [openDialog, setOpenDialog] = useState<DialogKey | null>(null);
+
+	function openForm(key: DialogKey) {
+		setOpenDialog(key);
+	}
+
+	function closeForm() {
+		setOpenDialog(null);
+	}
+
+	function handleSuccess(message: string) {
+		toast.success(message);
+		closeForm();
+		queryClient.invalidateQueries({
+			predicate: (query) =>
+				Array.isArray(query.queryKey[0]) &&
+				query.queryKey[0].includes("dashboard"),
+		});
+	}
+
+	const items: Array<{
+		key: DialogKey;
+		label: string;
+		description: string;
+		done: boolean;
+	}> = [
 		{
-			label: "Account created",
-			done: true,
-			href: "/dashboard/settings",
-		},
-		{
-			label: "Add your first tag",
+			key: "tag",
+			label: "Create a tag",
+			description: "Categorize your spending (e.g. Food, Rent, Transport)",
 			done: tagCount > 0,
-			href: "/dashboard/settings",
 		},
 		{
+			key: "transaction",
 			label: "Record a transaction",
+			description: "Log your first income or expense",
 			done: transactionCount > 0,
-			href: "/dashboard/transactions",
 		},
 		{
+			key: "loan",
 			label: "Track a loan",
+			description: "Add a loan to see payoff projections",
 			done: loanCount > 0,
-			href: "/dashboard/loans",
 		},
 	];
 
@@ -54,27 +80,33 @@ export function DashboardEmpty({
 
 	return (
 		<div className="mx-auto max-w-lg">
-			<div className="rounded-lg border bg-card p-6">
+			<div className="border border-border/50 bg-card/50 p-6">
+				{/* Header */}
 				<div className="mb-6 text-center">
-					<h2 className="mb-1 font-bold text-xl">
-						Welcome to Finora! Let's get started.
+					<span className="mb-3 inline-block border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-0.5 text-[10px] text-emerald-600 uppercase tracking-[0.2em] dark:text-emerald-400/80">
+						Ready to go
+					</span>
+					<h2 className="mb-1 font-light text-xl tracking-tight">
+						Your dashboard is set up
 					</h2>
 					<p className="text-muted-foreground text-sm">
-						Complete these steps to set up your financial dashboard.
+						Add some data and watch your financial overview come alive.
 					</p>
 				</div>
 
 				{/* Progress bar */}
 				<div className="mb-6">
-					<div className="mb-1 flex justify-between text-muted-foreground text-xs">
-						<span>Progress</span>
+					<div className="mb-1.5 flex justify-between text-muted-foreground text-xs">
+						<span className="text-[10px] uppercase tracking-wider">
+							Quick start
+						</span>
 						<span>
-							{completedCount}/{items.length} complete
+							{completedCount}/{items.length}
 						</span>
 					</div>
-					<div className="h-2 overflow-hidden rounded-full bg-muted">
+					<div className="h-1 overflow-hidden bg-foreground/5">
 						<div
-							className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+							className="h-full bg-emerald-500 transition-all duration-500"
 							style={{
 								width: `${(completedCount / items.length) * 100}%`,
 							}}
@@ -83,40 +115,68 @@ export function DashboardEmpty({
 				</div>
 
 				{/* Checklist */}
-				<ul className="space-y-3">
+				<ul className="space-y-2">
 					{items.map((item) => (
-						<li key={item.label}>
-							<Link
+						<li key={item.key}>
+							<Button
 								className={cn(
-									"flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
+									"group h-auto w-full justify-start gap-3 px-3 py-3 text-left",
 									item.done
-										? "bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
-										: "hover:bg-muted"
+										? "border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/5"
+										: "border-border/50 hover:border-emerald-500/20 hover:bg-card"
 								)}
-								href={item.href as "/dashboard/settings"}
+								disabled={item.done}
+								onClick={() => openForm(item.key)}
+								variant="outline"
 							>
 								{item.done ? (
-									<Check className="size-5 shrink-0 text-emerald-500" />
+									<Check className="size-4 shrink-0 text-emerald-500" />
 								) : (
-									<Circle className="size-5 shrink-0 text-muted-foreground" />
+									<Circle className="size-4 shrink-0 text-muted-foreground/40" />
 								)}
-								<span
-									className={cn(
-										item.done && "line-through decoration-emerald-500/40"
-									)}
-								>
-									{item.label}
-								</span>
-								{!item.done && (
-									<span className="ml-auto text-primary text-xs">
-										Get started
+								<div className="min-w-0 flex-1">
+									<span
+										className={cn(
+											"block font-medium text-xs",
+											item.done
+												? "text-emerald-700 dark:text-emerald-400"
+												: "text-foreground"
+										)}
+									>
+										{item.label}
 									</span>
+									<span className="block text-[10px] text-muted-foreground leading-relaxed">
+										{item.description}
+									</span>
+								</div>
+								{!item.done && (
+									<ArrowRight className="size-3.5 shrink-0 text-muted-foreground/40 transition-all group-hover/button:translate-x-0.5 group-hover/button:text-emerald-500" />
 								)}
-							</Link>
+							</Button>
 						</li>
 					))}
 				</ul>
 			</div>
+
+			{/* Form dialogs */}
+			<TagForm
+				mode="create"
+				onOpenChange={(open) => !open && closeForm()}
+				onSuccess={() => handleSuccess("Tag created")}
+				open={openDialog === "tag"}
+			/>
+			<TransactionForm
+				mode="create"
+				onOpenChange={(open) => !open && closeForm()}
+				onSuccess={() => handleSuccess("Transaction added")}
+				open={openDialog === "transaction"}
+			/>
+			<LoanForm
+				mode="create"
+				onOpenChange={(open) => !open && closeForm()}
+				onSuccess={() => handleSuccess("Loan added")}
+				open={openDialog === "loan"}
+			/>
 		</div>
 	);
 }
