@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Phase: 6 of 6 (Onboarding & Polish)
-Plan: 3 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-07 - Completed 06-03-PLAN.md
+Plan: 3 of 3 in current phase (all complete)
+Status: Phase complete
+Last activity: 2026-02-07 - Completed 06-02-PLAN.md (was running in parallel with 06-03)
 
-Progress: [###################-] 95% (19/20 plans through Phase 6 Plan 3)
+Progress: [####################] 100% (20/20 plans - all phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: 7.6 min
-- Total execution time: 144 min
+- Total plans completed: 20
+- Average duration: 7.8 min
+- Total execution time: 155 min
 
 **By Phase:**
 
@@ -108,6 +108,10 @@ Recent decisions affecting current work:
 - [06-03]: DeleteAccountDialog uses authClient.deleteUser with typed DELETE confirmation
 - [06-03]: Dashboard empty detection: monthlySummary all zeros + no loans + no tags
 - [06-03]: Tag sidebar keeps existing compact empty state (already suitable for constrained space)
+- [06-02]: @finora2/db added as web app dependency for server-side prisma queries in layout
+- [06-02]: Onboarding layout only checks auth (not hasCompletedOnboarding) to prevent redirect loops
+- [06-02]: CSS transitions (300ms slide+fade) for wizard step transitions, not animation library
+- [06-02]: Progress bar segments for minimal visual design in wizard
 
 ### Pending Todos
 
@@ -122,7 +126,7 @@ NOTE: loanType field defined in API input schema but not stored in database. Cur
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 06-03-PLAN.md (Settings Page & Empty States)
+Stopped at: Completed 06-02-PLAN.md (Onboarding Wizard UI)
 Resume file: None
 
 ## Phase 6 Progress
@@ -134,7 +138,12 @@ Plan 1 complete (Data/API Foundation):
 - All dashboard components wired to user currency preference
 - deleteUser enabled in auth config
 
-Plan 2: Onboarding wizard UI (in progress / separate execution)
+Plan 2 complete (Onboarding Wizard UI):
+- (onboarding) route group with auth-only layout
+- 4-step wizard: Welcome, Expenses, Loans, Setup
+- Dashboard redirect for users with hasCompletedOnboarding=false
+- Setup step collects name and currency preference
+- Skip button on all steps completes onboarding
 
 Plan 3 complete (Settings Page & Empty States):
 - Settings page with profile form (name + currency) and account management
@@ -143,5 +152,4 @@ Plan 3 complete (Settings Page & Empty States):
 - Dashboard guided checklist empty state
 - Transactions, loans, tags empty states integrated
 
-Remaining:
-- 06-02-PLAN: Onboarding wizard UI (may still be in progress)
+All plans complete. Phase 6 finished.
