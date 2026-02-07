@@ -71,13 +71,13 @@ Requirements for v2.0 Smart Finance milestone. Each maps to roadmap phases 7-12.
 
 ### Recurring Transactions
 
-- [ ] **RECUR-01**: User can create a recurring transaction with frequency (daily/weekly/biweekly/monthly/yearly)
-- [ ] **RECUR-02**: System auto-generates transactions on schedule from recurring rules
-- [ ] **RECUR-03**: User can skip a single upcoming occurrence without breaking the series
-- [ ] **RECUR-04**: User can modify a single occurrence independently from the series
-- [ ] **RECUR-05**: User can set an optional end date or occurrence count on a recurring rule
-- [ ] **RECUR-06**: User can pause and resume a recurring transaction series
-- [ ] **RECUR-07**: User can view and manage all recurring transaction rules
+- [x] **RECUR-01**: User can create a recurring transaction with frequency (daily/weekly/biweekly/monthly/yearly)
+- [x] **RECUR-02**: System auto-generates transactions on schedule from recurring rules
+- [x] **RECUR-03**: User can skip a single upcoming occurrence without breaking the series
+- [x] **RECUR-04**: User can modify a single occurrence independently from the series
+- [x] **RECUR-05**: User can set an optional end date or occurrence count on a recurring rule
+- [x] **RECUR-06**: User can pause and resume a recurring transaction series
+- [x] **RECUR-07**: User can view and manage all recurring transaction rules
 
 ### Budgets
 

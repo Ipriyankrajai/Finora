@@ -77,7 +77,7 @@ None yet.
 
 NOTE: loanType field defined in API input schema but not stored in database. Current UI works around this by displaying interestType instead.
 
-NOTE: RecurringBanner component created but not yet integrated into dashboard page. Manual integration needed.
+RecurringBanner integrated into dashboard page by orchestrator (commit cbc5d96).
 
 ## Session Continuity
 

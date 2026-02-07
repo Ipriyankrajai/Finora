@@ -93,10 +93,10 @@ v2 extends the working v1 foundation with six interconnected features. Build ord
 **Plans**: 4 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Prisma schema (RecurringRule, RecurringOccurrence models), Zod schemas, date computation utility, and tRPC recurring CRUD router
-- [ ] 07-02-PLAN.md — Trigger.dev generation engine (hourly cron + idempotent transaction creation)
-- [ ] 07-03-PLAN.md — Recurring management UI (page, table list, create/edit form, sidebar nav, dashboard banner)
-- [ ] 07-04-PLAN.md — Occurrence controls (skip, pause/resume, delete dialog, recurring transaction indicator)
+- [x] 07-01-PLAN.md — Prisma schema (RecurringRule, RecurringOccurrence models), Zod schemas, date computation utility, and tRPC recurring CRUD router
+- [x] 07-02-PLAN.md — Trigger.dev generation engine (hourly cron + idempotent transaction creation)
+- [x] 07-03-PLAN.md — Recurring management UI (page, table list, create/edit form, sidebar nav, dashboard banner)
+- [x] 07-04-PLAN.md — Occurrence controls (skip, pause/resume, delete dialog, recurring transaction indicator)
 
 ### Phase 8: Budgets
 **Goal**: Users can set monthly spending limits per category and see real-time progress toward those limits
@@ -189,7 +189,7 @@ Note: Phase 10 (Debt Strategies) has no dependency on Phases 7-9 and could execu
 | 4. Loans UI | v1.0 | 3/3 | Complete | 2026-01-31 |
 | 5. Visualizations & Dashboard | v1.0 | 3/3 | Complete | 2026-01-31 |
 | 6. Onboarding & Polish | v1.0 | 3/3 | Complete | 2026-02-07 |
-| 7. Recurring Transactions | v2.0 | 0/4 | Planning complete | - |
+| 7. Recurring Transactions | v2.0 | 4/4 | Complete | 2026-02-07 |
 | 8. Budgets | v2.0 | 0/3 | Not started | - |
 | 9. Goals | v2.0 | 0/3 | Not started | - |
 | 10. Debt Strategies | v2.0 | 0/2 | Not started | - |
