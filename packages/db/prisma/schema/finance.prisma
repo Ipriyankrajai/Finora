@@ -12,6 +12,24 @@ enum InterestType {
   COMPOUND
 }
 
+enum RecurringFrequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum RecurringStatus {
+  ACTIVE
+  PAUSED
+}
+
+enum OccurrenceStatus {
+  GENERATED
+  SKIPPED
+}
+
 model Transaction {
   id           String          @id @default(cuid())
   userId       String
@@ -23,9 +41,10 @@ model Transaction {
   createdAt    DateTime        @default(now()) @db.Timestamptz(3)
   updatedAt    DateTime        @updatedAt @db.Timestamptz(3)
 
-  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags              TransactionTag[]
-  linkedLoanPayment LoanPayment?
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags                TransactionTag[]
+  linkedLoanPayment   LoanPayment?
+  recurringOccurrence RecurringOccurrence?
 
   @@index([userId, date])
   @@index([userId, type, date])
@@ -41,8 +60,9 @@ model Tag {
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions TransactionTag[]
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   TransactionTag[]
+  recurringRules RecurringRuleTag[]
 
   @@unique([userId, name])
   @@index([userId, isActive])
@@ -101,4 +121,62 @@ model LoanPayment {
 
   @@index([loanId, paidAt])
   @@map("loan_payment")
+}
+
+model RecurringRule {
+  id                 String             @id @default(cuid())
+  userId             String
+  type               TransactionType    @default(EXPENSE)
+  amountCents        BigInt
+  description        String?
+  frequency          RecurringFrequency
+  dayOfWeek          Int?
+  dayOfMonth         Int?
+  startDate          DateTime           @db.Timestamptz(3)
+  endDate            DateTime?          @db.Timestamptz(3)
+  maxOccurrences     Int?
+  completedCount     Int                @default(0)
+  status             RecurringStatus    @default(ACTIVE)
+  nextOccurrenceDate DateTime           @db.Timestamptz(3)
+  lastGeneratedDate  DateTime?          @db.Timestamptz(3)
+  currencyCode       String             @default("USD")
+  createdAt          DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
+
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags        RecurringRuleTag[]
+  occurrences RecurringOccurrence[]
+
+  @@index([userId, status])
+  @@index([status, nextOccurrenceDate])
+  @@map("recurring_rule")
+}
+
+model RecurringRuleTag {
+  ruleId     String
+  tagId      String
+  assignedAt DateTime @default(now()) @db.Timestamptz(3)
+
+  rule RecurringRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  tag  Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([ruleId, tagId])
+  @@index([tagId])
+  @@map("recurring_rule_tag")
+}
+
+model RecurringOccurrence {
+  id            String           @id @default(cuid())
+  ruleId        String
+  scheduledDate DateTime         @db.Timestamptz(3)
+  status        OccurrenceStatus @default(GENERATED)
+  transactionId String?          @unique
+  generatedAt   DateTime         @default(now()) @db.Timestamptz(3)
+
+  rule        RecurringRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  transaction Transaction?  @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  @@unique([ruleId, scheduledDate])
+  @@index([ruleId, status])
+  @@map("recurring_occurrence")
 }
