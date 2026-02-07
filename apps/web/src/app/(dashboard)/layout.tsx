@@ -1,4 +1,5 @@
 import { auth } from "@finora2/auth";
+import prisma from "@finora2/db";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -29,6 +30,15 @@ export default async function DashboardLayout({
 
 	if (!session?.user) {
 		redirect("/sign-in");
+	}
+
+	const user = await prisma.user.findUnique({
+		where: { id: session.user.id },
+		select: { hasCompletedOnboarding: true },
+	});
+
+	if (!user?.hasCompletedOnboarding) {
+		redirect("/onboarding");
 	}
 
 	return (
