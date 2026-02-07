@@ -18,5 +18,17 @@ export const auth = betterAuth({
 			enabled: true,
 		},
 	},
+	databaseHooks: {
+		user: {
+			create: {
+				before: async (user) => ({
+					data: {
+						...user,
+						hasCompletedOnboarding: false,
+					},
+				}),
+			},
+		},
+	},
 	plugins: [nextCookies()],
 });
