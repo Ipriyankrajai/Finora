@@ -82,7 +82,7 @@ function SummaryCard({
 			{/* Subtle gradient background */}
 			<div
 				className={cn(
-					"pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50 transition-opacity duration-300 group-hover:opacity-100",
+					"pointer-events-none absolute inset-0 bg-linear-to-br opacity-50 transition-opacity duration-300 group-hover:opacity-100",
 					config.gradientClass
 				)}
 			/>
@@ -91,7 +91,7 @@ function SummaryCard({
 				{/* Icon container */}
 				<div
 					className={cn(
-						"flex size-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
+						"flex size-12 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105",
 						config.iconBgClass
 					)}
 				>
@@ -117,7 +117,7 @@ function SummaryCard({
 				{type === "net" && numericCents !== 0 && (
 					<div
 						className={cn(
-							"flex size-6 items-center justify-center rounded-full",
+							"flex size-6 items-center justify-center",
 							numericCents > 0
 								? "bg-emerald-100 dark:bg-emerald-900/50"
 								: "bg-rose-100 dark:bg-rose-900/50"
