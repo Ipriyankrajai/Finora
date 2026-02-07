@@ -5,11 +5,13 @@ import { ChevronRight, CreditCard, Plus } from "lucide-react";
 import Link from "next/link";
 import { memo, useCallback, useState } from "react";
 
+import { DashboardEmpty } from "@/components/empty-states/dashboard-empty";
 import { MoneyDisplay } from "@/components/shared/money-display";
 import { TagChip } from "@/components/tags/tag-chip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type LoanOverview, useDashboard } from "@/hooks/use-dashboard";
+import { useTags } from "@/hooks/use-tags";
 import { formatRelativeDate, formatTime } from "@/lib/format";
 import { trpc } from "@/utils/trpc";
 
@@ -355,11 +357,22 @@ export function DashboardPageClient() {
 		isLoading,
 		error,
 	} = useDashboard();
+	const { tags } = useTags();
 	const [expandedTag, setExpandedTag] = useState<{
 		id: string | "other";
 		name: string;
 	} | null>(null);
 	const [expandedLoanId, setExpandedLoanId] = useState<string | null>(null);
+
+	// Determine if dashboard is empty (new user with no data)
+	const hasNoTransactions =
+		!isLoading &&
+		monthlySummary &&
+		monthlySummary.incomeCents === 0n &&
+		monthlySummary.expenseCents === 0n;
+	const hasNoLoans = !isLoading && loanOverview.length === 0;
+	const hasNoTags = tags.length === 0;
+	const isDashboardEmpty = hasNoTransactions && hasNoLoans && hasNoTags;
 
 	// Handle pie chart click
 	const handleTagClick = (tagId: string | "other") => {
@@ -401,6 +414,20 @@ export function DashboardPageClient() {
 			<div className="py-8 text-center">
 				<p className="text-muted-foreground">Failed to load dashboard data</p>
 				<p className="mt-1 text-muted-foreground/70 text-sm">{error.message}</p>
+			</div>
+		);
+	}
+
+	// Show guided checklist when dashboard has no data (new user)
+	if (isDashboardEmpty) {
+		return (
+			<div className="space-y-6">
+				<DashboardEmpty
+					loanCount={loanOverview.length}
+					tagCount={tags.length}
+					transactionCount={0}
+				/>
+				<QuickAddFAB />
 			</div>
 		);
 	}

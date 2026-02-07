@@ -64,7 +64,10 @@ export function TransactionsPageClient() {
 					<CardTitle>All Transactions</CardTitle>
 				</CardHeader>
 				<CardContent className="p-0">
-					<TransactionList onEditTransaction={handleEditTransaction} />
+					<TransactionList
+						onAddTransaction={handleAddTransaction}
+						onEditTransaction={handleEditTransaction}
+					/>
 				</CardContent>
 			</Card>
 

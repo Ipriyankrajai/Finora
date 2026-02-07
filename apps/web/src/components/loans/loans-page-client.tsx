@@ -82,6 +82,7 @@ export function LoansPageClient() {
 
 			{/* Loans List */}
 			<LoanList
+				onAddLoan={handleAddLoan}
 				onDeleteLoan={handleDeleteLoan}
 				onEditLoan={handleEditLoan}
 				onLogPayment={handleLogPayment}

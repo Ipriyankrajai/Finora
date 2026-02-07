@@ -4,6 +4,7 @@ import { AlertCircle, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { LoansEmpty } from "@/components/empty-states/loans-empty";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -27,6 +28,7 @@ interface LoanListProps {
 	onEditLoan: (loan: LoanWithBalance) => void;
 	onDeleteLoan: (loan: LoanWithBalance) => void;
 	onLogPayment: (loan: LoanWithBalance) => void;
+	onAddLoan: () => void;
 }
 
 /**
@@ -37,6 +39,7 @@ export function LoanList({
 	onEditLoan,
 	onDeleteLoan,
 	onLogPayment,
+	onAddLoan,
 }: LoanListProps) {
 	const router = useRouter();
 	const { loans, isLoading, error, refetch } = useLoans();
@@ -99,18 +102,7 @@ export function LoanList({
 
 	// Empty state
 	if (!loans || loans.length === 0) {
-		return (
-			<div className="flex flex-col items-center justify-center py-12 text-center">
-				<div className="mb-4 flex size-16 items-center justify-center rounded-full bg-muted">
-					<span className="text-2xl">$</span>
-				</div>
-				<h3 className="font-medium text-lg">No loans yet</h3>
-				<p className="max-w-sm text-muted-foreground">
-					Add your first loan to start tracking payoff progress and simulate
-					extra payment strategies.
-				</p>
-			</div>
-		);
+		return <LoansEmpty onAddLoan={onAddLoan} />;
 	}
 
 	// Loans grid
