@@ -35,6 +35,7 @@ export interface TransactionWithTags {
 			updatedAt?: Date;
 		};
 	}>;
+	recurringOccurrence?: { ruleId: string } | null;
 }
 
 /**

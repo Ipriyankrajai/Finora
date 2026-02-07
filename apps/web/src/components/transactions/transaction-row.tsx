@@ -1,6 +1,9 @@
 "use client";
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Repeat, Trash2 } from "lucide-react";
+import type { Route } from "next";
+import Link from "next/link";
+
 import { MoneyDisplay } from "@/components/shared/money-display";
 import { TagChip } from "@/components/tags/tag-chip";
 import { Button } from "@/components/ui/button";
@@ -28,6 +31,7 @@ export interface Transaction {
 	date: Date;
 	description: string | null;
 	tags: TransactionTag[];
+	recurringOccurrence?: { ruleId: string } | null;
 }
 
 interface TransactionRowProps {
@@ -38,8 +42,9 @@ interface TransactionRowProps {
 }
 
 /**
- * Transaction row displaying amount, time, description, and tags.
+ * Transaction row displaying amount, time, description, tags, and recurring indicator.
  * Per CONTEXT.md: "amount, note, tags, and time (date in section header)"
+ * Shows a subtle repeat icon for transactions generated from recurring rules.
  */
 export function TransactionRow({
 	transaction,
@@ -49,6 +54,7 @@ export function TransactionRow({
 }: TransactionRowProps) {
 	const { id, type, amountCents, date, description, tags } = transaction;
 	const time = formatTime(new Date(date));
+	const isRecurring = !!transaction.recurringOccurrence;
 
 	return (
 		<div
@@ -69,6 +75,17 @@ export function TransactionRow({
 						type={type}
 					/>
 					<span className="text-muted-foreground text-xs">{time}</span>
+					{/* Recurring indicator */}
+					{isRecurring && (
+						<Link
+							className="text-muted-foreground transition-colors hover:text-foreground"
+							href={"/dashboard/recurring" as Route}
+							title="From recurring rule"
+						>
+							<Repeat className="size-3.5" />
+							<span className="sr-only">Recurring transaction</span>
+						</Link>
+					)}
 				</div>
 
 				{/* Description and tags row */}

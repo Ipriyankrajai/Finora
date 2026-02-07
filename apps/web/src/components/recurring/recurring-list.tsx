@@ -1,23 +1,15 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Pencil, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
 
 import { TagChip } from "@/components/tags/tag-chip";
-import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
 import type { RecurringRuleData } from "@/hooks/use-recurring";
-import { useDeleteRecurringRule } from "@/hooks/use-recurring";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents, formatDate } from "@/lib/format";
+
+import { DeleteRuleDialog } from "./delete-rule-dialog";
+import { OccurrenceControls } from "./occurrence-controls";
 
 /**
  * Human-readable frequency label
@@ -66,26 +58,17 @@ interface RecurringListProps {
 
 /**
  * Table/list view of all recurring rules.
- * Shows status, description, type, amount, frequency, next date, and tags.
- * Each row has edit and delete actions.
+ * Shows status, description, type, amount, frequency, next date, tags, and actions.
+ * Uses OccurrenceControls for pause/resume/skip and DeleteRuleDialog for deletion.
  */
 export function RecurringList({ rules, onEdit }: RecurringListProps) {
 	const { data: settings } = useUserSettings();
 	const currencySymbol = settings?.currencySymbol ?? "$";
-	const deleteRule = useDeleteRecurringRule();
-	const [deleteTarget, setDeleteTarget] = useState<RecurringRuleData | null>(
+	const [deletingRule, setDeletingRule] = useState<RecurringRuleData | null>(
 		null
 	);
 
 	const sortedRules = sortRules(rules);
-
-	const handleConfirmDelete = async () => {
-		if (!deleteTarget) {
-			return;
-		}
-		await deleteRule.mutateAsync({ id: deleteTarget.id });
-		setDeleteTarget(null);
-	};
 
 	return (
 		<>
@@ -203,25 +186,14 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 									</div>
 								</td>
 
-								{/* Actions */}
+								{/* Actions - using OccurrenceControls */}
 								<td className="px-4 py-3">
-									<div className="flex items-center justify-end gap-1">
-										<button
-											aria-label={`Edit ${rule.description || "rule"}`}
-											className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-											onClick={() => onEdit(rule)}
-											type="button"
-										>
-											<Pencil className="size-3.5" />
-										</button>
-										<button
-											aria-label={`Delete ${rule.description || "rule"}`}
-											className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-											onClick={() => setDeleteTarget(rule)}
-											type="button"
-										>
-											<Trash2 className="size-3.5" />
-										</button>
+									<div className="flex items-center justify-end">
+										<OccurrenceControls
+											onDelete={() => setDeletingRule(rule)}
+											onEdit={() => onEdit(rule)}
+											rule={rule}
+										/>
 									</div>
 								</td>
 							</tr>
@@ -285,62 +257,22 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 									/>
 								))}
 							</div>
-							<div className="flex items-center gap-1">
-								<button
-									aria-label={`Edit ${rule.description || "rule"}`}
-									className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-									onClick={() => onEdit(rule)}
-									type="button"
-								>
-									<Pencil className="size-3.5" />
-								</button>
-								<button
-									aria-label={`Delete ${rule.description || "rule"}`}
-									className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-									onClick={() => setDeleteTarget(rule)}
-									type="button"
-								>
-									<Trash2 className="size-3.5" />
-								</button>
-							</div>
+							<OccurrenceControls
+								onDelete={() => setDeletingRule(rule)}
+								onEdit={() => onEdit(rule)}
+								rule={rule}
+							/>
 						</div>
 					</div>
 				))}
 			</div>
 
-			{/* Delete confirmation dialog */}
-			<Dialog
-				onOpenChange={(o) => !o && setDeleteTarget(null)}
-				open={!!deleteTarget}
-			>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>
-							Delete {deleteTarget?.description || "this rule"}?
-						</DialogTitle>
-						<DialogDescription>
-							This will stop future occurrences from being generated. Previously
-							generated transactions will remain.
-						</DialogDescription>
-					</DialogHeader>
-					<DialogFooter>
-						<DialogClose
-							render={
-								<Button disabled={deleteRule.isPending} variant="outline">
-									Cancel
-								</Button>
-							}
-						/>
-						<Button
-							disabled={deleteRule.isPending}
-							onClick={handleConfirmDelete}
-							variant="destructive"
-						>
-							{deleteRule.isPending ? "Deleting..." : "Delete"}
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
+			{/* Delete confirmation dialog with rule-only vs rule-and-transactions choice */}
+			<DeleteRuleDialog
+				onOpenChange={(open) => !open && setDeletingRule(null)}
+				open={!!deletingRule}
+				rule={deletingRule}
+			/>
 		</>
 	);
 }
