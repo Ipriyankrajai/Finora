@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-07)
 ## Current Position
 
 Phase: 7 of 12 (Recurring Transactions)
-Plan: 1 of 4 in current phase
+Plan: 2 of 4 in current phase
 Status: In progress
-Last activity: 2026-02-07 — Completed 07-01-PLAN.md (Schema and API)
+Last activity: 2026-02-07 — Completed 07-02-PLAN.md (Trigger.dev Generation Engine)
 
-Progress: [█████████████████████░░░░░░░░░░░░░░░░░░░░] 21/36 plans (58%)
+Progress: [██████████████████████░░░░░░░░░░░░░░░░░░░░] 22/36 plans (61%)
 
 ## Performance Metrics
 
@@ -24,8 +24,9 @@ Progress: [█████████████████████░░
 - Total execution time: 155 min
 
 **v2 Velocity:**
-- Plans completed: 1
+- Plans completed: 2
 - 07-01: ~4 min
+- 07-02: ~6 min
 
 ## Accumulated Context
 
@@ -54,6 +55,10 @@ v2 implementation decisions (Phase 7):
 - Exhaustive switch with `never` default for frequency computation (Biome lint compliance)
 - Auto-derive dayOfMonth from startDate for MONTHLY rules (user convenience)
 - Nullable endDate/maxOccurrences in update schema (allows clearing values)
+- Duplicated computeNextOccurrence in trigger worker to avoid cross-package bundler issues
+- Prisma 7 modern mode for Trigger.dev build (no Rust engine needed with adapter)
+- Optional TRIGGER_SECRET_KEY in env (app starts without Trigger.dev configured)
+- Safety limit of 100 occurrences per rule per run; auto-pause on end conditions
 
 ### Pending Todos
 
@@ -66,5 +71,5 @@ NOTE: loanType field defined in API input schema but not stored in database. Cur
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 07-01-PLAN.md (Schema and API)
+Stopped at: Completed 07-02-PLAN.md (Trigger.dev Generation Engine)
 Resume file: None
