@@ -198,46 +198,46 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SETT-01 | Phase 6 | Complete |
 | SETT-02 | Phase 6 | Complete |
 
-### v2 (Pending — populated by roadmapper)
+### v2
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| RECUR-01 | — | Pending |
-| RECUR-02 | — | Pending |
-| RECUR-03 | — | Pending |
-| RECUR-04 | — | Pending |
-| RECUR-05 | — | Pending |
-| RECUR-06 | — | Pending |
-| RECUR-07 | — | Pending |
-| BUDG-01 | — | Pending |
-| BUDG-02 | — | Pending |
-| BUDG-03 | — | Pending |
-| BUDG-04 | — | Pending |
-| BUDG-05 | — | Pending |
-| BUDG-06 | — | Pending |
-| GOAL-01 | — | Pending |
-| GOAL-02 | — | Pending |
-| GOAL-03 | — | Pending |
-| GOAL-04 | — | Pending |
-| GOAL-05 | — | Pending |
-| GOAL-06 | — | Pending |
-| GOAL-07 | — | Pending |
-| DEBT-01 | — | Pending |
-| DEBT-02 | — | Pending |
-| DEBT-03 | — | Pending |
-| DEBT-04 | — | Pending |
-| ANLYT-01 | — | Pending |
-| ANLYT-02 | — | Pending |
-| ANLYT-03 | — | Pending |
-| ANLYT-04 | — | Pending |
-| EXP-01 | — | Pending |
-| EXP-02 | — | Pending |
+| RECUR-01 | Phase 7 | Pending |
+| RECUR-02 | Phase 7 | Pending |
+| RECUR-03 | Phase 7 | Pending |
+| RECUR-04 | Phase 7 | Pending |
+| RECUR-05 | Phase 7 | Pending |
+| RECUR-06 | Phase 7 | Pending |
+| RECUR-07 | Phase 7 | Pending |
+| BUDG-01 | Phase 8 | Pending |
+| BUDG-02 | Phase 8 | Pending |
+| BUDG-03 | Phase 8 | Pending |
+| BUDG-04 | Phase 8 | Pending |
+| BUDG-05 | Phase 8 | Pending |
+| BUDG-06 | Phase 8 | Pending |
+| GOAL-01 | Phase 9 | Pending |
+| GOAL-02 | Phase 9 | Pending |
+| GOAL-03 | Phase 9 | Pending |
+| GOAL-04 | Phase 9 | Pending |
+| GOAL-05 | Phase 9 | Pending |
+| GOAL-06 | Phase 9 | Pending |
+| GOAL-07 | Phase 9 | Pending |
+| DEBT-01 | Phase 10 | Pending |
+| DEBT-02 | Phase 10 | Pending |
+| DEBT-03 | Phase 10 | Pending |
+| DEBT-04 | Phase 10 | Pending |
+| ANLYT-01 | Phase 11 | Pending |
+| ANLYT-02 | Phase 11 | Pending |
+| ANLYT-03 | Phase 11 | Pending |
+| ANLYT-04 | Phase 11 | Pending |
+| EXP-01 | Phase 12 | Pending |
+| EXP-02 | Phase 12 | Pending |
 
 **Coverage:**
-- v1 requirements: 28 total (3 existing + 25 built) — all complete
-- v2 requirements: 30 total — pending
-- Mapped to phases: 0/30 (awaiting roadmap)
+- v1 requirements: 28 total (3 existing + 25 built) -- all complete
+- v2 requirements: 30 total -- all mapped
+- Mapped to phases: 30/30
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-02-07 after v2.0 milestone requirements definition*
+*Last updated: 2026-02-07 after v2.0 roadmap creation*
