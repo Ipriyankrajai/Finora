@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 ## Current Position
 
 Phase: 6 of 6 (Onboarding & Polish)
-Plan: 1 of 3 in current phase
+Plan: 3 of 3 in current phase
 Status: In progress
-Last activity: 2026-02-07 - Completed 06-01-PLAN.md
+Last activity: 2026-02-07 - Completed 06-03-PLAN.md
 
-Progress: [#################---] 89% (17/19 plans through Phase 6 Plan 1)
+Progress: [###################-] 95% (19/20 plans through Phase 6 Plan 3)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17
-- Average duration: 7.3 min
-- Total execution time: 124 min
+- Total plans completed: 19
+- Average duration: 7.6 min
+- Total execution time: 144 min
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [#################---] 89% (17/19 plans through Phase 6 Plan 1)
 | 03-tags-transactions-ui | 4 | 30 min | 7.5 min |
 | 04-loans-ui | 3 | 20 min | 6.7 min |
 | 05-visualizations-dashboard | 3 | 27 min | 9 min |
-| 06-onboarding-polish | 1 | 12 min | 12 min |
+| 06-onboarding-polish | 3 | 32 min | 10.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-03 (4 min), 05-01 (8 min), 05-02 (8 min), 05-03 (11 min), 06-01 (12 min)
-- Trend: Slight increase as features become more cross-cutting
+- Last 5 plans: 05-02 (8 min), 05-03 (11 min), 06-01 (12 min), 06-02 (12 min), 06-03 (8 min)
+- Trend: Stable at ~10 min for cross-cutting features
 
 *Updated after each plan completion*
 
@@ -104,6 +104,10 @@ Recent decisions affecting current work:
 - [06-01]: Direct Prisma queries for user mutations (not better-auth updateUser due to Prisma v7 bug #6469)
 - [06-01]: useUserSettings hook in each component (React Query deduplicates requests)
 - [06-01]: formatCents uses decimal style with manual symbol prepend for any currency
+- [06-03]: ProfileForm uses TanStack Form with two separate mutations (updateProfile + updateCurrency) on submit
+- [06-03]: DeleteAccountDialog uses authClient.deleteUser with typed DELETE confirmation
+- [06-03]: Dashboard empty detection: monthlySummary all zeros + no loans + no tags
+- [06-03]: Tag sidebar keeps existing compact empty state (already suitable for constrained space)
 
 ### Pending Todos
 
@@ -118,7 +122,7 @@ NOTE: loanType field defined in API input schema but not stored in database. Cur
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Completed 06-01-PLAN.md (Data/API Foundation)
+Stopped at: Completed 06-03-PLAN.md (Settings Page & Empty States)
 Resume file: None
 
 ## Phase 6 Progress
@@ -130,6 +134,14 @@ Plan 1 complete (Data/API Foundation):
 - All dashboard components wired to user currency preference
 - deleteUser enabled in auth config
 
+Plan 2: Onboarding wizard UI (in progress / separate execution)
+
+Plan 3 complete (Settings Page & Empty States):
+- Settings page with profile form (name + currency) and account management
+- Delete account dialog with typed confirmation
+- Reusable EmptyState component
+- Dashboard guided checklist empty state
+- Transactions, loans, tags empty states integrated
+
 Remaining:
-- 06-02-PLAN: Onboarding wizard UI
-- 06-03-PLAN: Settings page and polish
+- 06-02-PLAN: Onboarding wizard UI (may still be in progress)
