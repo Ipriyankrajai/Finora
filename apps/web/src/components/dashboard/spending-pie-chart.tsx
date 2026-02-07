@@ -4,6 +4,7 @@ import { FileQuestion } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import type { TagSpending } from "@/hooks/use-dashboard";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 
 interface SpendingPieChartProps {
@@ -36,6 +37,9 @@ interface CustomTooltipProps {
  * Shows tag name and formatted amount.
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+
 	if (!(active && payload?.length)) {
 		return null;
 	}
@@ -47,7 +51,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	return (
 		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="font-medium">{data.tagName}</p>
-			<p className="text-muted-foreground">{formatCents(data.totalCents)}</p>
+			<p className="text-muted-foreground">
+				{formatCents(data.totalCents, currencySymbol)}
+			</p>
 		</div>
 	);
 }

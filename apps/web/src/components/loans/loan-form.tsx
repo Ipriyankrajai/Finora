@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import type { LoanWithBalance } from "@/hooks/use-loans";
 import { useCreateLoan, useUpdateLoan } from "@/hooks/use-loans";
+import { useUserSettings } from "@/hooks/use-user-settings";
 
 // Validation regex patterns
 const AMOUNT_PATTERN = /^\d+(\.\d{1,2})?$/;
@@ -100,6 +101,8 @@ export function LoanForm({
 	onOpenChange,
 	onSuccess,
 }: LoanFormProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const createLoan = useCreateLoan();
 	const updateLoan = useUpdateLoan();
 
@@ -289,7 +292,7 @@ export function LoanForm({
 								<Label htmlFor={field.name}>Principal Amount</Label>
 								<div className="relative">
 									<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-										$
+										{currencySymbol}
 									</span>
 									<Input
 										className="pl-6"
@@ -406,7 +409,7 @@ export function LoanForm({
 						<Label>Monthly Payment (calculated)</Label>
 						<div className="relative">
 							<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-								$
+								{currencySymbol}
 							</span>
 							<Input
 								className="bg-muted/50 pl-6"

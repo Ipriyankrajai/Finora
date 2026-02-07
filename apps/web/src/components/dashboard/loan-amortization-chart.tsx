@@ -14,6 +14,7 @@ import {
 } from "recharts";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 import { trpc } from "@/utils/trpc";
 
@@ -45,6 +46,9 @@ interface CustomTooltipProps {
  * Shows month and balance amount.
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+
 	if (!(active && payload?.length)) {
 		return null;
 	}
@@ -56,19 +60,11 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	return (
 		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="font-medium">{data.label}</p>
-			<p className="text-muted-foreground">{formatCents(data.balanceCents)}</p>
+			<p className="text-muted-foreground">
+				{formatCents(data.balanceCents, currencySymbol)}
+			</p>
 		</div>
 	);
-}
-
-/**
- * Format Y-axis tick values as currency (in thousands)
- */
-function formatYAxisTick(value: number): string {
-	if (value >= 1000) {
-		return `$${Math.round(value / 1000)}k`;
-	}
-	return `$${value}`;
 }
 
 /**
@@ -81,10 +77,19 @@ export const LoanAmortizationChart = memo(function LoanAmortizationChart({
 	loanId,
 	loanName,
 }: LoanAmortizationChartProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const queryOptions = trpc.dashboard.getAmortizationSchedule.queryOptions({
 		loanId,
 	});
 	const { data, isLoading, error } = useQuery(queryOptions);
+
+	const formatYAxisTick = (value: number): string => {
+		if (value >= 1000) {
+			return `${currencySymbol}${Math.round(value / 1000)}k`;
+		}
+		return `${currencySymbol}${value}`;
+	};
 
 	if (isLoading) {
 		return (

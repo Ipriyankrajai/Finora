@@ -5,11 +5,13 @@ import { ChevronRight, CreditCard, Plus } from "lucide-react";
 import Link from "next/link";
 import { memo, useCallback, useState } from "react";
 
+import { DashboardEmpty } from "@/components/empty-states/dashboard-empty";
 import { MoneyDisplay } from "@/components/shared/money-display";
 import { TagChip } from "@/components/tags/tag-chip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type LoanOverview, useDashboard } from "@/hooks/use-dashboard";
+import { useTags } from "@/hooks/use-tags";
 import { formatRelativeDate, formatTime } from "@/lib/format";
 import { trpc } from "@/utils/trpc";
 
@@ -355,11 +357,22 @@ export function DashboardPageClient() {
 		isLoading,
 		error,
 	} = useDashboard();
+	const { tags } = useTags();
 	const [expandedTag, setExpandedTag] = useState<{
 		id: string | "other";
 		name: string;
 	} | null>(null);
 	const [expandedLoanId, setExpandedLoanId] = useState<string | null>(null);
+
+	// Determine if dashboard is empty (new user with no data)
+	// Show checklist until all 3 items done OR user skips
+	const hasTransactions =
+		!isLoading &&
+		monthlySummary &&
+		(monthlySummary.incomeCents > 0n || monthlySummary.expenseCents > 0n);
+	const hasTags = tags.length > 0;
+	const checklistComplete = hasTransactions && hasTags;
+	const isDashboardEmpty = !(isLoading || checklistComplete);
 
 	// Handle pie chart click
 	const handleTagClick = (tagId: string | "other") => {
@@ -405,6 +418,19 @@ export function DashboardPageClient() {
 		);
 	}
 
+	// Show guided checklist until all items completed or skipped
+	if (isDashboardEmpty) {
+		return (
+			<div className="space-y-6">
+				<DashboardEmpty
+					tagCount={tags.length}
+					transactionCount={hasTransactions ? 1 : 0}
+				/>
+				<QuickAddFAB />
+			</div>
+		);
+	}
+
 	// Render monthly summary section
 	const renderMonthlySummary = () => {
 		if (isLoading) {
@@ -439,8 +465,8 @@ export function DashboardPageClient() {
 
 		if (loanOverview.length === 0) {
 			return (
-				<div className="rounded-xl border-2 border-primary/20 border-dashed bg-gradient-to-br from-primary/[0.02] to-transparent p-8 text-center">
-					<div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10">
+				<div className="border-2 border-border/60 border-dashed bg-linear-to-br from-card/80 to-transparent p-8 text-center">
+					<div className="mx-auto mb-4 flex size-14 items-center justify-center bg-primary/10">
 						<CreditCard className="size-6 text-primary" />
 					</div>
 					<h3 className="mb-2 font-semibold text-lg">No loans yet</h3>
@@ -449,7 +475,7 @@ export function DashboardPageClient() {
 						scenarios for faster debt freedom.
 					</p>
 					<Link
-						className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+						className="inline-flex items-center gap-2 bg-linear-to-r from-emerald-600 to-emerald-500 px-4 py-2 font-medium text-sm text-white transition-colors hover:from-emerald-500 hover:to-emerald-400"
 						href="/dashboard/loans"
 					>
 						<Plus className="size-4" />
@@ -559,7 +585,7 @@ export function DashboardPageClient() {
 			<div className="space-y-4">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
-						<div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+						<div className="flex size-8 items-center justify-center bg-primary/10">
 							<CreditCard className="size-4 text-primary" />
 						</div>
 						<div>

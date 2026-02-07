@@ -2,7 +2,7 @@
 
 import { AlertCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useState } from "react";
-
+import { TransactionsEmpty } from "@/components/empty-states/transactions-empty";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -26,13 +26,17 @@ import { TransactionRow } from "./transaction-row";
 
 interface TransactionListProps {
 	onEditTransaction?: (transaction: TransactionWithTags) => void;
+	onAddTransaction: () => void;
 }
 
 /**
  * Paginated transaction list with date grouping.
  * Per CONTEXT.md: "Grouped by date with daily sections", "Page numbers"
  */
-export function TransactionList({ onEditTransaction }: TransactionListProps) {
+export function TransactionList({
+	onEditTransaction,
+	onAddTransaction,
+}: TransactionListProps) {
 	const { groups, items, isLoading, error, hasNextPage, refetch } =
 		useTransactions();
 	const { filters, setFilter } = useTransactionFilters();
@@ -122,37 +126,27 @@ export function TransactionList({ onEditTransaction }: TransactionListProps) {
 
 	// Empty state
 	if (groups.length === 0) {
-		return (
-			<div className="flex flex-col items-center justify-center py-12 text-center">
-				<div className="mb-4 rounded-full bg-muted/50 p-6">
-					<svg
-						aria-label="Empty clipboard"
-						className="size-12 text-muted-foreground"
-						fill="none"
-						role="img"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={1.5}
-						/>
-					</svg>
+		const hasActiveFilters =
+			filters.datePreset ||
+			filters.type ||
+			filters.tagId ||
+			filters.amountMin ||
+			filters.amountMax;
+
+		if (hasActiveFilters) {
+			return (
+				<div className="flex flex-col items-center justify-center py-12 text-center">
+					<h3 className="mb-2 font-medium text-lg">
+						No transactions match your filters
+					</h3>
+					<p className="text-muted-foreground text-sm">
+						Try adjusting your filters to see more results.
+					</p>
 				</div>
-				<h3 className="mb-2 font-medium text-lg">No transactions found</h3>
-				<p className="text-muted-foreground text-sm">
-					{filters.datePreset ||
-					filters.type ||
-					filters.tagId ||
-					filters.amountMin ||
-					filters.amountMax
-						? "Try adjusting your filters to see more results."
-						: 'Click "Add Transaction" to start tracking your spending.'}
-				</p>
-			</div>
-		);
+			);
+		}
+
+		return <TransactionsEmpty onAddTransaction={onAddTransaction} />;
 	}
 
 	// Transaction list with date groups

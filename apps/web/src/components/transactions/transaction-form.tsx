@@ -18,6 +18,7 @@ import {
 	useCreateTransaction,
 	useUpdateTransaction,
 } from "@/hooks/use-transactions";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
 
 import { TagMultiSelect } from "./tag-multi-select";
@@ -71,6 +72,8 @@ export function TransactionForm({
 	onOpenChange,
 	onSuccess,
 }: TransactionFormProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const createTransaction = useCreateTransaction();
 	const updateTransaction = useUpdateTransaction();
 
@@ -196,7 +199,7 @@ export function TransactionForm({
 								<Label htmlFor={field.name}>Amount</Label>
 								<div className="relative">
 									<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-										$
+										{currencySymbol}
 									</span>
 									<Input
 										autoFocus

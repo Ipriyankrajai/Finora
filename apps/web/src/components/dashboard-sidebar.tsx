@@ -55,7 +55,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 						return (
 							<Link
 								className={cn(
-									"flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium text-sm transition-colors",
+									"flex items-center gap-3 px-3 py-2.5 font-medium text-sm transition-colors",
 									isActive
 										? "bg-primary/10 text-primary"
 										: "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -79,7 +79,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 			{/* User info */}
 			<div className="shrink-0 border-border/50 border-t p-4">
 				<div className="flex items-center gap-3 px-3 py-2">
-					<div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
+					<div className="flex size-8 items-center justify-center bg-primary/10">
 						<span className="font-medium text-primary text-sm">
 							{user.name?.charAt(0).toUpperCase() || "U"}
 						</span>

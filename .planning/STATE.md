@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Users can see exactly where their money goes and when their loans will be paid off
-**Current focus:** Phase 5 - Visualizations & Dashboard (COMPLETE)
+**Current focus:** Phase 6 - Onboarding & Polish (IN PROGRESS)
 
 ## Current Position
 
-Phase: 5 of 6 (Visualizations & Dashboard)
-Plan: 3 of 3 in current phase (COMPLETE)
-Status: Phase 5 complete
-Last activity: 2026-01-31 - Completed 05-03-PLAN.md
+Phase: 6 of 6 (Onboarding & Polish)
+Plan: 3 of 3 in current phase (all complete)
+Status: Phase complete
+Last activity: 2026-02-07 - Completed 06-02-PLAN.md (was running in parallel with 06-03)
 
-Progress: [████████████████] 100% (16/16 plans through Phase 5 Plan 3)
+Progress: [####################] 100% (20/20 plans - all phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
-- Average duration: 7.0 min
-- Total execution time: 112 min
+- Total plans completed: 20
+- Average duration: 7.8 min
+- Total execution time: 155 min
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: [████████████████] 100% (16/16 plans t
 | 03-tags-transactions-ui | 4 | 30 min | 7.5 min |
 | 04-loans-ui | 3 | 20 min | 6.7 min |
 | 05-visualizations-dashboard | 3 | 27 min | 9 min |
+| 06-onboarding-polish | 3 | 32 min | 10.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (8 min), 04-03 (4 min), 05-01 (8 min), 05-02 (8 min), 05-03 (11 min)
-- Trend: Stable with variance based on complexity
+- Last 5 plans: 05-02 (8 min), 05-03 (11 min), 06-01 (12 min), 06-02 (12 min), 06-03 (8 min)
+- Trend: Stable at ~10 min for cross-cutting features
 
 *Updated after each plan completion*
 
@@ -98,6 +99,19 @@ Recent decisions affecting current work:
 - [05-03]: Render function extraction for loans section (noNestedTernary compliance)
 - [05-03]: Lazy load loan details on expand (avoid N+1 on dashboard load)
 - [05-03]: Amortization schema in dashboard schemas file (keeps related schemas together)
+- [06-01]: hasCompletedOnboarding defaults to true (existing users skip onboarding)
+- [06-01]: currencySymbol is display-only preference, does not affect stored amounts
+- [06-01]: Direct Prisma queries for user mutations (not better-auth updateUser due to Prisma v7 bug #6469)
+- [06-01]: useUserSettings hook in each component (React Query deduplicates requests)
+- [06-01]: formatCents uses decimal style with manual symbol prepend for any currency
+- [06-03]: ProfileForm uses TanStack Form with two separate mutations (updateProfile + updateCurrency) on submit
+- [06-03]: DeleteAccountDialog uses authClient.deleteUser with typed DELETE confirmation
+- [06-03]: Dashboard empty detection: monthlySummary all zeros + no loans + no tags
+- [06-03]: Tag sidebar keeps existing compact empty state (already suitable for constrained space)
+- [06-02]: @finora2/db added as web app dependency for server-side prisma queries in layout
+- [06-02]: Onboarding layout only checks auth (not hasCompletedOnboarding) to prevent redirect loops
+- [06-02]: CSS transitions (300ms slide+fade) for wizard step transitions, not animation library
+- [06-02]: Progress bar segments for minimal visual design in wizard
 
 ### Pending Todos
 
@@ -111,21 +125,31 @@ NOTE: loanType field defined in API input schema but not stored in database. Cur
 
 ## Session Continuity
 
-Last session: 2026-01-31
-Stopped at: Completed 05-03-PLAN.md (Loan Visualizations & What-If)
+Last session: 2026-02-07
+Stopped at: Completed 06-02-PLAN.md (Onboarding Wizard UI)
 Resume file: None
 
-## Phase 5 Complete
+## Phase 6 Progress
 
-All Phase 5 requirements met:
-- TAG-04: Tag click-to-expand
-- VIZ-01: Spending pie chart
-- VIZ-02: Spending timeline
-- VIZ-03: Loan amortization chart
-- VIZ-04: What-if calculator
-- DASH-01: Monthly income/expense summary
-- DASH-02: Recent transactions widget
-- DASH-03: Loan overview cards
-- DASH-04: Quick-add transaction FAB
+Plan 1 complete (Data/API Foundation):
+- User model extended with hasCompletedOnboarding and currencySymbol
+- User tRPC router with 4 endpoints
+- formatCents with currency symbol support
+- All dashboard components wired to user currency preference
+- deleteUser enabled in auth config
 
-Ready for Phase 6: Polish & Testing
+Plan 2 complete (Onboarding Wizard UI):
+- (onboarding) route group with auth-only layout
+- 4-step wizard: Welcome, Expenses, Loans, Setup
+- Dashboard redirect for users with hasCompletedOnboarding=false
+- Setup step collects name and currency preference
+- Skip button on all steps completes onboarding
+
+Plan 3 complete (Settings Page & Empty States):
+- Settings page with profile form (name + currency) and account management
+- Delete account dialog with typed confirmation
+- Reusable EmptyState component
+- Dashboard guided checklist empty state
+- Transactions, loans, tags empty states integrated
+
+All plans complete. Phase 6 finished.

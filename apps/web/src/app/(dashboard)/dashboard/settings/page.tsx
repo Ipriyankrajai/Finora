@@ -1,10 +1,9 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { Settings, User } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { AccountSection } from "@/components/settings/account-section";
+import { ProfileForm } from "@/components/settings/profile-form";
 import {
 	Card,
 	CardContent,
@@ -12,23 +11,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { authClient } from "@/lib/auth-client";
 
 export default function SettingsPage() {
-	const router = useRouter();
-	const { data: session } = authClient.useSession();
-
-	const handleSignOut = async () => {
-		await authClient.signOut({
-			fetchOptions: {
-				onSuccess: () => {
-					router.push("/");
-					toast.success("Signed out successfully");
-				},
-			},
-		});
-	};
-
 	return (
 		<div className="space-y-8">
 			{/* Header */}
@@ -46,41 +30,28 @@ export default function SettingsPage() {
 						<User className="size-5" />
 						Profile
 					</CardTitle>
-					<CardDescription>Your personal information</CardDescription>
+					<CardDescription>
+						Update your display name and currency preference.
+					</CardDescription>
 				</CardHeader>
-				<CardContent className="space-y-4">
-					<div className="grid gap-4 sm:grid-cols-2">
-						<div>
-							<span className="font-medium text-muted-foreground text-sm">
-								Name
-							</span>
-							<p className="text-foreground">{session?.user?.name || "—"}</p>
-						</div>
-						<div>
-							<span className="font-medium text-muted-foreground text-sm">
-								Email
-							</span>
-							<p className="text-foreground">{session?.user?.email || "—"}</p>
-						</div>
-					</div>
+				<CardContent>
+					<ProfileForm />
 				</CardContent>
 			</Card>
 
-			{/* Account Actions */}
+			{/* Account */}
 			<Card>
 				<CardHeader>
-					<CardTitle>Account</CardTitle>
-					<CardDescription>Manage your account settings</CardDescription>
+					<CardTitle className="flex items-center gap-2">
+						<Settings className="size-5" />
+						Account
+					</CardTitle>
+					<CardDescription>
+						Manage your account settings and session.
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<Button
-						className="gap-2"
-						onClick={handleSignOut}
-						variant="destructive"
-					>
-						<LogOut className="size-4" />
-						Sign Out
-					</Button>
+					<AccountSection />
 				</CardContent>
 			</Card>
 		</div>

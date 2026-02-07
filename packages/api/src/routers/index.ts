@@ -3,6 +3,7 @@ import { dashboardRouter } from "./dashboard";
 import { loanRouter } from "./loan";
 import { tagRouter } from "./tag";
 import { transactionRouter } from "./transaction";
+import { userRouter } from "./user";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => {
@@ -18,5 +19,6 @@ export const appRouter = router({
 	loan: loanRouter,
 	tag: tagRouter,
 	transaction: transactionRouter,
+	user: userRouter,
 });
 export type AppRouter = typeof appRouter;

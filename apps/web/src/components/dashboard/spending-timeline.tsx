@@ -21,6 +21,7 @@ import {
 	type SpendingTrendDataPoint,
 	useSpendingTrend,
 } from "@/hooks/use-dashboard";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
 
 interface SpendingTimelineProps {
@@ -54,6 +55,9 @@ interface CustomTooltipProps {
  * Shows date, income, and expenses with formatting.
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
+
 	if (!(active && payload?.length)) {
 		return null;
 	}
@@ -63,10 +67,14 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	}
 
 	return (
-		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
+		<div className="border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="mb-1 font-medium">{data.date}</p>
-			<p className="text-green-600">Income: {formatCents(data.incomeCents)}</p>
-			<p className="text-red-600">Expenses: {formatCents(data.expenseCents)}</p>
+			<p className="text-green-600">
+				Income: {formatCents(data.incomeCents, currencySymbol)}
+			</p>
+			<p className="text-red-600">
+				Expenses: {formatCents(data.expenseCents, currencySymbol)}
+			</p>
 		</div>
 	);
 }
@@ -110,9 +118,9 @@ function GranularityToggle({
 	onChange: (value: "weekly" | "daily") => void;
 }) {
 	return (
-		<div className="flex gap-1 rounded-md border bg-muted p-1">
+		<div className="flex gap-1 border bg-muted p-1">
 			<button
-				className={`rounded px-3 py-1 text-sm transition-colors ${
+				className={`px-3 py-1 text-sm transition-colors ${
 					granularity === "weekly"
 						? "bg-background font-medium shadow-sm"
 						: "text-muted-foreground hover:text-foreground"
@@ -123,7 +131,7 @@ function GranularityToggle({
 				Weekly
 			</button>
 			<button
-				className={`rounded px-3 py-1 text-sm transition-colors ${
+				className={`px-3 py-1 text-sm transition-colors ${
 					granularity === "daily"
 						? "bg-background font-medium shadow-sm"
 						: "text-muted-foreground hover:text-foreground"
@@ -138,16 +146,6 @@ function GranularityToggle({
 }
 
 /**
- * Dollar formatter for Y-axis
- */
-function formatYAxis(value: number): string {
-	if (value >= 1000) {
-		return `$${(value / 1000).toFixed(0)}k`;
-	}
-	return `$${value}`;
-}
-
-/**
  * Spending trend timeline chart with weekly bars or daily area views.
  * Per CONTEXT.md: "weekly bars and daily line views"
  * Per RESEARCH.md: Convert BigInt at chart boundary, use preserveStartEnd for XAxis
@@ -156,10 +154,19 @@ export function SpendingTimeline({
 	initialGranularity = "weekly",
 	months = 3,
 }: SpendingTimelineProps) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const [granularity, setGranularity] = useState<"weekly" | "daily">(
 		initialGranularity
 	);
 	const { data, isLoading, error } = useSpendingTrend(granularity, months);
+
+	const formatYAxis = (value: number): string => {
+		if (value >= 1000) {
+			return `${currencySymbol}${(value / 1000).toFixed(0)}k`;
+		}
+		return `${currencySymbol}${value}`;
+	};
 
 	// Transform API data for Recharts (convert BigInt to number)
 	const chartData: ChartData[] = data.map((point: SpendingTrendDataPoint) => {

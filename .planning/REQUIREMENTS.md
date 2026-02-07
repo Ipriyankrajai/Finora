@@ -59,13 +59,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Onboarding
 
-- [ ] **ONBD-01**: New user sees guided onboarding introducing expense tracking
-- [ ] **ONBD-02**: New user sees guided onboarding introducing loan features
+- [x] **ONBD-01**: New user sees guided onboarding introducing expense tracking
+- [x] **ONBD-02**: New user sees guided onboarding introducing loan features
 
 ### Settings
 
-- [ ] **SETT-01**: User can update their display name
-- [ ] **SETT-02**: User can set preferred currency symbol for display
+- [x] **SETT-01**: User can update their display name
+- [x] **SETT-02**: User can set preferred currency symbol for display
 
 ## v2 Requirements
 
@@ -154,10 +154,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-02 | Phase 2, 5 | Complete |
 | DASH-03 | Phase 2, 5 | Complete |
 | DASH-04 | Phase 5 | Complete |
-| ONBD-01 | Phase 6 | Pending |
-| ONBD-02 | Phase 6 | Pending |
-| SETT-01 | Phase 6 | Pending |
-| SETT-02 | Phase 6 | Pending |
+| ONBD-01 | Phase 6 | Complete |
+| ONBD-02 | Phase 6 | Complete |
+| SETT-01 | Phase 6 | Complete |
+| SETT-02 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total (3 existing + 25 new)
@@ -174,4 +174,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-31 after Phase 5 completion*
+*Last updated: 2026-02-07 after Phase 6 completion (all v1 requirements complete)*

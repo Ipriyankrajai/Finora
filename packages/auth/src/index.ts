@@ -13,5 +13,22 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
+	user: {
+		deleteUser: {
+			enabled: true,
+		},
+	},
+	databaseHooks: {
+		user: {
+			create: {
+				after: async (user) => {
+					await prisma.user.update({
+						where: { id: user.id },
+						data: { hasCompletedOnboarding: false },
+					});
+				},
+			},
+		},
+	},
 	plugins: [nextCookies()],
 });

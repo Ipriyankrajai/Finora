@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { type PaymentResult, useAddPayment } from "@/hooks/use-loans";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
 
 import { PaymentSummary } from "./payment-summary";
@@ -209,6 +210,8 @@ function PaymentFormContent({
 	loan: PaymentFormProps["loan"];
 	onSubmitSuccess: (result: PaymentResult) => void;
 }) {
+	const { data: settings } = useUserSettings();
+	const currencySymbol = settings?.currencySymbol ?? "$";
 	const addPayment = useAddPayment();
 
 	// Calculate default amount based on current loan state
@@ -267,7 +270,7 @@ function PaymentFormContent({
 							<Label htmlFor={field.name}>Amount</Label>
 							<div className="relative">
 								<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-									$
+									{currencySymbol}
 								</span>
 								<Input
 									autoFocus

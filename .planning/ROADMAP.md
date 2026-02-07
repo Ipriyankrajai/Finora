@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Tags & Transactions UI** - Tag management and transaction CRUD with filtering
 - [x] **Phase 4: Loans UI** - Loan management, payment tracking, balance calculations
 - [x] **Phase 5: Visualizations & Dashboard** - Charts, dashboard widgets, what-if simulator
-- [ ] **Phase 6: Onboarding & Polish** - Guided onboarding, settings, empty states
+- [x] **Phase 6: Onboarding & Polish** - Guided onboarding, settings, empty states
 
 ## Phase Details
 
@@ -117,11 +117,12 @@ Plans:
   3. User can update their display name in settings
   4. User can set preferred currency symbol for display
   5. Empty states provide clear guidance when no data exists
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: Guided onboarding flow
-- [ ] 06-02: Settings page and empty states
+- [x] 06-01-PLAN.md — Schema migration, user tRPC router, currency formatting
+- [x] 06-02-PLAN.md — Guided onboarding wizard with 4 steps
+- [x] 06-03-PLAN.md — Settings page expansion and empty states
 
 ## Progress
 
@@ -135,8 +136,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Tags & Transactions UI | 4/4 | ✓ Complete | 2026-01-31 |
 | 4. Loans UI | 3/3 | ✓ Complete | 2026-01-31 |
 | 5. Visualizations & Dashboard | 3/3 | ✓ Complete | 2026-01-31 |
-| 6. Onboarding & Polish | 0/2 | Not started | - |
+| 6. Onboarding & Polish | 3/3 | ✓ Complete | 2026-02-07 |
 
 ---
 *Roadmap created: 2026-01-29*
-*Last updated: 2026-01-31 (Phase 5 complete)*
+*Last updated: 2026-02-07 (Phase 6 complete — all phases done)*
