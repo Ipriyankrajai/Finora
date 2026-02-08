@@ -12,6 +12,9 @@ export default prisma;
 export {
 	InterestType,
 	LoanType,
+	OccurrenceStatus,
+	RecurringFrequency,
+	RecurringStatus,
 	TransactionType,
 } from "../prisma/generated/enums";
 export type {
