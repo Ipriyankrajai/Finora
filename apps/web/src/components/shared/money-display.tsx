@@ -19,7 +19,7 @@ interface MoneyDisplayProps {
 	type?: "INCOME" | "EXPENSE";
 	className?: string;
 	showSign?: boolean;
-	currencySymbol?: string;
+	currencyCode?: string;
 }
 
 function MoneyDisplay({
@@ -27,14 +27,14 @@ function MoneyDisplay({
 	type,
 	className,
 	showSign = true,
-	currencySymbol,
+	currencyCode,
 }: MoneyDisplayProps) {
 	const { data: settings } = useUserSettings();
-	const resolvedSymbol = currencySymbol ?? settings?.currencySymbol ?? "$";
+	const resolvedCode = currencyCode ?? settings?.currencyCode ?? "USD";
 	const numericCents = typeof cents === "bigint" ? Number(cents) : cents;
 	const isNegative = numericCents < 0;
 	const absoluteCents = Math.abs(numericCents);
-	const formatted = formatCents(absoluteCents, resolvedSymbol);
+	const formatted = formatCents(absoluteCents, resolvedCode);
 
 	// Determine sign prefix
 	let prefix = "";

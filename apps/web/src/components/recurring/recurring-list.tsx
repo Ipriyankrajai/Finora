@@ -105,7 +105,7 @@ interface RecurringListProps {
  */
 export function RecurringList({ rules, onEdit }: RecurringListProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const [deletingRule, setDeletingRule] = useState<RecurringRuleData | null>(
 		null
 	);
@@ -173,7 +173,7 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 									{rule.description || (
 										<span className="text-muted-foreground">
 											{frequencyLabel(rule.frequency)}{" "}
-											{formatCents(rule.amountCents, currencySymbol)}
+											{formatCents(rule.amountCents, currencyCode)}
 										</span>
 									)}
 								</td>
@@ -195,7 +195,7 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 
 								{/* Amount */}
 								<td className="px-4 py-3 text-right font-medium text-sm">
-									{formatCents(rule.amountCents, currencySymbol)}
+									{formatCents(rule.amountCents, currencyCode)}
 								</td>
 
 								{/* Frequency */}
@@ -298,7 +298,7 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 									)}
 									<span className="truncate font-medium text-sm">
 										{rule.description ||
-											`${frequencyLabel(rule.frequency)} ${formatCents(rule.amountCents, currencySymbol)}`}
+											`${frequencyLabel(rule.frequency)} ${formatCents(rule.amountCents, currencyCode)}`}
 									</span>
 								</div>
 								<div className="mt-1 flex items-center gap-2">
@@ -318,7 +318,7 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 								</div>
 							</div>
 							<span className="shrink-0 font-medium text-sm">
-								{formatCents(rule.amountCents, currencySymbol)}
+								{formatCents(rule.amountCents, currencyCode)}
 							</span>
 						</div>
 

@@ -128,6 +128,12 @@ export const recurringRouter = router({
 
 			const amountCents = displayToCents(amount);
 
+			// Fetch the user's currency code for the new record
+			const user = await db.user.findUniqueOrThrow({
+				where: { id: userId },
+				select: { currencyCode: true },
+			});
+
 			// For MONTHLY rules, derive dayOfMonth from startDate if not provided
 			const resolvedDayOfMonth =
 				frequency === "MONTHLY" && dayOfMonth === undefined
@@ -154,6 +160,7 @@ export const recurringRouter = router({
 						endDate,
 						maxOccurrences,
 						nextOccurrenceDate,
+						currencyCode: user.currencyCode,
 					},
 				});
 

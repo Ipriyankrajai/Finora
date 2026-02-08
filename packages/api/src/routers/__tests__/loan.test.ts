@@ -9,6 +9,9 @@ type LoanWithPayments = Loan & {
 // Mock Prisma before importing modules that use it
 vi.mock("@finora2/db", () => ({
 	default: {
+		user: {
+			findUniqueOrThrow: vi.fn(),
+		},
 		loan: {
 			findMany: vi.fn(),
 			findUnique: vi.fn(),
@@ -82,6 +85,10 @@ describe("loan router", () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
+		// Default: user lookup returns USD currency code
+		(prisma as any).user.findUniqueOrThrow.mockResolvedValue({
+			currencyCode: "USD",
+		});
 	});
 
 	describe("list", () => {
@@ -257,6 +264,7 @@ describe("loan router", () => {
 					termMonths: 60,
 					monthlyPaymentCents: BigInt(19_333),
 					startDate: new Date("2024-01-01"),
+					currencyCode: "USD",
 				},
 			});
 		});
@@ -496,6 +504,7 @@ describe("loan router", () => {
 
 		it("throws BAD_REQUEST when payment exceeds remaining balance", async () => {
 			// Loan has $100 remaining balance ($10000 principal - $9900 in payments)
+			// Payoff amount = $100 + current month interest ($100 * 6%/12 = $0.50) = $100.50
 			const loanWithPartialPayment: LoanWithPayments = {
 				...mockLoan,
 				principalCents: BigInt(1_000_000), // $10,000
@@ -507,7 +516,7 @@ describe("loan router", () => {
 				loanWithPartialPayment
 			);
 
-			// Try to pay $200 when only $100 remains
+			// Try to pay $200 when payoff is only $100.50
 			await expect(
 				caller.loan.addPayment({
 					loanId: MOCK_LOAN_ID,
@@ -519,7 +528,7 @@ describe("loan router", () => {
 				expect.objectContaining({
 					code: "BAD_REQUEST",
 					message:
-						"Payment amount exceeds remaining balance. Maximum payment allowed is $100.00",
+						"Payment amount exceeds payoff amount. Maximum payment allowed is $100.50",
 				})
 			);
 		});

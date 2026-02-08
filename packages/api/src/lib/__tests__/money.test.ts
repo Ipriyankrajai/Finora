@@ -52,6 +52,16 @@ describe("money utilities", () => {
 		it("formats large amounts", () => {
 			expect(centsToDisplay(100000000n)).toBe("$1,000,000.00");
 		});
+
+		it("uses currency code to resolve symbol", () => {
+			expect(centsToDisplay(10000n, "GBP")).toBe("£100.00");
+			expect(centsToDisplay(10000n, "EUR")).toBe("€100.00");
+			expect(centsToDisplay(10000n, "INR")).toBe("₹100.00");
+		});
+
+		it("defaults to USD when no code provided", () => {
+			expect(centsToDisplay(5000n)).toBe("$50.00");
+		});
 	});
 
 	describe("roundCents", () => {

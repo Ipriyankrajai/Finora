@@ -38,7 +38,7 @@ interface CustomTooltipProps {
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 
 	if (!(active && payload?.length)) {
 		return null;
@@ -52,7 +52,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="font-medium">{data.tagName}</p>
 			<p className="text-muted-foreground">
-				{formatCents(data.totalCents, currencySymbol)}
+				{formatCents(data.totalCents, currencyCode)}
 			</p>
 		</div>
 	);

@@ -1,5 +1,6 @@
 "use client";
 
+import { getSymbol } from "@finora2/api/lib/currency";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -73,7 +74,7 @@ export function TransactionForm({
 	onSuccess,
 }: TransactionFormProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const createTransaction = useCreateTransaction();
 	const updateTransaction = useUpdateTransaction();
 
@@ -199,7 +200,7 @@ export function TransactionForm({
 								<Label htmlFor={field.name}>Amount</Label>
 								<div className="relative">
 									<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-										{currencySymbol}
+										{getSymbol(currencyCode)}
 									</span>
 									<Input
 										autoFocus

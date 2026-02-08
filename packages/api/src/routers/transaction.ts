@@ -199,6 +199,12 @@ export const transactionRouter = router({
 			// Convert amount string to cents
 			const amountCents = displayToCents(amount);
 
+			// Fetch the user's currency code for the new record
+			const user = await db.user.findUniqueOrThrow({
+				where: { id: userId },
+				select: { currencyCode: true },
+			});
+
 			// Use Prisma transaction for atomicity
 			const transaction = await db.$transaction(async (tx) => {
 				// Create the transaction
@@ -209,6 +215,7 @@ export const transactionRouter = router({
 						amountCents,
 						date,
 						description,
+						currencyCode: user.currencyCode,
 					},
 				});
 

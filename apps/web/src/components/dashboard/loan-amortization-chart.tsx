@@ -1,5 +1,6 @@
 "use client";
 
+import { getSymbol } from "@finora2/api/lib/currency";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { TrendingDown } from "lucide-react";
@@ -12,7 +13,6 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
@@ -47,7 +47,7 @@ interface CustomTooltipProps {
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 
 	if (!(active && payload?.length)) {
 		return null;
@@ -61,7 +61,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 		<div className="rounded-md border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="font-medium">{data.label}</p>
 			<p className="text-muted-foreground">
-				{formatCents(data.balanceCents, currencySymbol)}
+				{formatCents(data.balanceCents, currencyCode)}
 			</p>
 		</div>
 	);
@@ -78,7 +78,7 @@ export const LoanAmortizationChart = memo(function LoanAmortizationChart({
 	loanName,
 }: LoanAmortizationChartProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const queryOptions = trpc.dashboard.getAmortizationSchedule.queryOptions({
 		loanId,
 	});
@@ -86,9 +86,9 @@ export const LoanAmortizationChart = memo(function LoanAmortizationChart({
 
 	const formatYAxisTick = (value: number): string => {
 		if (value >= 1000) {
-			return `${currencySymbol}${Math.round(value / 1000)}k`;
+			return `${getSymbol(currencyCode)}${Math.round(value / 1000)}k`;
 		}
-		return `${currencySymbol}${value}`;
+		return `${getSymbol(currencyCode)}${value}`;
 	};
 
 	if (isLoading) {
