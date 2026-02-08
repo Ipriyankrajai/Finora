@@ -55,6 +55,11 @@ export const recurringRouter = router({
 						tag: true,
 					},
 				},
+				occurrences: {
+					where: { status: "SKIPPED" },
+					orderBy: { scheduledDate: "desc" },
+					take: 1,
+				},
 			},
 		});
 
@@ -406,8 +411,9 @@ export const recurringRouter = router({
 		}),
 
 	/**
-	 * Skip a single upcoming occurrence without affecting future occurrences.
-	 * Creates or updates a RecurringOccurrence with SKIPPED status.
+	 * Skip a single upcoming occurrence and advance nextOccurrenceDate.
+	 * Creates or updates a RecurringOccurrence with SKIPPED status,
+	 * then advances the rule's nextOccurrenceDate if end conditions allow.
 	 */
 	skipOccurrence: protectedProcedure
 		.input(
@@ -417,23 +423,60 @@ export const recurringRouter = router({
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
-			await verifyRuleOwnership(input.ruleId, ctx.session.user.id);
+			const rule = await verifyRuleOwnership(input.ruleId, ctx.session.user.id);
 
-			await db.recurringOccurrence.upsert({
-				where: {
-					ruleId_scheduledDate: {
+			if (rule.status === "PAUSED") {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Cannot skip occurrence on a paused rule",
+				});
+			}
+
+			const frequency = rule.frequency as
+				| "DAILY"
+				| "WEEKLY"
+				| "BIWEEKLY"
+				| "MONTHLY"
+				| "YEARLY";
+			const anchorDay =
+				frequency === "MONTHLY" ? (rule.dayOfMonth ?? undefined) : undefined;
+
+			const nextDate = computeNextOccurrence(
+				frequency,
+				input.scheduledDate,
+				anchorDay
+			);
+
+			// Only advance if end conditions still allow it
+			const pastEndDate = rule.endDate && nextDate > rule.endDate;
+			const atMaxOccurrences =
+				rule.maxOccurrences && rule.completedCount >= rule.maxOccurrences;
+			const shouldAdvance = !(pastEndDate || atMaxOccurrences);
+
+			await db.$transaction(async (tx) => {
+				await tx.recurringOccurrence.upsert({
+					where: {
+						ruleId_scheduledDate: {
+							ruleId: input.ruleId,
+							scheduledDate: input.scheduledDate,
+						},
+					},
+					create: {
 						ruleId: input.ruleId,
 						scheduledDate: input.scheduledDate,
+						status: "SKIPPED",
 					},
-				},
-				create: {
-					ruleId: input.ruleId,
-					scheduledDate: input.scheduledDate,
-					status: "SKIPPED",
-				},
-				update: {
-					status: "SKIPPED",
-				},
+					update: {
+						status: "SKIPPED",
+					},
+				});
+
+				if (shouldAdvance) {
+					await tx.recurringRule.update({
+						where: { id: input.ruleId },
+						data: { nextOccurrenceDate: nextDate },
+					});
+				}
 			});
 
 			return { success: true };

@@ -1,5 +1,6 @@
 "use client";
 
+import { format, getYear } from "date-fns";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
 
@@ -10,6 +11,47 @@ import { formatCents, formatDate } from "@/lib/format";
 
 import { DeleteRuleDialog } from "./delete-rule-dialog";
 import { OccurrenceControls } from "./occurrence-controls";
+
+function formatShortDate(date: Date): string {
+	const d = new Date(date);
+	const currentYear = getYear(new Date());
+	if (getYear(d) === currentYear) {
+		return format(d, "MMM d");
+	}
+	return format(d, "MMM d, yyyy");
+}
+
+function formatSchedule(rule: RecurringRuleData): {
+	start: string;
+	end: string;
+	progress?: { completed: number; total: number };
+} {
+	const start = formatShortDate(rule.startDate);
+
+	if (rule.maxOccurrences) {
+		return {
+			start,
+			end: `${rule.completedCount}/${rule.maxOccurrences}`,
+			progress: {
+				completed: rule.completedCount,
+				total: rule.maxOccurrences,
+			},
+		};
+	}
+
+	if (rule.endDate) {
+		return { start, end: formatShortDate(rule.endDate) };
+	}
+
+	return { start, end: "Forever" };
+}
+
+function getLastSkipped(rule: RecurringRuleData): Date | null {
+	if (!rule.occurrences || rule.occurrences.length === 0) {
+		return null;
+	}
+	return new Date(rule.occurrences[0].scheduledDate);
+}
 
 /**
  * Human-readable frequency label
@@ -93,6 +135,9 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 								Frequency
 							</th>
 							<th className="px-4 py-3 text-left font-medium text-muted-foreground text-xs">
+								Schedule
+							</th>
+							<th className="px-4 py-3 text-left font-medium text-muted-foreground text-xs">
 								Next Date
 							</th>
 							<th className="px-4 py-3 text-left font-medium text-muted-foreground text-xs">
@@ -158,12 +203,49 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 									{frequencyLabel(rule.frequency)}
 								</td>
 
+								{/* Schedule */}
+								<td className="px-4 py-3 text-sm">
+									{(() => {
+										const schedule = formatSchedule(rule);
+										return (
+											<div className="flex items-center gap-1.5">
+												<span>{schedule.start}</span>
+												<span className="text-muted-foreground">&rarr;</span>
+												<span>{schedule.end}</span>
+												{schedule.progress && (
+													<div className="ml-1 h-1.5 w-12 overflow-hidden rounded-full bg-muted">
+														<div
+															className="h-full rounded-full bg-primary"
+															style={{
+																width: `${Math.min(100, (schedule.progress.completed / schedule.progress.total) * 100)}%`,
+															}}
+														/>
+													</div>
+												)}
+											</div>
+										);
+									})()}
+								</td>
+
 								{/* Next Date */}
 								<td className="px-4 py-3 text-sm">
 									{rule.status === "PAUSED" ? (
 										<span className="text-muted-foreground">Paused</span>
 									) : (
-										formatDate(new Date(rule.nextOccurrenceDate))
+										<div>
+											<div>{formatDate(new Date(rule.nextOccurrenceDate))}</div>
+											{(() => {
+												const skipped = getLastSkipped(rule);
+												if (!skipped) {
+													return null;
+												}
+												return (
+													<div className="text-muted-foreground text-xs">
+														Skipped {formatShortDate(skipped)}
+													</div>
+												);
+											})()}
+										</div>
 									)}
 								</td>
 
@@ -240,22 +322,58 @@ export function RecurringList({ rules, onEdit }: RecurringListProps) {
 							</span>
 						</div>
 
+						<div className="mb-2 flex items-center gap-1.5 text-muted-foreground text-xs">
+							{(() => {
+								const schedule = formatSchedule(rule);
+								return (
+									<>
+										<span>{schedule.start}</span>
+										<span>&rarr;</span>
+										<span>{schedule.end}</span>
+										{schedule.progress && (
+											<div className="ml-1 h-1 w-8 overflow-hidden rounded-full bg-muted">
+												<div
+													className="h-full rounded-full bg-primary"
+													style={{
+														width: `${Math.min(100, (schedule.progress.completed / schedule.progress.total) * 100)}%`,
+													}}
+												/>
+											</div>
+										)}
+									</>
+								);
+							})()}
+						</div>
+
 						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-2">
-								<span className="text-muted-foreground text-xs">
-									Next:{" "}
-									{rule.status === "PAUSED"
-										? "Paused"
-										: formatDate(new Date(rule.nextOccurrenceDate))}
-								</span>
-								{rule.tags.slice(0, 2).map(({ tag }) => (
-									<TagChip
-										color={tag.color}
-										key={tag.id}
-										name={tag.name}
-										size="sm"
-									/>
-								))}
+							<div className="flex flex-col gap-1">
+								<div className="flex items-center gap-2">
+									<span className="text-muted-foreground text-xs">
+										Next:{" "}
+										{rule.status === "PAUSED"
+											? "Paused"
+											: formatDate(new Date(rule.nextOccurrenceDate))}
+									</span>
+									{rule.tags.slice(0, 2).map(({ tag }) => (
+										<TagChip
+											color={tag.color}
+											key={tag.id}
+											name={tag.name}
+											size="sm"
+										/>
+									))}
+								</div>
+								{(() => {
+									const skipped = getLastSkipped(rule);
+									if (!skipped || rule.status === "PAUSED") {
+										return null;
+									}
+									return (
+										<span className="text-muted-foreground text-xs">
+											Skipped {formatShortDate(skipped)}
+										</span>
+									);
+								})()}
 							</div>
 							<OccurrenceControls
 								onDelete={() => setDeletingRule(rule)}

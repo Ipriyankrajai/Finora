@@ -35,6 +35,11 @@ export interface RecurringRuleData {
 			color: string;
 		};
 	}>;
+	occurrences?: Array<{
+		id: string;
+		scheduledDate: Date;
+		status: "GENERATED" | "SKIPPED";
+	}>;
 }
 
 /**
