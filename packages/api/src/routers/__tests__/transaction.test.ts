@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 // Mock @finora2/db module
 vi.mock("@finora2/db", () => ({
 	default: {
+		user: {
+			findUniqueOrThrow: vi.fn(),
+		},
 		transaction: {
 			findMany: vi.fn(),
 			findUnique: vi.fn(),
@@ -43,6 +46,9 @@ import { appRouter } from "../index";
 
 // Type-safe mock helpers
 const mockDb = db as unknown as {
+	user: {
+		findUniqueOrThrow: Mock;
+	};
 	transaction: {
 		findMany: Mock;
 		findUnique: Mock;
@@ -105,6 +111,8 @@ const createMockTransaction = (overrides = {}) => ({
 describe("transactionRouter", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		// Default: user lookup returns USD currency code
+		mockDb.user.findUniqueOrThrow.mockResolvedValue({ currencyCode: "USD" });
 	});
 
 	describe("list", () => {

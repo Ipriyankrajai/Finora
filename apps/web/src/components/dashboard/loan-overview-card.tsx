@@ -47,7 +47,7 @@ export function LoanOverviewCard({
 	onToggle,
 }: LoanOverviewCardProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const { name, balanceCents, projectedPayoffDate, interestPaidCents } = loan;
 
 	// Check if loan is paid off
@@ -126,7 +126,7 @@ export function LoanOverviewCard({
 								isPaidOff && "text-emerald-600 dark:text-emerald-400"
 							)}
 						>
-							{formatCents(balanceCents, currencySymbol)}
+							{formatCents(balanceCents, currencyCode)}
 						</p>
 					</div>
 					{interestPaidCents > 0n && (
@@ -135,7 +135,7 @@ export function LoanOverviewCard({
 								Interest Paid
 							</p>
 							<p className="font-medium text-muted-foreground text-sm tabular-nums">
-								{formatCents(interestPaidCents, currencySymbol)}
+								{formatCents(interestPaidCents, currencyCode)}
 							</p>
 						</div>
 					)}

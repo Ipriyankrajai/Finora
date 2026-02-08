@@ -1,5 +1,6 @@
 "use client";
 
+import { getSymbol } from "@finora2/api/lib/currency";
 import {
 	Calculator,
 	Calendar,
@@ -8,7 +9,6 @@ import {
 	TrendingDown,
 } from "lucide-react";
 import { memo, useDeferredValue, useMemo, useState } from "react";
-
 import { Slider } from "@/components/ui/slider";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { formatCents } from "@/lib/format";
@@ -64,7 +64,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 	name,
 }: WhatIfSimulatorProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 
 	// Extra payment amount in dollars (user input)
 	const [extraPaymentDollars, setExtraPaymentDollars] = useState(0);
@@ -107,7 +107,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 	const monthsSavedDisplay = formatMonthsAsYearsMonths(projection.monthsSaved);
 	const interestSavedDisplay = formatCents(
 		projection.interestSavedCents,
-		currencySymbol
+		currencyCode
 	);
 
 	// Check for infinite scenarios
@@ -149,12 +149,12 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 							Extra Monthly Payment
 						</label>
 						<span className="rounded-full bg-primary/10 px-3 py-1 font-bold text-primary text-sm tabular-nums">
-							{currencySymbol}
+							{getSymbol(currencyCode)}
 							{extraPaymentDollars}
 						</span>
 					</div>
 					<Slider
-						formatValue={(v) => `${currencySymbol}${v}`}
+						formatValue={(v) => `${getSymbol(currencyCode)}${v}`}
 						id="extra-payment-slider"
 						max={sliderMax}
 						min={0}
@@ -163,9 +163,9 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 						value={extraPaymentDollars}
 					/>
 					<div className="flex justify-between text-muted-foreground text-xs">
-						<span>{currencySymbol}0</span>
+						<span>{getSymbol(currencyCode)}0</span>
 						<span>
-							{currencySymbol}
+							{getSymbol(currencyCode)}
 							{sliderMax}
 						</span>
 					</div>
@@ -218,7 +218,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 										Total Interest
 									</p>
 									<p className="font-medium tabular-nums">
-										{formatCents(baseline.totalInterestCents, currencySymbol)}
+										{formatCents(baseline.totalInterestCents, currencyCode)}
 									</p>
 								</div>
 							</div>
@@ -236,7 +236,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 					>
 						<h5 className="mb-3 flex items-center gap-2 font-semibold text-primary text-xs uppercase tracking-wider">
 							<span className="size-2 rounded-full bg-primary" />
-							With +{currencySymbol}
+							With +{getSymbol(currencyCode)}
 							{extraPaymentDollars}/mo
 						</h5>
 
@@ -276,7 +276,7 @@ export const WhatIfSimulator = memo(function WhatIfSimulator({
 										Total Interest
 									</p>
 									<p className="font-medium tabular-nums">
-										{formatCents(projection.totalInterestCents, currencySymbol)}
+										{formatCents(projection.totalInterestCents, currencyCode)}
 									</p>
 								</div>
 							</div>

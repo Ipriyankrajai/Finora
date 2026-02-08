@@ -1,5 +1,6 @@
 "use client";
 
+import { getSymbol } from "@finora2/api/lib/currency";
 import { useForm } from "@tanstack/react-form";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -115,7 +116,7 @@ export function LoanForm({
 	onSuccess,
 }: LoanFormProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const createLoan = useCreateLoan();
 	const updateLoan = useUpdateLoan();
 
@@ -366,7 +367,7 @@ export function LoanForm({
 								<Label htmlFor={field.name}>Principal Amount</Label>
 								<div className="relative">
 									<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-										{currencySymbol}
+										{getSymbol(currencyCode)}
 									</span>
 									<Input
 										className="pl-6"
@@ -483,7 +484,7 @@ export function LoanForm({
 						<Label>Monthly Payment (calculated)</Label>
 						<div className="relative">
 							<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-								{currencySymbol}
+								{getSymbol(currencyCode)}
 							</span>
 							<Input
 								className="bg-muted/50 pl-6"

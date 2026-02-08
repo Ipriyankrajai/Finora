@@ -1,12 +1,16 @@
 "use client";
 
+import {
+	type CurrencyCode,
+	getCurrencyOptions,
+	getOptionLabel,
+} from "@finora2/api/lib/currency";
 import { useForm } from "@tanstack/react-form";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +25,6 @@ import {
 	useUpdateCurrency,
 	useUpdateProfile,
 } from "@/hooks/use-user-settings";
-import { CURRENCY_SYMBOLS, getCurrencyLabel } from "@/lib/format";
 
 interface StepSetupProps {
 	defaultName?: string;
@@ -31,7 +34,7 @@ interface StepSetupProps {
 
 export function StepSetup({
 	defaultName = "",
-	defaultCurrency = "$",
+	defaultCurrency = "USD",
 	onBack,
 }: StepSetupProps) {
 	const router = useRouter();
@@ -43,7 +46,7 @@ export function StepSetup({
 	const form = useForm({
 		defaultValues: {
 			name: defaultName,
-			currencySymbol: defaultCurrency,
+			currencyCode: defaultCurrency,
 		},
 		onSubmit: async ({ value }) => {
 			setIsSubmitting(true);
@@ -52,7 +55,7 @@ export function StepSetup({
 					await updateProfile.mutateAsync({ name: value.name.trim() });
 				}
 				await updateCurrency.mutateAsync({
-					currencySymbol: value.currencySymbol,
+					currencyCode: value.currencyCode as CurrencyCode,
 				});
 				await completeOnboarding.mutateAsync();
 				toast.success("You're all set!");
@@ -65,10 +68,12 @@ export function StepSetup({
 		validators: {
 			onSubmit: z.object({
 				name: z.string().min(2, "Name must be at least 2 characters"),
-				currencySymbol: z.string().min(1).max(3),
+				currencyCode: z.string().min(1),
 			}),
 		},
 	});
+
+	const currencyOptions = getCurrencyOptions();
 
 	return (
 		<div className="flex flex-col items-center text-center">
@@ -132,7 +137,7 @@ export function StepSetup({
 						)}
 					</form.Field>
 
-					<form.Field name="currencySymbol">
+					<form.Field name="currencyCode">
 						{(field) => (
 							<div className="space-y-2 text-left">
 								<Label
@@ -152,7 +157,7 @@ export function StepSetup({
 								>
 									<SelectTrigger className="h-11 border-border/50 bg-card/30 text-foreground backdrop-blur-sm transition-all focus:border-emerald-500/40 focus:bg-card/60">
 										{field.state.value ? (
-											getCurrencyLabel(field.state.value)
+											getOptionLabel(field.state.value)
 										) : (
 											<span className="text-muted-foreground">
 												Select currency
@@ -160,9 +165,9 @@ export function StepSetup({
 										)}
 									</SelectTrigger>
 									<SelectContent>
-										{CURRENCY_SYMBOLS.map((currency) => (
-											<SelectItem key={currency.value} value={currency.value}>
-												{currency.label}
+										{currencyOptions.map((opt) => (
+											<SelectItem key={opt.value} value={opt.value}>
+												{opt.label}
 											</SelectItem>
 										))}
 									</SelectContent>

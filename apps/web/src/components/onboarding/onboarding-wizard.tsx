@@ -86,7 +86,7 @@ export function OnboardingWizard() {
 			case "setup":
 				return (
 					<StepSetup
-						defaultCurrency={userSettings?.currencySymbol ?? "$"}
+						defaultCurrency={userSettings?.currencyCode ?? "USD"}
 						defaultName={userSettings?.name ?? ""}
 						onBack={handleBack}
 					/>

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { trpc } from "@/utils/trpc";
 
 /**
- * Hook to fetch current user settings (name, email, currencySymbol, hasCompletedOnboarding).
+ * Hook to fetch current user settings (name, email, currencyCode, hasCompletedOnboarding).
  */
 export function useUserSettings() {
 	const queryOptions = trpc.user.getSettings.queryOptions();
@@ -41,7 +41,7 @@ export function useUpdateProfile() {
 }
 
 /**
- * Hook to update the user's preferred currency symbol.
+ * Hook to update the user's preferred currency code.
  * Invalidates user settings cache on success.
  */
 export function useUpdateCurrency() {

@@ -1,5 +1,6 @@
 "use client";
 
+import { getSymbol } from "@finora2/api/lib/currency";
 import { useForm } from "@tanstack/react-form";
 import { useMemo, useState } from "react";
 import { z } from "zod";
@@ -211,7 +212,7 @@ function PaymentFormContent({
 	onSubmitSuccess: (result: PaymentResult) => void;
 }) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const addPayment = useAddPayment();
 
 	// Calculate default amount based on current loan state
@@ -270,7 +271,7 @@ function PaymentFormContent({
 							<Label htmlFor={field.name}>Amount</Label>
 							<div className="relative">
 								<span className="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground text-xs">
-									{currencySymbol}
+									{getSymbol(currencyCode)}
 								</span>
 								<Input
 									autoFocus

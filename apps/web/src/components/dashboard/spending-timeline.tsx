@@ -1,5 +1,6 @@
 "use client";
 
+import { getSymbol } from "@finora2/api/lib/currency";
 import { format } from "date-fns";
 import { FileQuestion } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +15,6 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -56,7 +56,7 @@ interface CustomTooltipProps {
  */
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 
 	if (!(active && payload?.length)) {
 		return null;
@@ -70,10 +70,10 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 		<div className="border bg-popover px-3 py-2 text-sm shadow-md">
 			<p className="mb-1 font-medium">{data.date}</p>
 			<p className="text-green-600">
-				Income: {formatCents(data.incomeCents, currencySymbol)}
+				Income: {formatCents(data.incomeCents, currencyCode)}
 			</p>
 			<p className="text-red-600">
-				Expenses: {formatCents(data.expenseCents, currencySymbol)}
+				Expenses: {formatCents(data.expenseCents, currencyCode)}
 			</p>
 		</div>
 	);
@@ -155,7 +155,7 @@ export function SpendingTimeline({
 	months = 3,
 }: SpendingTimelineProps) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
+	const currencyCode = settings?.currencyCode ?? "USD";
 	const [granularity, setGranularity] = useState<"weekly" | "daily">(
 		initialGranularity
 	);
@@ -163,9 +163,9 @@ export function SpendingTimeline({
 
 	const formatYAxis = (value: number): string => {
 		if (value >= 1000) {
-			return `${currencySymbol}${(value / 1000).toFixed(0)}k`;
+			return `${getSymbol(currencyCode)}${(value / 1000).toFixed(0)}k`;
 		}
-		return `${currencySymbol}${value}`;
+		return `${getSymbol(currencyCode)}${value}`;
 	};
 
 	// Transform API data for Recharts (convert BigInt to number)

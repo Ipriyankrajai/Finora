@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { CURRENCY_CODES } from "../lib/currency";
+
 export const updateProfileInput = z.object({
 	name: z
 		.string()
@@ -9,10 +11,7 @@ export const updateProfileInput = z.object({
 });
 
 export const updateCurrencyInput = z.object({
-	currencySymbol: z
-		.string()
-		.min(1, "Must be at least 1 character")
-		.max(3, "Cannot exceed 3 characters"),
+	currencyCode: z.enum(CURRENCY_CODES),
 });
 
 export type UpdateProfileInput = z.infer<typeof updateProfileInput>;

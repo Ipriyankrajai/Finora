@@ -222,6 +222,12 @@ export const loanRouter = router({
 			const principalCents = displayToCents(input.principal);
 			const monthlyPaymentCents = displayToCents(input.monthlyPayment);
 
+			// Fetch the user's currency code for the new record
+			const user = await db.user.findUniqueOrThrow({
+				where: { id: userId },
+				select: { currencyCode: true },
+			});
+
 			const loan = await db.loan.create({
 				data: {
 					userId,
@@ -233,6 +239,7 @@ export const loanRouter = router({
 					termMonths: input.termMonths,
 					monthlyPaymentCents,
 					startDate: input.startDate,
+					currencyCode: user.currencyCode,
 				},
 			});
 

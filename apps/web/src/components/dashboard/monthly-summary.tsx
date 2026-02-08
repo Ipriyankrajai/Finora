@@ -29,8 +29,8 @@ function SummaryCard({
 	icon: React.ComponentType<{ className?: string }>;
 }) {
 	const { data: settings } = useUserSettings();
-	const currencySymbol = settings?.currencySymbol ?? "$";
-	const formatted = formatCents(cents, currencySymbol);
+	const currencyCode = settings?.currencyCode ?? "USD";
+	const formatted = formatCents(cents, currencyCode);
 	const numericCents = Number(cents);
 
 	// Determine styling based on type

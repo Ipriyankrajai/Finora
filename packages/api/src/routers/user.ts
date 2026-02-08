@@ -12,7 +12,7 @@ export const userRouter = router({
 				id: true,
 				name: true,
 				email: true,
-				currencySymbol: true,
+				currencyCode: true,
 				hasCompletedOnboarding: true,
 			},
 		});
@@ -41,7 +41,7 @@ export const userRouter = router({
 		.mutation(async ({ ctx, input }) => {
 			return await prisma.user.update({
 				where: { id: ctx.session.user.id },
-				data: { currencySymbol: input.currencySymbol },
+				data: { currencyCode: input.currencyCode },
 			});
 		}),
 

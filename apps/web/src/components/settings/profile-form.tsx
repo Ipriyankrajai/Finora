@@ -1,10 +1,14 @@
 "use client";
 
+import {
+	type CurrencyCode,
+	getCurrencyOptions,
+	getOptionLabel,
+} from "@finora2/api/lib/currency";
 import { useForm } from "@tanstack/react-form";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,25 +23,16 @@ import {
 	useUpdateProfile,
 	useUserSettings,
 } from "@/hooks/use-user-settings";
-import { CURRENCY_SYMBOLS, getCurrencyLabel } from "@/lib/format";
 
-/**
- * Validation schema for profile form
- */
 const profileSchema = z.object({
 	name: z
 		.string()
 		.trim()
 		.min(2, "Name must be at least 2 characters")
 		.max(100, "Name cannot exceed 100 characters"),
-	currencySymbol: z.string().min(1, "Please select a currency"),
+	currencyCode: z.string().min(1, "Please select a currency"),
 });
 
-/**
- * Profile edit form with name and currency symbol fields.
- * Uses TanStack Form with Zod validation, following transaction-form pattern.
- * Satisfies SETT-01 (update display name) and SETT-02 (set currency symbol).
- */
 export function ProfileForm() {
 	const router = useRouter();
 	const { data: settings, isLoading: settingsLoading } = useUserSettings();
@@ -49,20 +44,17 @@ export function ProfileForm() {
 	const form = useForm({
 		defaultValues: {
 			name: settings?.name ?? "",
-			currencySymbol: settings?.currencySymbol ?? "$",
+			currencyCode: settings?.currencyCode ?? "USD",
 		},
 		onSubmit: async ({ value }) => {
-			// Update name if changed
 			if (value.name !== settings?.name) {
 				await updateProfile.mutateAsync({ name: value.name });
 			}
-			// Update currency if changed
-			if (value.currencySymbol !== settings?.currencySymbol) {
+			if (value.currencyCode !== settings?.currencyCode) {
 				await updateCurrency.mutateAsync({
-					currencySymbol: value.currencySymbol,
+					currencyCode: value.currencyCode as CurrencyCode,
 				});
 			}
-			// Refresh server-rendered data (sidebar shows name from server session)
 			router.refresh();
 		},
 		validators: {
@@ -78,6 +70,8 @@ export function ProfileForm() {
 			</div>
 		);
 	}
+
+	const currencyOptions = getCurrencyOptions();
 
 	return (
 		<form
@@ -110,26 +104,26 @@ export function ProfileForm() {
 				)}
 			</form.Field>
 
-			{/* Currency Symbol */}
-			<form.Field name="currencySymbol">
+			{/* Currency */}
+			<form.Field name="currencyCode">
 				{(field) => (
 					<div className="space-y-2">
-						<Label>Currency Symbol</Label>
+						<Label>Currency</Label>
 						<Select
 							onValueChange={(val) => field.handleChange(val as string)}
 							value={field.state.value}
 						>
 							<SelectTrigger>
 								{field.state.value ? (
-									getCurrencyLabel(field.state.value)
+									getOptionLabel(field.state.value)
 								) : (
 									<span className="text-muted-foreground">Select currency</span>
 								)}
 							</SelectTrigger>
 							<SelectContent>
-								{CURRENCY_SYMBOLS.map((currency) => (
-									<SelectItem key={currency.value} value={currency.value}>
-										{currency.label}
+								{currencyOptions.map((opt) => (
+									<SelectItem key={opt.value} value={opt.value}>
+										{opt.label}
 									</SelectItem>
 								))}
 							</SelectContent>
