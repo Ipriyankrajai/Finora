@@ -13,14 +13,13 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue,
 } from "@/components/ui/select";
 import {
 	useUpdateCurrency,
 	useUpdateProfile,
 	useUserSettings,
 } from "@/hooks/use-user-settings";
-import { CURRENCY_SYMBOLS } from "@/lib/format";
+import { CURRENCY_SYMBOLS, getCurrencyLabel } from "@/lib/format";
 
 /**
  * Validation schema for profile form
@@ -121,7 +120,11 @@ export function ProfileForm() {
 							value={field.state.value}
 						>
 							<SelectTrigger>
-								<SelectValue placeholder="Select currency" />
+								{field.state.value ? (
+									getCurrencyLabel(field.state.value)
+								) : (
+									<span className="text-muted-foreground">Select currency</span>
+								)}
 							</SelectTrigger>
 							<SelectContent>
 								{CURRENCY_SYMBOLS.map((currency) => (

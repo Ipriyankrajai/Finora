@@ -62,3 +62,12 @@ export const CURRENCY_SYMBOLS = [
 	{ value: "R$", label: "R$ - Brazilian Real" },
 	{ value: "\u20A9", label: "\u20A9 - South Korean Won" },
 ] as const;
+
+/**
+ * Get full currency label from symbol.
+ * Returns the full label (e.g., "$ - US Dollar") or just the symbol if not found.
+ */
+export function getCurrencyLabel(symbol: string): string {
+	const currency = CURRENCY_SYMBOLS.find((c) => c.value === symbol);
+	return currency?.label ?? symbol;
+}
