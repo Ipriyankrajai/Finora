@@ -56,7 +56,7 @@ export function DeleteRuleDialog({
 						like to do with the transactions already generated from this rule?
 					</DialogDescription>
 				</DialogHeader>
-				<DialogFooter className="flex-col gap-2 sm:flex-row">
+				<DialogFooter>
 					<DialogClose
 						render={
 							<Button disabled={deleteRule.isPending} variant="outline">
