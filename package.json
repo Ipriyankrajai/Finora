@@ -26,6 +26,8 @@
     "test": "turbo test",
     "dev:native": "turbo -F native dev",
     "dev:web": "turbo -F web dev",
+    "dev:trigger": "turbo -F web dev:trigger",
+    "dev:all": "turbo -F web dev dev:trigger",
     "db:push": "turbo -F @finora2/db db:push",
     "db:studio": "turbo -F @finora2/db db:studio",
     "db:generate": "turbo -F @finora2/db db:generate",

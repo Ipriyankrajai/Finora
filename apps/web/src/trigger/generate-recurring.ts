@@ -1,5 +1,5 @@
 import db from "@finora2/db";
-import { logger, schedules } from "@trigger.dev/sdk/v3";
+import { logger, schedules } from "@trigger.dev/sdk";
 import {
 	addDays,
 	addMonths,

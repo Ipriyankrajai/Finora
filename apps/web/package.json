@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --kill-others --names next,trigger --prefix-colors yellow,blue \"next dev --port 3001\" \"npx trigger.dev@latest dev\"",
-    "dev:next": "next dev --port 3001",
+    "dev": "next dev --port 3001",
     "dev:trigger": "npx trigger.dev@latest dev",
     "deploy:trigger": "npx trigger.dev@latest deploy",
     "build": "next build",
@@ -63,7 +62,6 @@
     "@types/node": "^20",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "concurrently": "^9.2.1",
     "tailwindcss": "^4.1.10",
     "trigger.dev": "^4.3.3",
     "typescript": "catalog:"

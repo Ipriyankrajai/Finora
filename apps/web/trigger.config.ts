@@ -1,9 +1,9 @@
 import { prismaExtension } from "@trigger.dev/build/extensions/prisma";
-import { defineConfig } from "@trigger.dev/sdk/v3";
+import { defineConfig } from "@trigger.dev/sdk";
 
 export default defineConfig({
 	project: process.env.TRIGGER_PROJECT_REF || "finora-dev",
-	runtime: "node",
+	runtime: "node-22",
 	maxDuration: 300,
 	dirs: ["./src/trigger"],
 	retries: {
