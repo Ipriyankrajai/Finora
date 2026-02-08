@@ -157,7 +157,3 @@ Run `bun run lint` before committing.
 ## License
 
 This project is private and not licensed for public use.
-
----
-
-Built with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack)
