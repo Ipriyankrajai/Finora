@@ -12,6 +12,20 @@ enum InterestType {
   COMPOUND
 }
 
+enum LoanType {
+  PERSONAL
+  AUTO
+  MORTGAGE
+  STUDENT
+  BUSINESS
+  CREDIT_CARD
+  MEDICAL
+  HOME_EQUITY
+  PAYDAY
+  CONSOLIDATION
+  OTHER
+}
+
 enum RecurringFrequency {
   DAILY
   WEEKLY
@@ -86,6 +100,7 @@ model Loan {
   id                 String       @id @default(cuid())
   userId             String
   name               String
+  loanType           LoanType     @default(OTHER)
   interestType       InterestType @default(COMPOUND)
   principalCents     BigInt
   annualRatePercent  Float

@@ -3,12 +3,24 @@ import { z } from "zod";
 import { moneyInput, notesInput } from "./transaction";
 
 /**
- * Loan type for UI categorization/display
- * This is separate from InterestType (SIMPLE/COMPOUND) which affects calculations
+ * Loan type matching Prisma enum
+ * Categorizes loans by their purpose (auto, mortgage, personal, etc.)
  */
-export const loanTypeSchema = z.enum(["car", "home", "personal", "other"]);
+export const loanTypeSchema = z.enum([
+	"PERSONAL",
+	"AUTO",
+	"MORTGAGE",
+	"STUDENT",
+	"BUSINESS",
+	"CREDIT_CARD",
+	"MEDICAL",
+	"HOME_EQUITY",
+	"PAYDAY",
+	"CONSOLIDATION",
+	"OTHER",
+]);
 
-export type LoanType = z.infer<typeof loanTypeSchema>;
+export type LoanTypeInput = z.infer<typeof loanTypeSchema>;
 
 /**
  * Interest calculation type matching Prisma enum
@@ -26,7 +38,7 @@ export const createLoanInput = z.object({
 		.trim()
 		.min(1, { message: "Loan name is required" })
 		.max(100, { message: "Loan name cannot exceed 100 characters" }),
-	loanType: loanTypeSchema,
+	loanType: loanTypeSchema.default("OTHER"),
 	interestType: interestTypeSchema.default("COMPOUND"),
 	principal: moneyInput,
 	annualRatePercent: z

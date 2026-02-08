@@ -36,6 +36,19 @@ const WHOLE_NUMBER_PATTERN = /^\d+$/;
  */
 const loanSchema = z.object({
 	name: z.string().min(1, "Name is required").max(100, "Name too long"),
+	loanType: z.enum([
+		"PERSONAL",
+		"AUTO",
+		"MORTGAGE",
+		"STUDENT",
+		"BUSINESS",
+		"CREDIT_CARD",
+		"MEDICAL",
+		"HOME_EQUITY",
+		"PAYDAY",
+		"CONSOLIDATION",
+		"OTHER",
+	]),
 	interestType: z.enum(["SIMPLE", "COMPOUND"]),
 	principal: z
 		.string()
@@ -131,6 +144,18 @@ export function LoanForm({
 	const form = useForm({
 		defaultValues: {
 			name: loan?.name ?? "",
+			loanType: (loan?.loanType ?? "OTHER") as
+				| "PERSONAL"
+				| "AUTO"
+				| "MORTGAGE"
+				| "STUDENT"
+				| "BUSINESS"
+				| "CREDIT_CARD"
+				| "MEDICAL"
+				| "HOME_EQUITY"
+				| "PAYDAY"
+				| "CONSOLIDATION"
+				| "OTHER",
 			interestType: (loan?.interestType ?? "COMPOUND") as "SIMPLE" | "COMPOUND",
 			principal: getInitialPrincipal(),
 			annualRatePercent: loan?.annualRatePercent?.toString() ?? "",
@@ -145,7 +170,7 @@ export function LoanForm({
 			if (mode === "create") {
 				await createLoan.mutateAsync({
 					name: value.name,
-					loanType: "personal", // Default since not stored
+					loanType: value.loanType,
 					interestType: value.interestType,
 					principal: value.principal,
 					annualRatePercent: Number.parseFloat(value.annualRatePercent),
@@ -157,6 +182,7 @@ export function LoanForm({
 				await updateLoan.mutateAsync({
 					id: loan.id,
 					name: value.name,
+					loanType: value.loanType,
 					interestType: value.interestType,
 					principal: value.principal,
 					annualRatePercent: Number.parseFloat(value.annualRatePercent),
@@ -205,6 +231,7 @@ export function LoanForm({
 			// Reset form and populate with loan data when opening
 			form.reset();
 			form.setFieldValue("name", loan?.name ?? "");
+			form.setFieldValue("loanType", loan?.loanType ?? "OTHER");
 			form.setFieldValue("interestType", loan?.interestType ?? "COMPOUND");
 			form.setFieldValue("principal", getInitialPrincipal());
 			form.setFieldValue(
@@ -258,6 +285,53 @@ export function LoanForm({
 										{error?.message}
 									</p>
 								))}
+							</div>
+						)}
+					</form.Field>
+
+					{/* Loan Type select */}
+					<form.Field name="loanType">
+						{(field) => (
+							<div className="space-y-2">
+								<Label>Loan Type</Label>
+								<Select
+									onValueChange={(value) =>
+										field.handleChange(
+											value as
+												| "PERSONAL"
+												| "AUTO"
+												| "MORTGAGE"
+												| "STUDENT"
+												| "BUSINESS"
+												| "CREDIT_CARD"
+												| "MEDICAL"
+												| "HOME_EQUITY"
+												| "PAYDAY"
+												| "CONSOLIDATION"
+												| "OTHER"
+										)
+									}
+									value={field.state.value}
+								>
+									<SelectTrigger className="w-full">
+										<SelectValue placeholder="Select loan type" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="PERSONAL">Personal Loan</SelectItem>
+										<SelectItem value="AUTO">Auto/Car Loan</SelectItem>
+										<SelectItem value="MORTGAGE">Mortgage</SelectItem>
+										<SelectItem value="STUDENT">Student Loan</SelectItem>
+										<SelectItem value="BUSINESS">Business Loan</SelectItem>
+										<SelectItem value="CREDIT_CARD">Credit Card</SelectItem>
+										<SelectItem value="MEDICAL">Medical Loan</SelectItem>
+										<SelectItem value="HOME_EQUITY">Home Equity</SelectItem>
+										<SelectItem value="PAYDAY">Payday Loan</SelectItem>
+										<SelectItem value="CONSOLIDATION">
+											Consolidation Loan
+										</SelectItem>
+										<SelectItem value="OTHER">Other</SelectItem>
+									</SelectContent>
+								</Select>
 							</div>
 						)}
 					</form.Field>

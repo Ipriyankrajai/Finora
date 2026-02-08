@@ -68,6 +68,7 @@ describe("loan router", () => {
 		id: MOCK_LOAN_ID,
 		userId: MOCK_USER_ID,
 		name: "Car Loan",
+		loanType: "AUTO" as const,
 		interestType: "COMPOUND" as const,
 		principalCents: BigInt(1_000_000), // $10,000
 		annualRatePercent: 6.0,
@@ -235,7 +236,7 @@ describe("loan router", () => {
 
 			const result = await caller.loan.create({
 				name: "Car Loan",
-				loanType: "car",
+				loanType: "AUTO",
 				interestType: "COMPOUND",
 				principal: "10000.00",
 				annualRatePercent: 6.0,
@@ -249,6 +250,7 @@ describe("loan router", () => {
 				data: {
 					userId: MOCK_USER_ID,
 					name: "Car Loan",
+					loanType: "AUTO",
 					interestType: "COMPOUND",
 					principalCents: BigInt(1_000_000),
 					annualRatePercent: 6.0,
@@ -264,7 +266,7 @@ describe("loan router", () => {
 
 			await caller.loan.create({
 				name: "Home Loan",
-				loanType: "home",
+				loanType: "MORTGAGE",
 				principal: "250000.50",
 				annualRatePercent: 4.5,
 				termMonths: 360,
@@ -284,7 +286,7 @@ describe("loan router", () => {
 			await expect(
 				caller.loan.create({
 					name: "Bad Loan",
-					loanType: "personal",
+					loanType: "PERSONAL",
 					principal: "-1000.00",
 					annualRatePercent: 5,
 					termMonths: 12,
@@ -298,7 +300,7 @@ describe("loan router", () => {
 			await expect(
 				caller.loan.create({
 					name: "Bad Loan",
-					loanType: "personal",
+					loanType: "PERSONAL",
 					principal: "1000.00",
 					annualRatePercent: 150,
 					termMonths: 12,

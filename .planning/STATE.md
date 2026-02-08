@@ -75,9 +75,15 @@ None yet.
 
 ### Blockers/Concerns
 
-NOTE: loanType field defined in API input schema but not stored in database. Current UI works around this by displaying interestType instead.
+None.
 
 RecurringBanner integrated into dashboard page by orchestrator (commit cbc5d96).
+
+### Recent Additions
+
+- Added: Comprehensive `LoanType` enum to database with 11 categories (PERSONAL, AUTO, MORTGAGE, STUDENT, BUSINESS, CREDIT_CARD, MEDICAL, HOME_EQUITY, PAYDAY, CONSOLIDATION, OTHER)
+- Added: Loan type dropdown in UI form for proper loan categorization
+- Default value: OTHER (for backwards compatibility with existing loans)
 
 ## Session Continuity
 
