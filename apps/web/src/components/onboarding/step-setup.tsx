@@ -15,14 +15,13 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue,
 } from "@/components/ui/select";
 import {
 	useCompleteOnboarding,
 	useUpdateCurrency,
 	useUpdateProfile,
 } from "@/hooks/use-user-settings";
-import { CURRENCY_SYMBOLS } from "@/lib/format";
+import { CURRENCY_SYMBOLS, getCurrencyLabel } from "@/lib/format";
 
 interface StepSetupProps {
 	defaultName?: string;
@@ -152,7 +151,13 @@ export function StepSetup({
 									value={field.state.value}
 								>
 									<SelectTrigger className="h-11 border-border/50 bg-card/30 text-foreground backdrop-blur-sm transition-all focus:border-emerald-500/40 focus:bg-card/60">
-										<SelectValue placeholder="Select currency" />
+										{field.state.value ? (
+											getCurrencyLabel(field.state.value)
+										) : (
+											<span className="text-muted-foreground">
+												Select currency
+											</span>
+										)}
 									</SelectTrigger>
 									<SelectContent>
 										{CURRENCY_SYMBOLS.map((currency) => (
@@ -176,7 +181,7 @@ export function StepSetup({
 				</div>
 
 				{/* Ready checklist */}
-				<div className="onboarding-stagger-5 mb-8 border border-border/30 bg-emerald-500/[0.03] p-4">
+				<div className="onboarding-stagger-5 mb-8 border border-border/30 bg-emerald-500/3 p-4">
 					<p className="mb-3 text-left text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
 						What&apos;s ready for you
 					</p>

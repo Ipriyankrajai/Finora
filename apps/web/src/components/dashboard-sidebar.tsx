@@ -4,6 +4,7 @@ import {
 	CreditCard,
 	Home,
 	PieChart,
+	Repeat,
 	Settings,
 	TrendingUp,
 	Wallet,
@@ -27,6 +28,7 @@ interface DashboardSidebarProps {
 const navItems = [
 	{ href: "/dashboard", icon: Home, label: "Overview" },
 	{ href: "/dashboard/transactions", icon: Wallet, label: "Transactions" },
+	{ href: "/dashboard/recurring", icon: Repeat, label: "Recurring" },
 	{ href: "/dashboard/analytics", icon: PieChart, label: "Analytics" },
 	{ href: "/dashboard/loans", icon: CreditCard, label: "Loans" },
 	{ href: "/dashboard/goals", icon: TrendingUp, label: "Goals" },

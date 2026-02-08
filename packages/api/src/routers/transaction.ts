@@ -134,6 +134,9 @@ export const transactionRouter = router({
 							tag: true,
 						},
 					},
+					recurringOccurrence: {
+						select: { ruleId: true },
+					},
 				},
 			});
 

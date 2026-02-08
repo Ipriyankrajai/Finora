@@ -12,9 +12,10 @@ model User {
   accounts      Account[]
 
   // Finance relations
-  tags         Tag[]
-  transactions Transaction[]
-  loans        Loan[]
+  tags           Tag[]
+  transactions   Transaction[]
+  loans          Loan[]
+  recurringRules RecurringRule[]
 
   @@unique([email])
   @@map("user")

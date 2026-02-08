@@ -288,7 +288,7 @@ export function TransactionForm({
 						)}
 					</form.Field>
 
-					<DialogFooter className="pt-4">
+					<DialogFooter>
 						<DialogClose
 							render={
 								<Button disabled={isPending} type="button" variant="outline">

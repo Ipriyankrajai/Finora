@@ -131,6 +131,7 @@ export function LoanDetailPage({ loanId }: LoanDetailPageProps) {
 	const loanForForm: LoanWithBalance = {
 		id: loan.id,
 		name: loan.name,
+		loanType: loan.loanType,
 		interestType: loan.interestType,
 		principalCents: loan.principalCents,
 		balanceCents: loan.balanceCents,

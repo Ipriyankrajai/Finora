@@ -1,4 +1,4 @@
-import db, { type InterestType } from "@finora2/db";
+import db, { type InterestType, type LoanType } from "@finora2/db";
 import { TRPCError } from "@trpc/server";
 
 import { protectedProcedure, router } from "../index";
@@ -226,6 +226,7 @@ export const loanRouter = router({
 				data: {
 					userId,
 					name: input.name,
+					loanType: input.loanType,
 					interestType: input.interestType as InterestType,
 					principalCents,
 					annualRatePercent: input.annualRatePercent,
@@ -269,6 +270,7 @@ export const loanRouter = router({
 			// Build update data, converting money fields if provided
 			const updateData: {
 				name?: string;
+				loanType?: LoanType;
 				interestType?: InterestType;
 				principalCents?: bigint;
 				annualRatePercent?: number;
@@ -279,6 +281,9 @@ export const loanRouter = router({
 
 			if (updateFields.name !== undefined) {
 				updateData.name = updateFields.name;
+			}
+			if (updateFields.loanType !== undefined) {
+				updateData.loanType = updateFields.loanType;
 			}
 			if (updateFields.interestType !== undefined) {
 				updateData.interestType = updateFields.interestType as InterestType;

@@ -251,7 +251,7 @@ function PaymentFormContent({
 
 	return (
 		<>
-			<DialogHeader className="pb-4">
+			<DialogHeader>
 				<DialogTitle>Log Payment - {loan.name}</DialogTitle>
 			</DialogHeader>
 
@@ -340,7 +340,7 @@ function PaymentFormContent({
 					)}
 				</form.Field>
 
-				<DialogFooter className="pt-4">
+				<DialogFooter>
 					<DialogClose
 						render={
 							<Button

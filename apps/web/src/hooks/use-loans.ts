@@ -7,11 +7,22 @@ import { trpc } from "@/utils/trpc";
 
 /**
  * Loan with calculated balance and interest totals
- * Note: loanType is not stored in database - loan schema only has interestType (SIMPLE/COMPOUND)
  */
 export interface LoanWithBalance {
 	id: string;
 	name: string;
+	loanType:
+		| "PERSONAL"
+		| "AUTO"
+		| "MORTGAGE"
+		| "STUDENT"
+		| "BUSINESS"
+		| "CREDIT_CARD"
+		| "MEDICAL"
+		| "HOME_EQUITY"
+		| "PAYDAY"
+		| "CONSOLIDATION"
+		| "OTHER";
 	interestType: "SIMPLE" | "COMPOUND";
 	principalCents: bigint;
 	balanceCents: bigint;
@@ -114,6 +125,7 @@ export function useCreateLoan() {
 			const optimisticLoan: LoanWithBalance = {
 				id: tempId,
 				name: newLoan.name,
+				loanType: newLoan.loanType ?? "OTHER",
 				interestType: newLoan.interestType ?? "COMPOUND",
 				principalCents,
 				balanceCents: principalCents,
@@ -188,6 +200,18 @@ function applyOptimisticLoanUpdate(
 	update: {
 		id: string;
 		name?: string;
+		loanType?:
+			| "PERSONAL"
+			| "AUTO"
+			| "MORTGAGE"
+			| "STUDENT"
+			| "BUSINESS"
+			| "CREDIT_CARD"
+			| "MEDICAL"
+			| "HOME_EQUITY"
+			| "PAYDAY"
+			| "CONSOLIDATION"
+			| "OTHER";
 		interestType?: "SIMPLE" | "COMPOUND";
 		principal?: string;
 		annualRatePercent?: number;
@@ -214,6 +238,7 @@ function applyOptimisticLoanUpdate(
 	return {
 		...loan,
 		name: update.name ?? loan.name,
+		loanType: update.loanType ?? loan.loanType,
 		interestType: update.interestType ?? loan.interestType,
 		principalCents: updatedPrincipalCents,
 		annualRatePercent: update.annualRatePercent ?? loan.annualRatePercent,

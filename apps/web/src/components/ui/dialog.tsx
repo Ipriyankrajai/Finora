@@ -76,7 +76,7 @@ function DialogHeader({
 	return (
 		<div
 			className={cn(
-				"flex flex-col gap-1.5 text-center sm:text-left",
+				"flex flex-col gap-1.5 pb-6 text-center sm:text-left",
 				className
 			)}
 			data-slot="dialog-header"
@@ -92,7 +92,7 @@ function DialogFooter({
 	return (
 		<div
 			className={cn(
-				"flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+				"flex flex-col-reverse gap-2 pt-6 sm:flex-row sm:justify-end",
 				className
 			)}
 			data-slot="dialog-footer"
