@@ -231,7 +231,7 @@ export function LoanForm({
 			// Reset form and populate with loan data when opening
 			form.reset();
 			form.setFieldValue("name", loan?.name ?? "");
-			form.setFieldValue("loanType", loan?.loanType ?? "OTHER");
+			form.setFieldValue("loanType", loan?.loanType ?? "PERSONAL");
 			form.setFieldValue("interestType", loan?.interestType ?? "COMPOUND");
 			form.setFieldValue("principal", getInitialPrincipal());
 			form.setFieldValue(
