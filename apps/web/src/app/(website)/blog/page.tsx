@@ -141,20 +141,26 @@ export default function BlogPage() {
 			<section className="relative z-10 border-border/50 border-t bg-card/30 backdrop-blur-sm">
 				<div className="mx-auto max-w-5xl px-6 py-16">
 					<div className="fade-in mx-auto max-w-xl animate-in fill-mode-both text-center duration-500">
+						<span className="mb-6 inline-flex border border-primary/20 bg-primary/5 px-3 py-1.5 text-[10px] text-primary uppercase tracking-[0.3em]">
+							Newsletter
+						</span>
 						<h2 className="mb-4 font-semibold text-2xl tracking-tight">
 							Stay Updated
 						</h2>
-						<p className="mb-6 text-muted-foreground">
+						<p className="mb-6 text-muted-foreground text-sm">
 							Get the latest financial tips and Finora updates delivered to your
 							inbox.
 						</p>
-						<div className="mx-auto flex max-w-md gap-3">
+						<div className="mx-auto flex max-w-md gap-px bg-border/50">
 							<input
-								className="h-11 flex-1 rounded-md border border-border bg-background/50 px-4 text-sm backdrop-blur-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+								className="h-9 flex-1 border border-border/50 bg-background/50 px-4 text-xs backdrop-blur-sm placeholder:text-muted-foreground/50 focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/50"
 								placeholder="Enter your email"
 								type="email"
 							/>
-							<Button className="bg-linear-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-500 hover:to-emerald-400">
+							<Button
+								className="bg-linear-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-500 hover:to-emerald-400"
+								size="lg"
+							>
 								Subscribe
 							</Button>
 						</div>
